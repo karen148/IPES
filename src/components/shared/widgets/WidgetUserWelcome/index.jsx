@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TooltipE from "./../../tooltip";
+import { useDispatch } from "react-redux";
+import { startLogout } from "../../../../actions/auth";
 
 const WidgetUserWelcome = () => {
+
+  const dispatch = useDispatch();
+
   const [nombre, setNombre] = useState("");
   const [img, setImg] = useState("");
   const exitApp = () => {
-    localStorage.removeItem("token");
-    // history.push('/home')
+    dispatch( startLogout() )
   };
 
   const getDatos = () => {
