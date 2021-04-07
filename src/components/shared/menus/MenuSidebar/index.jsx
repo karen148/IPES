@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
 // import { useRouter } from 'next/router';
 
 const MenuSidebar = () => {
@@ -7,12 +7,12 @@ const MenuSidebar = () => {
     const menuItems = [
         {
             text: 'Tablero',
-            url: '/tablero',
+            url: '/',
             icon: 'lnr lnr-chart-bars',
         },
         {
             text: 'Plazas de mercado',
-            url: '/mercado',
+            url: '/plaza',
             icon: 'lnr lnr-home',
         },
         {

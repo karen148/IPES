@@ -1,0 +1,708 @@
+import React, { useEffect, useState, Fragment } from "react";
+import axios from "axios";
+
+import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
+import TablasPlazas from "./../../components/shared/tables/TablaPlazas";
+import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
+
+import {getFuncionarios, getCategorias, getLocalidades, getCantidades } from './../../actions/plaza'
+
+import MenuItem from "@material-ui/core/MenuItem";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
+import SearchIcon from '@material-ui/icons/Search';
+import EditIcon from "@material-ui/icons/Edit";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+
+import { ThemeProvider } from "@material-ui/core/styles";
+import Modal from "./../../components/shared/modal";
+import theme from './../../theme';
+import TooltipE from './../../components/shared/tooltip';
+import useStyles from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { ListItemText } from "@material-ui/core";
+
+const Plazas = () => {
+  const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const { funcionarios, categorias, localidades, cantidades } = useSelector(state => state.plaza)
+
+  const [currency1, setCurrency1] = React.useState(null);
+  const [currency2, setCurrency2] = React.useState(null);
+
+  const [plazas, setPlaza] = useState([]);
+  const [plaza1, setPlaza1] = useState(plazas);
+  const [alerta, setAlerta] = useState(false);
+  const [estado, setEstado] = useState(true);
+  const [open, setOpen] = React.useState(false);
+  const [telefonos, setTele] = useState([{telefono: ' '}]);
+  const [local, setLocal2] = useState('');
+  const [cat, setCat] = useState([]);
+  const [funcio, setFunci2] = useState([]);
+  const [nomplaza, setNomplaza] = useState('');
+  const [nomplaza1, setNomplaza1] = useState('');
+  const [img, setImg] = useState(null);
+  const [img1, setImg1] = useState(null);
+  const [state, setStatet] = useState({
+      id: '',
+      nombre: '',
+      direccion: '',
+      email: '',
+      horario_m1: '',
+      horario_m2: '',
+      horario_t1:'',
+      horario_t2:'',
+  })
+  
+  useEffect(() => {
+    dispatch( getCantidades());
+  }, [dispatch])
+  
+  useEffect(() => {
+    dispatch( getFuncionarios());
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch( getCategorias());
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch( getLocalidades());
+  }, [dispatch])
+
+  const handleImg = (event) => {
+    var reader = new FileReader();
+     reader.readAsDataURL(event[0]);
+     reader.onload = function() {
+       setImg(event[0]);
+       setImg1(reader.result)
+     };
+     
+     reader.onerror = function() {
+       console.log(reader.error);
+     };
+ };
+
+  const handleState = (event) => {
+    const {value , name} = event.target;
+    setStatet((_state) => ({..._state, [name]: value}));
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    getPlazas();
+    setAlerta(false)
+  };
+
+  const handleChange1 = (event) => {
+    setCurrency1(event.target.value);
+  };
+
+  const handleChange2 = (event) => {
+    setCurrency2(event.target.value);
+  };
+  
+  //agregar un telefono
+  const handleAddTel = () =>{
+    setTele([...telefonos, {telefono: ''}])
+  }
+
+  //evento para modificar input
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...telefonos];
+    list[index][name] = value;
+    setTele(list);
+  };
+
+  // evento para remover un hijo
+  const handleRemoveClick = index => {
+    const list = [...telefonos];
+    list.splice(index, 1);
+    setTele(list);
+  };
+  
+  const setRegistro = async () => {
+    let horario = []
+    horario.push(state.horario_m1+'-'+state.horario_m2, state.horario_t1+'-'+state.horario_t2)
+    let tele= []
+    telefonos.map(item => {
+      Array.prototype.push.apply(tele, [item.telefono])
+    })
+    let cate = []
+    cat.map(item => {
+      Array.prototype.push.apply(cate, [item.label])
+    })
+
+    let config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+
+    axios.post(process.env.REACT_APP_URL_API +"plazas/crear",
+        {
+          admin_id: funcio.id,
+          localidad_nombre: local,
+          nombre: nomplaza,
+          categorias_nombres:cate,
+          direccion: state.direccion,
+          telefonos: tele,
+          email: state.email,
+          horarios: horario,
+        }
+        ,config
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("SE REGISTRO");
+          console.log(response);
+          let id = response.data.plaza.id
+          const formData = new FormData();
+          formData.append('imagen', img)
+          formData.append('plaza', 'img')
+          console.log(img);
+          let config1 = {
+            method: 'put',
+            url: process.env.REACT_APP_URL_API+'uploads/PLAZA/'+id,
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            data: formData
+          };
+          axios(config1)
+          .then(response => {
+            if (response.status) {
+              setAlerta(true)
+            }
+          })
+          .catch((e) => {
+            console.log('ERROR',e);
+          })
+        }
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+
+  const getPlazas = async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(process.env.REACT_APP_URL_API + "plazas/getAll", config)
+      .then((response) => {
+        console.log(response.data.plazas);
+        let data = response.data.plazas;
+        let data1 = data.map((item) => ({
+          id: item.id,
+          usuario: item.admin_id,
+          localidad: item.localidad_nombre,
+          nombre: item.nombre,
+          direccion: item.direccion,
+          telefonos: item.telefonos,
+          email: item.email,
+          locatarios: 0,
+          categorias: item.categorias_nombres,
+          horarios: item.horarios,
+          activo: item.activo,
+          img: item.img,
+          fecha: item.updated_at === null ? item.created_at : item.updated_at,
+          acciones: [
+            {
+              name: "Editar",
+              icon: <EditIcon />,
+              id: item.id
+            },
+            {
+              name: "Eliminar",
+              icon: <DeleteIcon />,
+              id: item.id
+            },
+          ],
+        }));
+        setPlaza(data1);
+        setPlaza1(data1);
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+  useEffect(() => {
+    getPlazas();
+  }, []);
+
+  const Filtros = () =>{
+    console.log(currency1+' - '+currency2);
+    let data = []
+    let data1 = []
+    if (currency2 !==null && currency1 === null) {
+      data = plaza1.filter(item => item.localidad === currency2)
+    }else if (currency2 === null && currency1 !== null) {
+      data = plaza1.map(item => {
+        if (item.categorias !== null && item.categorias.length > 0) {
+          for (let i = 0; i < item.categorias.length; i++) {
+            const element = item.categorias[i];
+            console.log(element);
+            if (element === currency1) {
+               return item;
+               console.log(element);
+               console.log(item);
+            }
+          }
+        }
+      })
+    }else {
+      console.log('hola');
+      data = plaza1.map(item => {
+        if(item.localidad === currency2) {
+          if (item.categorias !== null && item.categorias.length > 0) {
+            for (let i = 0; i < item.categorias.length; i++) {
+              const element = item.categorias[i];
+              console.log(element);
+              if (element === currency1) {
+                 return item
+              }
+            }
+          }
+        }
+      })
+    }
+    setPlaza1(data)
+  }
+
+  const Restaurar = () =>{
+    setPlaza1(plazas)
+    setCurrency1(null)
+    setCurrency2(null)
+  }
+
+  const Buscar = () => {
+    let data = []
+    data = plaza1.filter(item => item.nombre === nomplaza1)
+    setPlaza1(data)
+  }
+
+  return (
+    <ContainerDashboard title="Settings">
+      <HeaderDashboard
+        title="Plazas de mercado"
+        description="Información de los locatarios por plaza"
+      />
+      <ThemeProvider theme={theme}>
+      <section className="ps-items-listing">
+        <div className="ps-section__actions">
+          <a className="ps-btn success" onClick={handleClickOpen}>
+            <AddIcon />
+            Nueva plaza
+          </a>
+        </div>
+        <div className="ps-section__header">
+          <div className="ps-section__filter ps-form--filter">
+            <div className="ps-form__left ">
+              <div className={"form-group" + " " + classes.root}>
+                  <TextField
+                    id="filled-select-currency"
+                    select
+                    label="Categorías"
+                    value={currency1}
+                    onChange={handleChange1}
+                    fullWidth
+                    className={classes.margin}
+                  >
+                    {categorias.map((option) => (
+                      <MenuItem key={option.id} value={option.label}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+              </div>
+              <div className="form-group">
+                  <TextField
+                    id="filled-select-currency"
+                    select
+                    label="Localidad"
+                    value={currency2}
+                    onChange={handleChange2}
+                    fullWidth
+                    className={classes.margin}
+                  >
+                    {localidades.map((option) => (
+                      <MenuItem key={option.id} value={option.label}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+              </div>
+            </div>
+            <div className="ps-form__right">
+              <TooltipE title='Filtrar'>
+                <button className="ps-btn ps-btn--gray" onClick={Filtros}>
+                  <i style={{fontSize: '30px'}} className="lnr lnr-funnel"></i>
+                </button>
+              </TooltipE>
+            </div>
+            <div className="ps-form__right">
+              <TooltipE title='Restaurar información'> 
+                <button className="ps-btn ps-btn--gray" onClick={Restaurar}>
+                  <i style={{fontSize: '30px'}} className="lnr lnr-undo"></i>
+                </button>
+              </TooltipE>
+            </div>
+          </div>
+          <div className="ps-section__search">
+          <div className={"form-group" + " " + classes.root}> 
+            <Autocomplete
+                  id="free-solo-demo"
+                  freeSolo
+                  options={plazas.map((option) => option.nombre)}
+                  inputValue={nomplaza1}
+                  onInputChange={(event, newInputValue) => {
+                  setNomplaza1(newInputValue);
+                  }}
+                  renderInput={(params) => (
+                  <TextField {...params} 
+                      margin="normal" 
+                      type= 'text'
+                      id="standard-basic"
+                      style={{width: '300px', marginTop: '5px'}}
+                      placeholder="Por favor ingrese el nombre de la plaza..."
+                        />
+                  )}
+              />
+          </div>
+            <TooltipE title='Buscar'> 
+                <IconButton color="primary" component="span" onClick={Buscar}>
+                  <SearchIcon style={{fontSize: '35px', marginTop: '-15px'}}/>
+                </IconButton>
+            </TooltipE>
+          </div>
+        </div>
+        <div className="ps-section__content">
+            <TablasPlazas datos={plaza1} getPlaza={getPlazas} />
+        </div>
+        <div className="ps-section__footer">
+          <p>Mostrar 10 de 30 artículos.</p>
+          {/* <Pagination /> */}
+        </div>
+      </section>
+        <Modal
+          open={open}
+          handleClose={handleClose}
+          title="Crear plaza"
+          tamaño="xl"
+        >
+          <Fragment>
+            <section className="ps-new-item">
+              <div className="ps-form__content">
+                <div className="row">
+                  <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <figure className="ps-block--form-box">
+                      <figcaption style={{color: "white"}}>Datos de la plaza</figcaption>
+                      <div className="ps-block__content">
+                        <div className="form-group">
+                          <label>
+                            Nombre de la plaza<sup>*</sup>
+                          </label>
+                            <Autocomplete
+                                id="free-solo-demo"
+                                freeSolo
+                                options={plazas.map((option) => option.nombre)}
+                                inputValue={nomplaza}
+                                onInputChange={(event, newInputValue) => {
+                                setNomplaza(newInputValue);
+                                }}
+                                renderInput={(params) => (
+                                <TextField {...params} 
+                                    margin="normal" 
+                                    variant="outlined"
+                                    type= 'text'
+                                    placeholder="Por favor ingrese el nombre de la plaza..."
+                                     />
+                                )}
+                            />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Dirección<sup>*</sup>
+                          </label>
+                          <TextField
+                            margin="normal" 
+                            variant="outlined"
+                            type= 'text'
+                            placeholder="Por favor ingrese la dirección de la plaza..."
+                            name="direccion"
+                            fullWidth
+                            value={state.direccion}
+                            onChange={handleState}
+                          />
+                        </div>
+                        <div className="form-group row">
+                        <div className="col-sm-6">
+                            <label>
+                                Localidad<sup>*</sup>
+                            </label>
+                            <Autocomplete
+                                id="free-solo-demo"
+                                freeSolo
+                                options={localidades.map((option) => option.label)}
+                                inputValue={local}
+                                onInputChange={(event, newInputValue) => {
+                                setLocal2(newInputValue);
+                                }}
+                                renderInput={(params) => (
+                                <TextField {...params} 
+                                    type='text'
+                                    margin="normal" 
+                                    variant="outlined"
+                                     />
+                                )}
+                            />
+                          </div>
+                          <div className="col-sm-6">
+                            <label>
+                              Funcionarios<sup>*</sup>
+                            </label>
+                            <Autocomplete
+                                id="free-solo-demo"
+                                freeSolo
+                                options={funcionarios}
+                                getOptionLabel={(option) => option.label}
+                                value={funcio}
+                                onChange={(event, newValue) => {
+                                setFunci2(newValue);
+                                }}
+                                renderInput={(params) => (
+                                <TextField {...params} 
+                                    type='text'
+                                    margin="normal" 
+                                    variant="outlined"
+                                />
+                              )}
+                            />
+                            {/* <Autocomplete
+                                id="free-solo-demo"
+                                freeSolo
+                                options={localidades.map((option) => option.label)}
+                                inputValue={local}
+                                onInputChange={(event, newInputValue) => {
+                                setLocal2(newInputValue);
+                                }}
+                                renderInput={(params) => (
+                                <TextField {...params} 
+                                    margin="normal" 
+                                    variant="outlined" 
+                                     />
+                                )}
+                            /> */}
+                          </div>
+                        </div>
+                        <div className="form-group row">
+                          {telefonos.map((x,i) => {
+                            return(<>
+                                  <div className="col-sm-8">
+                                    <label>
+                                        Teléfono<sup>*</sup>
+                                    </label>
+                                    <TextField
+                                      margin="normal" 
+                                      variant="outlined"
+                                      type= 'text'
+                                      placeholder="Por favor ingrese el teléfono "
+                                      value={x.telefono}
+                                      name="telefono"
+                                      onChange={(e) => handleInputChange(e,i)}
+                                      fullWidth
+                                    />
+                                  </div>
+                                  <div className="col-sm-4">
+                                      {telefonos.length !== 1 && <Button
+                                        onClick={() => handleRemoveClick(i)}
+                                        variant="contained"
+                                        color='primary'
+                                        style={{marginTop: '40px', marginRight: '10px', color: 'white'}}
+                                      >
+                                        <b>-</b>
+                                      </Button>
+                                      }
+                                      {telefonos.length - 1 === i && <Button
+                                        onClick={handleAddTel}
+                                        variant="contained"
+                                        color='primary'
+                                        style={{marginTop: '40px', color: 'white'}}
+                                      >
+                                        <b>+</b>
+                                      </Button>
+                                      }
+                                  </div>
+                                  </>)
+                          })}
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            Correo electrónico<sup>*</sup>
+                          </label>
+                          <TextField
+                            margin="normal" 
+                            variant="outlined"
+                            type= 'text'
+                            fullWidth
+                            placeholder="Por favor ingrese el correo electrónico de la plaza..."
+                            value={state.email}
+                            name="email"
+                            onChange={handleState}
+                          />
+                        </div>
+                        <div className="form-group row">
+                            <div className="col-sm-12">
+                                <label>
+                                    Horario de la mañana<sup>*</sup>
+                                </label>
+                            </div>
+                          <div className="col-sm-6">
+                            <TextField
+                              margin="normal" 
+                              variant="outlined"
+                              fullWidth
+                              type="time"
+                              value={state.horario_m1}
+                              name="horario_m1"
+                              onChange={handleState}
+                            />
+                          </div>
+                          <div className="col-sm-6">
+                            <TextField
+                              margin="normal" 
+                              variant="outlined"
+                              fullWidth
+                              type="time"
+                              value={state.horario_m2}
+                              name="horario_m2"
+                              onChange={handleState}
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group row">
+                            <div className="col-sm-12">
+                                <label>
+                                    Horario de la tarde<sup>*</sup>
+                                </label>
+                            </div>
+                          <div className="col-sm-6">
+                            <TextField
+                              margin="normal" 
+                              variant="outlined"
+                              fullWidth
+                              type="time"
+                              value={state.horario_t1}
+                              name="horario_t1"
+                              onChange={handleState}
+                            />
+                          </div>
+                          <div className="col-sm-6">
+                            <TextField
+                              margin="normal" 
+                              variant="outlined"
+                              fullWidth
+                              type="time"
+                              value={state.horario_t2}
+                              name="horario_t2"
+                              onChange={handleState}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </figure>
+                  </div>
+                  <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <figure className="ps-block--form-box">
+                      <figcaption style={{color:"white"}}>Imagen</figcaption>
+                      <div className="ps-block__content">
+                        <div className="form-group">
+                          <label>Por favor verifique que la foto o imagen 
+                                 tenga los siguientes formatos: 'png', 'jpg', 'JPG', 'jpeg', 'gif'</label>
+                          <div className="form-group--nest row">
+                            <div className="col-sm-12">
+                                <input
+                                className="form-control mb-1"
+                                type="file"
+                                placeholder=""
+                                style={{paddingTop: '10px'}}
+                                accept = ".png,.jpg,.JPG,.jpeg,.gif"
+                                onChange={e => handleImg(e.target.files)}
+                                />
+                            </div>
+                            <div className="col-sm-12 text-center">
+                                <div className="ps-block__left">
+                                    <img src={img1} alt="" width="200px" height="200px"/>
+                                </div>
+                            </div>
+                            {/* <button className="ps-btn ps-btn--sm">
+                              Enviar imagen
+                            </button> */}
+                          </div>
+                        </div>
+                      </div>
+                    </figure>
+                    <figure className="ps-block--form-box">
+                      <figcaption style={{color:"white"}}>Categorías</figcaption>
+                      <div className="ps-block__content">
+                        <div className="form-group">
+                          <label>
+                            Categoría<sup>*</sup>
+                          </label>
+                          <Autocomplete
+                              multiple
+                              limitTags={2}
+                              id="multiple-limit-tags"
+                              value={cat}
+                              onChange={(event, newValue) => {setCat(newValue)}}
+                              options={categorias}
+                              getOptionLabel={(option) => option.label}
+                              renderInput={(params) => (
+                                <TextField {...params} variant="outlined" placeholder="Categorías de las plazas" />
+                              )}
+                            />
+                        </div>
+                      </div>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+              {/* {plaza.map(item => {
+                return( item.nombre === nomplaza 
+                        ? setEstado(false) 
+                        : setEstado(true)
+                  )
+              })}
+              {estado === true ? <div className="col-sm-12 text-center">
+                        <button className="ps-btn success" style={{marginBottom: '30px'}} onClick={setRegistro}>
+                            Registrar
+                        </button>
+                      </div> : false
+              } */}
+              <div className="col-sm-12 text-center">
+                <br></br>
+                {alerta === true ? <Alert severity="success">Información enviada exitosamente</Alert> : false}
+                <br></br>
+              </div>
+              <div className="col-sm-12 text-center">
+                <button className="ps-btn success" style={{marginBottom: '30px', marginTop: '15px'}} onClick={setRegistro}>
+                    Registrar
+                </button>
+              </div> 
+            </section>
+          </Fragment>
+        </Modal>
+      </ThemeProvider>
+    </ContainerDashboard>
+  );
+};
+export default Plazas;
+// export default connect((state) => state.app)(SettingsPage);

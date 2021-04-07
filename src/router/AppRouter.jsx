@@ -11,6 +11,8 @@ import { PrivateRoute } from './PrivateRoute';
 
 import Login from './../pages/Login'
 import Tablero from './../pages/Tablero'
+import Perfil from './../pages/Perfil'
+import Plazas from './../pages/Plazas'
 
 
 export const AppRouter = () => {
@@ -23,7 +25,7 @@ export const AppRouter = () => {
     }, [dispatch])
 
     if (checking) {
-        return(<h5>Espere...</h5>)
+        return(<h5>Por favor espere...</h5>)
     }
 
     return (
@@ -40,6 +42,18 @@ export const AppRouter = () => {
                         exact 
                         path="/" 
                         component={Tablero} 
+                        isAuthenticated= {!!id}
+                    />
+                    <PrivateRoute 
+                        exact 
+                        path="/perfil" 
+                        component={Perfil} 
+                        isAuthenticated= {!!id}
+                    />
+                    <PrivateRoute 
+                        exact 
+                        path="/plaza" 
+                        component={Plazas} 
                         isAuthenticated= {!!id}
                     />
                     <Redirect to ="/"/>

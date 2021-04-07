@@ -3,10 +3,13 @@ import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import Alert from '@material-ui/lab/Alert';
 import useStyles from './styles.js'
+import { useSelector } from "react-redux";
 
 const FormAccountSettings = () => {
 
   const classes = useStyles();
+
+  const { id, rol} = useSelector(state => state.auth)
 
   const [ojo1, setOjo1] = useState('visibility_off')
   const [ojo2, setOjo2] = useState('visibility_off')
@@ -73,7 +76,7 @@ const FormAccountSettings = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .get(process.env.REACT_APP_URL_API+`admins/getAdmin/${localStorage.getItem("id")}`,
+      .get(process.env.REACT_APP_URL_API+`admins/getAdmin/${id}`,
         config
       )
       .then((response) => {
@@ -99,7 +102,7 @@ const FormAccountSettings = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .put(process.env.REACT_APP_URL_API+`admins/updateAdmin/${localStorage.getItem("id")}`,
+      .put(process.env.REACT_APP_URL_API+`admins/updateAdmin/${id}`,
         {
           nombre: state.nombre,
           apellido: state.apellido,
@@ -112,8 +115,6 @@ const FormAccountSettings = () => {
           getDatos()
           // return(<div className={classes.root}><Alert severity="success">Datos actualizados</Alert></div>)
           alert("Datos actualizados");
-        } else {
-          return history.push("/perfil");
         }
       })
       .catch((e) => {
@@ -129,7 +130,7 @@ const FormAccountSettings = () => {
       console.log(img1);
     let config = {
       method: 'put',
-      url: process.env.REACT_APP_URL_API+`uploads/${localStorage.getItem("rol")}/${localStorage.getItem("id")}`,
+      url: process.env.REACT_APP_URL_API+`uploads/${rol}/${id}`,
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       data: formData
     };
@@ -137,8 +138,6 @@ const FormAccountSettings = () => {
       .then((response) => {
         if (response.status === 200) {
           alert("Imagen actualizada");
-        } else {
-          return history.push("/perfil");
         }
       })
       .catch((error) => {

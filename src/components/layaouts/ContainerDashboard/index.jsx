@@ -3,7 +3,7 @@ import FooterCopyright from './../../shared/footers/FooterCopyright';
 import MenuSidebar from './../../shared/menus/MenuSidebar';
 import WidgetEarningSidebar from './../../shared/widgets/WidgetEarningSidebar';
 import WidgetUserWelcome from './../../shared/widgets/WidgetUserWelcome';
-// import HeaderMobile from './../../shared/headers/HeaderMobile'
+import HeaderMobile from './../../shared/headers/HeaderMobile'
 import {ThemeProvider} from '@material-ui/core/styles';
 import  theme from './../../../theme'
 // import useStyles from './styles'
@@ -35,7 +35,7 @@ const ContainerDashboard = ({ children}) => {
                     </div>
                 </div>
                 <div className="ps-main__wrapper">
-                    {/* <HeaderMobile /> */}
+                    <HeaderMobile />
                     {children}
                 </div>
             </main>

@@ -1,112 +1,210 @@
-import React, {useEffect, useState, Fragment} from 'react';
-import axios from 'axios';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from "@material-ui/core";
-import TooltipE from './../../tooltip'
-import Modal from './../../modal'
+import React, { useState, Fragment } from "react";
+import axios from "axios";
+import IconButton from "@material-ui/core/IconButton";
+import TooltipE from "./../../tooltip";
+import Modal from "./../../modal";
+import _Eliminar from './../../modal/Eliminar.jsx'
+import _Actualizar from './../../modal/Actualizar.jsx'
+import Button from "@material-ui/core/Button";
+import { Category } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 // import Tooltip from '@material-ui/core/Tooltip';
-import { Table, Tag, Space } from 'antd';
-import moment from 'moment';
 
-const TablaPlazas = ({ datos }) => {
+const TablaPlazas = ({ datos, getPlaza}) => {
 
-    const [open, setOpen] = React.useState(false);
-    const [idp, setIdp] = useState(0);
+  const { funcionarios } = useSelector(state => state.plaza)
+  const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  const [idp, setIdp] = useState(0);
+  const [idp1, setIdp1] = useState(0);
+  const [idp2, setIdp2] = useState(0);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const tableItems = datos.map((item, index) => {
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
 
-        // let data = item.categorias.length
-        // for (let index = 0; index <= index <= ( Object.keys(item.categorias).length); index++) {
-        //     const element = item.categorias[index];
-        //     console.log(element);
-        // }
-        // for (let index = 0; index < data.length; index++) {
-        //     const element = data[index];
-        //     console.log(element);
-            
-        // }
-        console.log(item.categorias);
+  const handleClose1 = () => {
+    setOpen1(false);
+    getPlaza()
+  };
 
+  const handleClickOpen2 = () => {
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+    getPlaza()
+  };
+
+  const Eliminar = () => {
+    
+    let config1 = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      };
+      axios.put(process.env.REACT_APP_URL_API+'plazas/delete/'+idp2,
+        {
+            activo:false
+        }
+        ,config1)
+      .then(response => {
+        if (response.status) {
+          handleClose1()
+        }
+      })
+      .catch((e) => {
+        console.log('ERROR',e);
+      })
+  }
+
+  const Actualizar = () => {
+    console.log(idp1)
+  }
+
+
+  console.log(idp);
+  const tableItems = datos.map((item, index) => {
+    if(item !== undefined){
+      if (item.activo === true) {
+        let data = [];
+        if (item.categorias !== null && item.categorias.length > 0) {
+          for (let i = 0; i <= item.categorias.length; i++) {
+            const element = item.categorias[i];
+            data.push({ categoria: element });
+          }
+        }
         return (
-            <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>
-                    <a href="#" onClick={() => {handleClickOpen(), setIdp(item.id)}}>
-                        <strong>{item.nombre}</strong>
-                    </a>
-                </td>
-                <td>{item.localidad}</td>
-                <td>{item.locatarios}</td>
-                <td>{item.categorias}
-                    {/* {item.categorias.forEach((cat) => (
-                        <p className="ps-item-categories" style={{fontSize: '16px'}} key={index * 21}>
-                            {cat}
-                        </p>
-                    ))} */}
-                </td>
-                <td>
-                    {item.fecha === null ? <p>No hay fecha</p>: item.fecha.slice(0,10)}
-                </td>
-                <td>
-                    {/* <p className="ps-item-categories"> */}
-                        {item.acciones.map((cat) => (
-                        <TooltipE title={cat.name} key={cat.name}>
-                            <IconButton color="default" component="span" key={cat.name}>
-                                {cat.icon}
-                            </IconButton>
-                        </TooltipE>
-                        ))}
-                    {/* </p> */}
-                </td>
-            </tr>
+          <tr key={item.id}>
+            <td>{index + 1}</td>
+            <td>
+              <Button
+                color="secondary"
+                onClick={() => {
+                  handleClickOpen();
+                  setIdp(item.id);
+                }}
+              >
+                <b>{item.nombre}</b>
+              </Button>
+            </td>
+            <td>{item.localidad}</td>
+            <td>{item.locatarios}</td>
+            <td style={{ width: "180px" }}>
+              {data.map((item) => {
+                return (
+                  <Button size="small" color="primary">
+                    <b>{item.categoria}</b>
+                  </Button>
+                );
+              })}
+            </td>
+            <td>
+              {item.fecha === null ? (
+                <p>No hay fecha</p>
+              ) : (
+                item.fecha.slice(0, 10)
+              )}
+            </td>
+            <td>
+              {item.acciones.map((cat) => {
+                return (
+                  <TooltipE title={cat.name} key={cat.name}>
+                    <IconButton 
+                      color="default" 
+                      component="span" 
+                      key={cat.name} 
+                      onClick={cat.name === 'Editar' 
+                        ? ()=>{handleClickOpen2(); setIdp1(cat.id);} 
+                        : ()=>{handleClickOpen1(); setIdp2(cat.id);}}
+                      >
+                      {cat.icon}
+                    </IconButton>
+                  </TooltipE>
+                );
+              })}
+            </td>
+          </tr>
         );
-    });
-    console.log(idp);
+      }
+    }
+  });
+  console.log(datos);
+  return (
+    <div className="table-responsive">
+      <table
+        className="table ps-table"
+        style={{ textAlign: "center" }}
+        height="500px"
+      >
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre de la plaza</th>
+            <th>Localidad</th>
+            <th>Locatarios inscritos</th>
+            <th>Categorías</th>
+            <th>Fecha actualizada</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>{tableItems}</tbody>
+      </table>
+      <Modal
+        open={open}
+        handleClose={handleClose}
+        title={datos.map((item) => {
+          return item !== undefined && item.id === idp && item.nombre;
+        })}
+        tamaño="xs"
+      >
+        {datos.map((item) => {
+          if (item !== undefined && item.id === idp) {
+            return (
+              <Fragment>
+                <b>Funcionario: </b>
+                {funcionarios.map(fun => {return ( item.usuario === fun.id ? fun.label :'')})}
+                <br></br>
+                <b>Dirección: </b>
+                {item.direccion}
+                <br></br>
+                <b>Telefonos: </b>
+                {item.telefonos + "."}
+                <br></br>
+                <b>Horario de atención: </b>
+                {item.horarios + "."}
+                <br></br>
+                <b>Correo oficial: </b>
+                {item.email}
+                <br></br>
+              </Fragment>
+            );
+          }
+        })}
+      </Modal>
+      <_Eliminar 
+        open={open1}
+        handleClose={handleClose1}
+        eliminar={Eliminar}
+        titulo={datos.map(item => {return (item !== undefined && item.id === idp2 && item.nombre)})}
+      />
+      <_Actualizar 
+        plazas={datos}
+        open={open2}
+        handleClose={handleClose2}
+        idPlaza={idp1}
+      />
+      
+    </div>
+  );
+};
 
-    return (<div className="table-responsive">
-            <table className="table ps-table" style={{textAlign: 'center',}} height= '500px'>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre de la plaza</th>
-                        <th>Localidad</th>
-                        <th>Locatarios inscritos</th>
-                        <th>Categorías</th>
-                        <th>Fecha actualizada</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>{tableItems}</tbody>
-            </table>
-            <Modal 
-                open={open} 
-                handleClose={handleClose}
-                title={datos.map(item => { return (item.id === idp && item.nombre)})}
-                tamaño= 'xs'
-            >
-            {datos.map(item => {
-                if(item.id === idp){
-                    return (
-                        <Fragment>
-                            <p><strong>Dirección: </strong>{item.direccion}</p>
-                            <p><strong>Telefonos: </strong>{item.telefono1} - {item.telefono2}</p>
-                            <p><strong>Horario de atención: </strong>{item.horario_m} / {item.horario_t}</p>
-                            <p><strong>Correo oficial: </strong>{item.email}</p>
-                            <br></br>
-                        </Fragment>
-                    )
-                }
-            })}
-            </Modal>
-        </div>)
-}
-
-export default TablaPlazas
+export default TablaPlazas;

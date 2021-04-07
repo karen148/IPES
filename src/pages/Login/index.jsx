@@ -61,13 +61,13 @@ export default function Login({ history }) {
             Iniciar sesión
           </Typography>
           <form className={classes.form} noValidate style={{fontSize: '20px'}}>
+            <label style={{fontSize: '15px'}}>Correo electrónico *</label>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="email"
-              label="Correo electronico"
               name="email"
               values={email}
               onChange={handleInputChange}
@@ -75,13 +75,13 @@ export default function Login({ history }) {
               autoFocus
               style={{fontSize: '20px'}}
             />
+            <label style={{fontSize: '15px'}}>Contraseña *</label>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               name="contraseña"
-              label="Contraseña"
               values={contraseña}
               onChange={handleInputChange}
               type="password"

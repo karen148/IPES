@@ -13,12 +13,24 @@ export const startLogin = (email, password) =>{
             if (response.status === 200) {
                 localStorage.setItem('token', response.data.token)
                 localStorage.setItem('token-date', new Date().getTime() );
-                localStorage.setItem("id", response.data.id)
-                localStorage.setItem("rol", response.data.rol)
-                dispatch( login ({
-                    rol: response.data.rol,
-                    id: response.data.id
-                }))
+                localStorage.setItem('id', response.data.id)
+                let config = {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}`},
+                };
+                axios.get(process.env.REACT_APP_URL_API +'admins/getAdmin/'+response.data.id, config)
+                .then((response) => {
+                    console.log(response);
+                    let datos = response.data.admin;
+                    dispatch( login ({
+                        rol: datos.rol,
+                        id: datos.id,
+                        name: datos.nombre,
+                        img: datos.img
+                    }))
+                })
+                .catch ((e) => {
+                    console.log("ERROR!!!!!", e);
+                })
             }
         })
         .catch((e) => {
@@ -39,14 +51,27 @@ export const starChecking = () =>{
         .then((response) => {
             localStorage.setItem('token', response.data.token)
             localStorage.setItem('token-date', new Date().getTime() );
-            dispatch( login ({
-                rol: localStorage.getItem("rol"),
-                id: localStorage.getItem("id"),
-            }))
+            let config1 = {
+                headers: { Authorization: `Bearer ${localStorage.getItem("token")}`},
+            };
+            axios.get(process.env.REACT_APP_URL_API +'admins/getAdmin/'+localStorage.getItem('id'), config1)
+            .then((response) => {
+                console.log(response);
+                let datos = response.data.admin;
+                dispatch( login ({
+                    rol: datos.rol,
+                    id: datos.id,
+                    name: datos.nombre,
+                    img: datos.img
+                }))
+            })
+            .catch ((e) => {
+                console.log("ERROR!!!!!", e);
+            })
         })
         .catch((e) => {
             dispatch(checkingFinish ())
-            console.log('ERRORR'+e);
+            console.log('ERRORR',e);
         })
     }
 }
