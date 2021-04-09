@@ -194,12 +194,13 @@ const TablaPlazas = ({ datos, getPlaza}) => {
                 <div className="col-sm-12 text-center">
                   <div className="ps-block__left">
                     <img
-                      src={process.env.REACT_APP_URL_API+`uploads/retorna/PLAZA/${item.img}`}
+                      src={process.env.REACT_APP_URL_API+`uploads/retorna/PLAZA/${item.img ? item.img : item.logo}`}
                       alt=""
                       width="200px"
                       height="200px"
                     />
                   </div>
+                  <p>{item.img ? 'Imagen' : 'Logo'}</p>
                   <br></br>
                 </div>
                 <b>Funcionario: </b>
@@ -236,6 +237,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
         direccion1={plaza.direccion}
         email1={plaza.email}
         imagen={plaza.img}
+        logo1={plaza.logo}
         locali={plaza.localidad_nombre}
         funcio2={plaza.admin_id}
         cat1={plaza.categorias_nombres}

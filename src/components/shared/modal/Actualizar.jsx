@@ -21,6 +21,7 @@ const Actualizar = ({
   cat1,
   horarios1,
   telefonos1,
+  logo1
 }) => {
   const { funcionarios, categorias, localidades } = useSelector(
     (state) => state.plaza
@@ -130,7 +131,7 @@ const Actualizar = ({
       setDireccion(direccion1);
       setEmail(email1);
       setImg1(
-        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen}`
+        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen ? imagen : logo1}`
       );
       setLocal2(locali);
 
@@ -147,9 +148,10 @@ const Actualizar = ({
     cat1,
     horarios1,
     telefonos1,
+    logo1,
   ]);
 
-  console.log(local);
+  console.log(logo1);
   console.log(funcio2);
   console.log(locali);
 
@@ -206,7 +208,12 @@ const Actualizar = ({
     let horario = [];
     horario.push(
       horario_m1 + "-" + horario_m2,
-      horario_lm1 + "-" + horario_lm2
+      horario_lm1 + "-" + horario_lm2,
+      horario_mm1 + "-" + horario_mm2,
+      horario_jm1 + "-" + horario_jm2,
+      horario_vm1 + "-" + horario_vm2,
+      horario_sm1 + "-" + horario_sm2,
+      horario_dm1 + "-" + horario_dm2,
     );
     let tele = [];
     telefonos.map((item) => {
@@ -251,7 +258,7 @@ const Actualizar = ({
   const setImagen = async () => {
     const formData = new FormData();
     formData.append("imagen", img);
-    formData.append("plaza", "img");
+    formData.append("plaza", imglogo);
     console.log(img);
     let config1 = {
       method: "put",
@@ -668,7 +675,7 @@ const Actualizar = ({
                             type="time"
                             value={horario_dm1}
                             name="horario_dm1"
-                            onChange={(e) => setHorariosm1(e.target.value)}
+                            onChange={(e) => setHorariodm1(e.target.value)}
                           />
                         </div>
                         <div className="col-sm-6">
@@ -679,7 +686,7 @@ const Actualizar = ({
                             type="time"
                             value={horario_dm2}
                             name="horario_dm2"
-                            onChange={(e) => setHorariosm2(e.target.value)}
+                            onChange={(e) => setHorariodm2(e.target.value)}
                           />
                         </div>
                       </>
@@ -697,9 +704,9 @@ const Actualizar = ({
                             variant="outlined"
                             fullWidth
                             type="time"
-                            value={horario_dm1}
-                            name="horario_dm1"
-                            onChange={(e) => setHorariosm1(e.target.value)}
+                            value={horario_m1}
+                            name="horario_m1"
+                            onChange={(e) => setHorariom1(e.target.value)}
                           />
                         </div>
                         <div className="col-sm-6">
@@ -708,9 +715,9 @@ const Actualizar = ({
                             variant="outlined"
                             fullWidth
                             type="time"
-                            value={horario_dm2}
-                            name="horario_dm2"
-                            onChange={(e) => setHorariosm2(e.target.value)}
+                            value={horario_m2}
+                            name="horario_m2"
+                            onChange={(e) => setHorariom2(e.target.value)}
                           />
                         </div>
                       </>
