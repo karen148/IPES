@@ -7,24 +7,19 @@ import _Eliminar from './../../modal/Eliminar.jsx'
 import _Actualizar from './../../modal/Actualizar.jsx'
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { getCantidades, getPlaz } from "../../../../actions/plaza";
+import { getCantidades} from "../../../../actions/plaza";
 // import Tooltip from '@material-ui/core/Tooltip';
 
-const TablaPlazas = ({ datos, getPlaza}) => {
+const TablaPlazas = () => {
 
   const dispatch = useDispatch();
-  const { funcionarios, cantidades, plazas } = useSelector(state => state.plaza)
-  const [plaza, setPlaza] = React.useState([]);
+  const { funcionarios, cantidades } = useSelector(state => state.plaza)
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [idp, setIdp] = useState(0);
   const [idp1, setIdp1] = useState(0);
   const [idp2, setIdp2] = useState(0);
-
-  useEffect(() => {
-    dispatch( getPlaz());
-  }, [dispatch])
 
   useEffect(() => {
     dispatch( getCantidades());
@@ -44,7 +39,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
 
   const handleClose1 = () => {
     setOpen1(false);
-    getPlaza()
+    // getPlaza()
   };
 
   const handleClickOpen2 = () => {
@@ -53,7 +48,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
 
   const handleClose2 = () => {
     setOpen2(false);
-    getPlaza();
+    // getPlaza()
   };
 
   const Eliminar = () => {
@@ -76,110 +71,97 @@ const TablaPlazas = ({ datos, getPlaza}) => {
       })
   }
 
-  const getPla = async (idP) => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + `plazas/find/${idP}`, config)
-      .then((response) => {
-        let data = response.data.plaza;
-        setPlaza(data)
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
-
-  console.log(plaza);
-  console.log(plaza.localidad_nombre);
   console.log(idp);
-  const tableItems = datos.map((item, index) => {
-    if(item !== undefined){
-      if (item.activo === true) {
-        let data = [];
-        if (item.categorias !== null && item.categorias.length > 0) {
-          for (let i = 0; i <= item.categorias.length; i++) {
-            const element = item.categorias[i];
-            data.push({ categoria: element });
-          }
-        }
-        return (
-          <tr key={item.id}>
-            <td>{index + 1}</td>
-            <td>
-              <Button
-                color="secondary"
-                onClick={() => {
-                  handleClickOpen();
-                  setIdp(item.id);
-                }}
-              >
-                <b>{item.nombre}</b>
-              </Button>
-            </td>
-            <td>{item.localidad}</td>
-            <td>{cantidades.map(can => { return ( item.id === can.id && can.total)})}</td>
-            <td style={{ width: "180px" }}>
-              {data.map((item) => {
-                return (
-                  <Button size="small" color="primary">
-                    <b>{item.categoria}</b>
-                  </Button>
-                );
-              })}
-            </td>
-            <td>
-              {item.fecha === null ? (
-                <p>No hay fecha</p>
-              ) : (
-                item.fecha.slice(0, 10)
-              )}
-            </td>
-            <td>
-              {item.acciones.map((cat) => {
-                return (
-                  <TooltipE title={cat.name} key={cat.name}>
-                    <IconButton 
-                      color="default" 
-                      component="span" 
-                      key={cat.name} 
-                      onClick={cat.name === 'Editar' 
-                        ? ()=>{handleClickOpen2(); setIdp1(cat.id); getPla(cat.id)} 
-                        : ()=>{handleClickOpen1(); setIdp2(cat.id);}}
-                      >
-                      {cat.icon}
-                    </IconButton>
-                  </TooltipE>
-                );
-              })}
-            </td>
-          </tr>
-        );
-      }
-    }
-  });
-  console.log(datos);
+  // const tableItems = datos.map((item, index) => {
+  //   console.log(item.locatarios);
+  //   if(item !== undefined){
+  //     if (item.activo === true) {
+  //       let data = [];
+  //       if (item.categorias !== null && item.categorias.length > 0) {
+  //         for (let i = 0; i <= item.categorias.length; i++) {
+  //           const element = item.categorias[i];
+  //           data.push({ categoria: element });
+  //         }
+  //       }
+  //       return (
+  //         <tr key={item.id}>
+  //           <td>{index + 1}</td>
+  //           <td>
+  //             <Button
+  //               color="secondary"
+  //               onClick={() => {
+  //                 handleClickOpen();
+  //                 setIdp(item.id);
+  //               }}
+  //             >
+  //               <b>{item.nombre}</b>
+  //             </Button>
+  //           </td>
+  //           <td>{item.localidad}</td>
+  //           <td>{cantidades.map(can => { return ( item.id === can.id && can.total)})}</td>
+  //           <td style={{ width: "180px" }}>
+  //             {data.map((item) => {
+  //               return (
+  //                 <Button size="small" color="primary">
+  //                   <b>{item.categoria}</b>
+  //                 </Button>
+  //               );
+  //             })}
+  //           </td>
+  //           <td>
+  //             {item.fecha === null ? (
+  //               <p>No hay fecha</p>
+  //             ) : (
+  //               item.fecha.slice(0, 10)
+  //             )}
+  //           </td>
+  //           <td>
+  //             {item.acciones.map((cat) => {
+  //               return (
+  //                 <TooltipE title={cat.name} key={cat.name}>
+  //                   <IconButton 
+  //                     color="default" 
+  //                     component="span" 
+  //                     key={cat.name} 
+  //                     onClick={cat.name === 'Editar' 
+  //                       ? ()=>{handleClickOpen2(); setIdp1(cat.id);} 
+  //                       : ()=>{handleClickOpen1(); setIdp2(cat.id);}}
+  //                     >
+  //                     {cat.icon}
+  //                   </IconButton>
+  //                 </TooltipE>
+  //               );
+  //             })}
+  //           </td>
+  //         </tr>
+  //       );
+  //     }
+  //   }
+  // });
+
   return (
     <div className="table-responsive">
       <table
         className="table ps-table"
         style={{ textAlign: "center" }}
+        height="500px"
       >
         <thead>
           <tr>
             <th>ID</th>
-            <th>Nombre de la plaza</th>
+            <th>Nombre del local</th>
             <th>Localidad</th>
-            <th>Locatarios inscritos</th>
+            <th>Plaza de mercado</th>
+            <th>Estado</th>
             <th>Categorías</th>
-            <th>Fecha actualizada</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>{tableItems}</tbody>
+        <tbody>
+          {/* {tableItems} */}
+        </tbody>
       </table>
-      <Modal
+      {/* <Modal
         open={open}
         handleClose={handleClose}
         title={datos.map((item) => {
@@ -232,16 +214,8 @@ const TablaPlazas = ({ datos, getPlaza}) => {
         open={open2}
         handleClose={handleClose2}
         idPlaza={idp1}
-        nombre1={plaza.nombre}
-        direccion1={plaza.direccion}
-        email1={plaza.email}
-        imagen={plaza.img}
-        locali={plaza.localidad_nombre}
-        funcio2={plaza.admin_id}
-        cat1={plaza.categorias_nombres}
-        horarios1={plaza.horarios}
-        telefonos1={plaza. telefonos}
-      />
+      /> */}
+      
     </div>
   );
 };

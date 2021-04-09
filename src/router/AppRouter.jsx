@@ -9,23 +9,30 @@ import { starChecking } from './../actions/auth'
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import Login from './../pages/Login'
 import Tablero from './../pages/Tablero'
 import Perfil from './../pages/Perfil'
 import Plazas from './../pages/Plazas'
+import Locatarios from './../pages/Locatarios'
 
+import useStyles from './style'
 
 export const AppRouter = () => {
 
     const dispatch = useDispatch();
     const { checking, id } = useSelector(state => state.auth)
+    const classes = useStyles();
 
     useEffect(() => {
         dispatch( starChecking())
     }, [dispatch])
 
     if (checking) {
-        return(<h5>Por favor espere...</h5>)
+        return(<div className={classes.root}>
+                    <CircularProgress color="secondary" />
+                </div>)
     }
 
     return (
@@ -54,6 +61,12 @@ export const AppRouter = () => {
                         exact 
                         path="/plaza" 
                         component={Plazas} 
+                        isAuthenticated= {!!id}
+                    />
+                    <PrivateRoute 
+                        exact 
+                        path="/locatario" 
+                        component={Locatarios} 
                         isAuthenticated= {!!id}
                     />
                     <Redirect to ="/"/>

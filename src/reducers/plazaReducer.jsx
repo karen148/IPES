@@ -3,6 +3,7 @@ import {types} from './../types'
 const initialState = {
     funcionarios: [],
     plazas: [],
+    plazastrues: [],
     localidades:[],
     categorias:[],
     cantidades:[]
@@ -36,6 +37,19 @@ export const plazaReducer = ( state = initialState, action ) => {
                 ...state,
                 cantidades: [ ...action.cantidad ]
             }
+
+        case types.plazaDatos:
+            return {
+                ...state,
+                plazas: [ ...action.plaza ]
+            }
+
+        case types.plazaDatosTrue:
+            return {
+                ...state,
+                plazastrues: [ ...action.plazatrue ]
+            }    
+
         default:
             return state;
     }

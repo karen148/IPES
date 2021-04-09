@@ -17,7 +17,7 @@ const MenuSidebar = () => {
         },
         {
             text: 'Locatarios',
-            url: '/tablero',
+            url: '/locatario',
             icon: 'lnr lnr-store',
         },
         {

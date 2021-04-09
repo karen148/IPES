@@ -11,7 +11,7 @@ const HeaderDashboard = ({
                 <h3>{title}</h3>
                 <p>{description}</p>
             </div>
-            <div className="header__center">
+            {/* <div className="header__center">
                 <FormHeaderSearch />
             </div>
             <div className="header__right">
@@ -19,7 +19,7 @@ const HeaderDashboard = ({
                     <span>Ver tu tienda</span>
                     <i className="lnr lnr-enter"></i>
                 </a>
-            </div>
+            </div> */}
         </header>
     );
 };

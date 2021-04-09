@@ -5,18 +5,22 @@ import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import TablasPlazas from "./../../components/shared/tables/TablaPlazas";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
-import {getFuncionarios, getCategorias, getLocalidades, getCantidades } from './../../actions/plaza'
+import {getFuncionarios, getCategorias, getLocalidades} from './../../actions/plaza'
 
-import MenuItem from "@material-ui/core/MenuItem";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from '@material-ui/icons/Search';
 import EditIcon from "@material-ui/icons/Edit";
+import RefreshIcon from '@material-ui/icons/Refresh';
+
+
+import MenuItem from "@material-ui/core/MenuItem";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
+import NotesIcon from '@material-ui/icons/Notes';
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import Modal from "./../../components/shared/modal";
@@ -24,7 +28,7 @@ import theme from './../../theme';
 import TooltipE from './../../components/shared/tooltip';
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import { ListItemText } from "@material-ui/core";
+import { KeyboardReturnRounded } from "@material-ui/icons";
 
 const Plazas = () => {
   const classes = useStyles();
@@ -58,11 +62,7 @@ const Plazas = () => {
       horario_t1:'',
       horario_t2:'',
   })
-  
-  useEffect(() => {
-    dispatch( getCantidades());
-  }, [dispatch])
-  
+
   useEffect(() => {
     dispatch( getFuncionarios());
   }, [dispatch])
@@ -75,6 +75,7 @@ const Plazas = () => {
     dispatch( getLocalidades());
   }, [dispatch])
 
+  console.log(cantidades);
   const handleImg = (event) => {
     var reader = new FileReader();
      reader.readAsDataURL(event[0]);
@@ -200,33 +201,37 @@ const Plazas = () => {
       .then((response) => {
         console.log(response.data.plazas);
         let data = response.data.plazas;
-        let data1 = data.map((item) => ({
-          id: item.id,
-          usuario: item.admin_id,
-          localidad: item.localidad_nombre,
-          nombre: item.nombre,
-          direccion: item.direccion,
-          telefonos: item.telefonos,
-          email: item.email,
-          locatarios: 0,
-          categorias: item.categorias_nombres,
-          horarios: item.horarios,
-          activo: item.activo,
-          img: item.img,
-          fecha: item.updated_at === null ? item.created_at : item.updated_at,
-          acciones: [
-            {
-              name: "Editar",
-              icon: <EditIcon />,
-              id: item.id
-            },
-            {
-              name: "Eliminar",
-              icon: <DeleteIcon />,
-              id: item.id
-            },
-          ],
-        }));
+        let data1 = [] 
+        data.map((item) => {
+          if (item.activo === true) {
+              data1.push ({
+                  id: item.id,
+                  usuario: item.admin_id,
+                  localidad: item.localidad_nombre,
+                  nombre: item.nombre,
+                  direccion: item.direccion,
+                  telefonos: item.telefonos,
+                  email: item.email,
+                  categorias: item.categorias_nombres,
+                  horarios: item.horarios,
+                  activo: item.activo,
+                  img: item.img,
+                  fecha: item.updated_at === null ? item.created_at : item.updated_at,
+                  acciones: [
+                    {
+                      name: "Editar",
+                      icon: <EditIcon />,
+                      id: item.id
+                    },
+                    {
+                      name: "Eliminar",
+                      icon: <DeleteIcon />,
+                      id: item.id
+                    },
+                  ],
+              })
+          }
+        });
         setPlaza(data1);
         setPlaza1(data1);
       })
@@ -242,7 +247,7 @@ const Plazas = () => {
     console.log(currency1+' - '+currency2);
     let data = []
     let data1 = []
-    if (currency2 !==null && currency1 === null) {
+    if (currency2 !==null && currency1 ===null) {
       data = plaza1.filter(item => item.localidad === currency2)
     }else if (currency2 === null && currency1 !== null) {
       data = plaza1.map(item => {
@@ -252,8 +257,6 @@ const Plazas = () => {
             console.log(element);
             if (element === currency1) {
                return item;
-               console.log(element);
-               console.log(item);
             }
           }
         }
@@ -262,7 +265,7 @@ const Plazas = () => {
       console.log('hola');
       data = plaza1.map(item => {
         if(item.localidad === currency2) {
-          if (item.categorias !== null && item.categorias.length > 0) {
+          if (item.categorias !== ' ' && item.categorias.length > 0) {
             for (let i = 0; i < item.categorias.length; i++) {
               const element = item.categorias[i];
               console.log(element);
@@ -279,8 +282,8 @@ const Plazas = () => {
 
   const Restaurar = () =>{
     setPlaza1(plazas)
-    setCurrency1(null)
-    setCurrency2(null)
+    setCurrency1(undefined)
+    setCurrency2()
   }
 
   const Buscar = () => {
@@ -288,12 +291,12 @@ const Plazas = () => {
     data = plaza1.filter(item => item.nombre === nomplaza1)
     setPlaza1(data)
   }
-
+ console.log(currency1);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
         title="Plazas de mercado"
-        description="Información de los locatarios por plaza"
+        description="Información de las plazas"
       />
       <ThemeProvider theme={theme}>
       <section className="ps-items-listing">
@@ -315,6 +318,7 @@ const Plazas = () => {
                     onChange={handleChange1}
                     fullWidth
                     className={classes.margin}
+                    style={{marginRight:'20px'}}
                   >
                     {categorias.map((option) => (
                       <MenuItem key={option.id} value={option.label}>
@@ -331,6 +335,7 @@ const Plazas = () => {
                     value={currency2}
                     onChange={handleChange2}
                     fullWidth
+                    style={{marginRight:'20px'}}
                     className={classes.margin}
                   >
                     {localidades.map((option) => (
@@ -342,17 +347,17 @@ const Plazas = () => {
               </div>
             </div>
             <div className="ps-form__right">
-              <TooltipE title='Filtrar'>
-                <button className="ps-btn ps-btn--gray" onClick={Filtros}>
-                  <i style={{fontSize: '30px'}} className="lnr lnr-funnel"></i>
-                </button>
+              <TooltipE title='Filtrar'> 
+                <IconButton color="primary" component="span" onClick={Filtros}>
+                  <NotesIcon style={{fontSize: '35px', marginTop: '-5px', marginLeft:'-10px'}}/>
+                </IconButton>
               </TooltipE>
             </div>
             <div className="ps-form__right">
               <TooltipE title='Restaurar información'> 
-                <button className="ps-btn ps-btn--gray" onClick={Restaurar}>
-                  <i style={{fontSize: '30px'}} className="lnr lnr-undo"></i>
-                </button>
+                <IconButton color="secondary" component="span" onClick={Restaurar}>
+                  <RefreshIcon style={{fontSize: '35px', marginTop: '-5px'}}/>
+                </IconButton>
               </TooltipE>
             </div>
           </div>
@@ -410,6 +415,10 @@ const Plazas = () => {
                           <label>
                             Nombre de la plaza<sup>*</sup>
                           </label>
+                          <div className="col-sm-12 text-center">
+                            {plazas.map((option) =>{ return (option.nombre === nomplaza && <Alert severity="error">La plaza de mercado ya existe</Alert>)})}
+                            <br></br>
+                          </div>
                             <Autocomplete
                                 id="free-solo-demo"
                                 freeSolo
@@ -688,7 +697,6 @@ const Plazas = () => {
                       </div> : false
               } */}
               <div className="col-sm-12 text-center">
-                <br></br>
                 {alerta === true ? <Alert severity="success">Información enviada exitosamente</Alert> : false}
                 <br></br>
               </div>
@@ -696,7 +704,8 @@ const Plazas = () => {
                 <button className="ps-btn success" style={{marginBottom: '30px', marginTop: '15px'}} onClick={setRegistro}>
                     Registrar
                 </button>
-              </div> 
+                <br></br>
+              </div>
             </section>
           </Fragment>
         </Modal>

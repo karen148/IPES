@@ -6,10 +6,14 @@ export const types = {
     authStartStartTokenRenew: '[auth] Start token renew',
     authLogout: '[auth] Logout',
 
+    plazaDatosTrue: '[plaza] Obtener los datos de la plaza que son activos',
+    plazaDatos: '[plaza] Obtener los datos de la plaza',
     plazaCantidad:'[plaza] Obtener la cantidad de locatarios',
     plazaEliminar:'[plaza] Eliminar plaza',
     plazaEditar: '[plaza] Editar datos de la plaza',
     plazaLocalidades:'[plaza] Obtener localidades',
     plazaFuncionario: '[plaza] Obtener funcionarios',
-    plazaCategorias: '[plaza] Obtener categorias'
+    plazaCategorias: '[plaza] Obtener categorias',
+
+    locatariosDatos:'[locatario] Obtener datos de los locatarios'
 }
