@@ -91,9 +91,6 @@ const TablaPlazas = ({ datos, getPlaza}) => {
       });
   };
 
-  console.log(plaza);
-  console.log(plaza.localidad_nombre);
-  console.log(idp);
   const tableItems = datos.map((item, index) => {
     if(item !== undefined){
       if (item.activo === true) {
@@ -227,6 +224,8 @@ const TablaPlazas = ({ datos, getPlaza}) => {
         open={open1}
         handleClose={handleClose1}
         eliminar={Eliminar}
+        titulo3='Eliminar plaza'
+        titulo2='la plaza'
         titulo={datos.map(item => {return (item !== undefined && item.id === idp2 && item.nombre)})}
       />
       <_Actualizar

@@ -2,38 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-import Modal from "./index";
+import Modal from "./../index";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
 
+import { useForm } from "./../../../../hooks/useForm";
+
 const Actualizar = ({
   open,
   handleClose,
   idPlaza,
-  nombre1,
-  direccion1,
+  loc1,
+  ced1,
+  nom1,
+  ape1,
   email1,
-  imagen,
-  locali,
-  funcio2,
-  cat1,
-  horarios1,
   telefonos1,
-  logo1
+  plaza1,
+  categorias1,
+  horarios2,
+  imagen2,
+  logo2,
 }) => {
-  const { funcionarios, categorias, localidades } = useSelector(
-    (state) => state.plaza
-  );
+  const { plazastrues } = useSelector((state) => state.plaza);
+  const { locatarios } = useSelector((state) => state.locatario);
+  const { id } = useSelector((state) => state.auth);
 
-  const [alerta1, setAlerta1] = useState(false);
-  const [alerta, setAlerta] = useState(false);
-  const [nombre2, setNombre2] = useState("");
-  const [email2, setEmail] = useState("");
   const [horaSI, setHoraSI] = useState(false);
-  const [imglogo, setImgLogo] = useState('img');
-  const [direccion2, setDireccion] = useState("");
+  const [alerta1, setAlerta1] = useState(false);
+  const [imglogo, setImgLogo] = useState("img");
   const [horario_m1, setHorariom1] = useState("");
   const [horario_m2, setHorariom2] = useState("");
   const [horario_lm1, setHorariolm1] = useState("");
@@ -48,22 +47,30 @@ const Actualizar = ({
   const [horario_sm2, setHorariosm2] = useState("");
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
-  const [horario, setHorario] = useState([]);
-  const [plaza1, setPlaza1] = useState([]);
-  const [local, setLocal2] = useState("");
-  const [cat, setCat] = useState([]);
-  const [funcio, setFunci2] = useState([]);
-  const [telefonos2, setTele2] = useState([]);
-  const [telefonos, setTele] = useState([{ telefono: " " }]);
+
+  const [cedula, setCedula] = useState('');
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
+  const [telefonos, setTele] = useState([{ telefono: " " }]);
+  const [alerta, setAlerta] = useState(false);
+  const [plaza, setPlaza] = useState([]);
+  const [cat, setCat] = useState([]);
+  const [infoLocatarios, handleInputChange, setValues] = useForm({
+    local: '',
+    nombre: '',
+    apellido: '',
+    actividad: '',
+    email: '',
+  });
+
+  const { local, apellido, nombre, actividad, email } = infoLocatarios;
 
   useEffect(() => {
-    if (nombre1) {
+    if (ced1) {
       let semana = [];
-      if (horarios1) {
-        for (let h = 0; h < horarios1.length; h++) {
-          semana.push(horarios1[h].split("-", 2));
+      if (horarios2) {
+        for (let h = 0; h < horarios2.length; h++) {
+          semana.push(horarios2[h].split("-", 2));
         }
       }
 
@@ -106,91 +113,49 @@ const Actualizar = ({
         }
       }
 
-      let categorias = [];
-      if (cat1) {
-        for (let h = 0; h < cat1.length; h++) {
-          categorias.push({ id: h, label: cat1[h] });
-        }
-      }
-      console.log(categorias);
-      let admin = "";
-      if (funcio2) {
-        admin = funcionarios.filter((fu) => fu.id === funcio2);
-        setFunci2(admin[0].label);
-      } else {
-        setFunci2("");
-      }
+      setCedula(ced1);
 
-      // let nombre = ''
-      // if(funcio2.label){
-      //   nombre = funcio2.label
-      // }
+      setValues({ infoLocatarios, local: loc1 });
 
-      console.log(telefonos);
-      setNombre2(nombre1);
-      setDireccion(direccion1);
-      setEmail(email1);
-      setImg1(
-        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen ? imagen : logo1}`
-      );
-      setLocal2(locali);
+      setValues({ infoLocatarios, nombre: nom1 });
+
+      setValues({ infoLocatarios, apellido: ape1 });
+
+      // setValues({infoLocatarios, actividad: '-'})
+
+      setValues({ infoLocatarios, email: email1 });
 
       setTele(telefonos);
-      setCat(categorias);
+
+      setPlaza(
+        plazastrues.length !== 0
+          ? plazastrues.filter((item) => item.id === plaza1)[0]
+          : ""
+      );
+
+      setCat(categorias1);
+
+      setImg1(
+        process.env.REACT_APP_URL_API +
+          `uploads/retorna/LOCATARIO/${imagen2 ? imagen2 : logo2}`
+      );
     }
   }, [
-    nombre1,
-    direccion1,
+    loc1,
+    ced1,
+    nom1,
+    ape1,
     email1,
-    imagen,
-    locali,
-    funcio2,
-    cat1,
-    horarios1,
     telefonos1,
-    logo1,
+    plaza1,
+    categorias1,
+    horarios2,
+    imagen2,
+    logo2,
   ]);
 
-  console.log(logo1);
-  console.log(funcio2);
-  console.log(locali);
-
-  const HoraSi = () => {
-    setHoraSI(true);
-  };
-
-  const HoraNO = () => {
-    setHoraSI(false);
-  };
-
-  const Logo = () => {
-    setImgLogo('logo');
-  };
-
-  const Img = () => {
-    setImgLogo('img');
-  };
-
-  //agregar un telefono
-  const handleAddTel = () => {
-    setTele([...telefonos, { telefono: "" }]);
-  };
-
-  //evento para modificar input
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...telefonos];
-    list[index][name] = value;
-    setTele(list);
-  };
-
-  // evento para remover un hijo
-  const handleRemoveClick = (index) => {
-    const list = [...telefonos];
-    list.splice(index, 1);
-    setTele(list);
-  };
-
+  console.log(ced1, loc1, nom1, ape1);
+  console.log(plaza);
   const handleImg = (event) => {
     var reader = new FileReader();
     reader.readAsDataURL(event[0]);
@@ -204,7 +169,44 @@ const Actualizar = ({
     };
   };
 
-  const setActulizar = async () => {
+  const HoraSi = () => {
+    setHoraSI(true);
+  };
+
+  const HoraNO = () => {
+    setHoraSI(false);
+  };
+
+  const Logo = () => {
+    setImgLogo("logo");
+  };
+
+  const Img = () => {
+    setImgLogo("img");
+  };
+
+  //agregar un telefono
+  const handleAddTel = () => {
+    setTele([...telefonos, { telefono: "" }]);
+  };
+
+  //evento para modificar input
+  const handleInputChange1 = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...telefonos];
+    list[index][name] = value;
+    setTele(list);
+  };
+
+  // evento para remover un hijo
+  const handleRemoveClick = (index) => {
+    const list = [...telefonos];
+    list.splice(index, 1);
+    setTele(list);
+  };
+
+
+  const setActualizar = async () => {
     let horario = [];
     horario.push(
       horario_m1 + "-" + horario_m2,
@@ -213,41 +215,37 @@ const Actualizar = ({
       horario_jm1 + "-" + horario_jm2,
       horario_vm1 + "-" + horario_vm2,
       horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2,
+      horario_dm1 + "-" + horario_dm2
     );
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
-    });
-    let cate = [];
-    cat.map((item) => {
-      Array.prototype.push.apply(cate, [item.label]);
     });
 
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
 
-    console.log(funcio);
     axios
       .put(
-        process.env.REACT_APP_URL_API + `plazas/update/${idPlaza}`,
+        process.env.REACT_APP_URL_API + "locatarios/update/" + idPlaza,
         {
-          admin_id: funcio.id,
-          localidad_nombre: local,
-          categorias_nombres: cate,
-          nombre: nombre2,
-          direccion: direccion2,
-          telefonos: tele,
-          email: email2,
+          admin_id: id,
+          plaza_id: plaza.id,
+          nombre_local: local,
+          categorias: cat,
+          nombre: nombre,
+          apellido: apellido,
+          cedula: cedula,
           horarios: horario,
+          telefonos: tele,
+          email: email,
         },
         config
       )
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
-          setAlerta(true);
+            setAlerta(true);
         }
       })
       .catch((e) => {
@@ -258,11 +256,11 @@ const Actualizar = ({
   const setImagen = async () => {
     const formData = new FormData();
     formData.append("imagen", img);
-    formData.append("plaza", imglogo);
+    formData.append("locatario", imglogo);
     console.log(img);
     let config1 = {
       method: "put",
-      url: process.env.REACT_APP_URL_API + `uploads/PLAZA/${idPlaza}`,
+      url: process.env.REACT_APP_URL_API + `uploads/LOCATARIO/${idPlaza}`,
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       data: formData,
     };
@@ -276,12 +274,12 @@ const Actualizar = ({
         console.log("ERROR", e);
       });
   };
-  console.log(nombre2);
+
   return (
     <Modal
       open={open}
       handleClose={handleClose}
-      title="Actualizar plaza"
+      title="Actualizar locatario"
       tamaño="xl"
     >
       <section className="ps-new-item">
@@ -290,99 +288,117 @@ const Actualizar = ({
             <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
               <figure className="ps-block--form-box">
                 <figcaption style={{ color: "white" }}>
-                  Datos de la plaza {nombre1}
+                  Datos del locatario
                 </figcaption>
                 <div className="ps-block__content">
                   <div className="form-group">
                     <label>
-                      Nombre de la plaza<sup>*</sup>
+                      Nombre del establecimiento<sup>*</sup>
                     </label>
                     <TextField
                       margin="normal"
                       variant="outlined"
                       type="text"
-                      placeholder="Por favor ingrese el nombre de la plaza..."
-                      name="nombre"
+                      placeholder="Por favor ingrese el nombre del establecimiento"
+                      name="local"
                       fullWidth
-                      value={nombre2}
-                      onChange={(e) => setNombre2(e.target.value)}
+                      value={local}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="form-group">
                     <label>
-                      Dirección<sup>*</sup>
+                      Cédula<sup>*</sup>
                     </label>
-                    <TextField
-                      margin="normal"
-                      variant="outlined"
-                      type="text"
-                      placeholder="Por favor ingrese la dirección de la plaza..."
-                      name="direccion"
-                      fullWidth
-                      value={direccion2}
-                      onChange={(e) => setDireccion(e.target.value)}
+                    {/* <div className="col-sm-12 text-center">
+                      {locatarios.map((option) => {
+                        return (
+                          option.cedula === cedula && (
+                            <Alert severity="error">
+                              El locatario ya existe
+                            </Alert>
+                          )
+                        );
+                      })}
+                      <br></br>
+                    </div> */}
+                    <Autocomplete
+                      id="free-solo-demo"
+                      freeSolo
+                      options={locatarios.map((option) => option.cedula)}
+                      inputValue={cedula}
+                      onInputChange={(event, newInputValue) => {
+                        setCedula(newInputValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          margin="normal"
+                          variant="outlined"
+                          type="text"
+                          placeholder="Por favor ingrese el número del documento..."
+                        />
+                      )}
                     />
                   </div>
                   <div className="form-group row">
                     <div className="col-sm-6">
                       <label>
-                        Localidad<sup>*</sup>
+                        Nombres<sup>*</sup>
                       </label>
-                      <Autocomplete
-                        id="free-solo-demo"
-                        freeSolo
-                        options={localidades.map((option) => option.label)}
-                        inputValue={local}
-                        onInputChange={(event, newInputValue) => {
-                          setLocal2(newInputValue);
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            type="text"
-                            margin="normal"
-                            variant="outlined"
-                          />
-                        )}
+                      <TextField
+                        margin="normal"
+                        variant="outlined"
+                        type="text"
+                        name="nombre"
+                        fullWidth
+                        value={nombre}
+                        onChange={handleInputChange}
                       />
                     </div>
                     <div className="col-sm-6">
                       <label>
-                        Funcionarios<sup>*</sup>
+                        Apellidos<sup>*</sup>
                       </label>
-                      <Autocomplete
-                        id="free-solo-demo"
-                        freeSolo
-                        options={funcionarios}
-                        getOptionLabel={(option) => option.label}
-                        value={funcio}
-                        onChange={(event, newValue) => {
-                          setFunci2(newValue);
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            type="text"
-                            margin="normal"
-                            variant="outlined"
-                          />
-                        )}
+                      <TextField
+                        margin="normal"
+                        variant="outlined"
+                        type="text"
+                        name="apellido"
+                        fullWidth
+                        value={apellido}
+                        onChange={handleInputChange}
                       />
-                      {/* <Autocomplete
-                                  id="free-solo-demo"
-                                  freeSolo
-                                  options={localidades.map((option) => option.label)}
-                                  inputValue={local}
-                                  onInputChange={(event, newInputValue) => {
-                                  setLocal2(newInputValue);
-                                  }}
-                                  renderInput={(params) => (
-                                  <TextField {...params} 
-                                      margin="normal" 
-                                      variant="outlined" 
-                                       />
-                                  )}
-                              /> */}
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-6">
+                      <label>
+                        Correo electrónico<sup>*</sup>
+                      </label>
+                      <TextField
+                        margin="normal"
+                        variant="outlined"
+                        type="text"
+                        name="email"
+                        fullWidth
+                        value={email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="col-sm-6">
+                      <label>
+                        Actividad económica<sup>*</sup>
+                      </label>
+                      <TextField
+                        margin="normal"
+                        variant="outlined"
+                        type="text"
+                        name="actividad"
+                        fullWidth
+                        value={actividad}
+                        onChange={handleInputChange}
+                      />
                     </div>
                   </div>
                   <div className="form-group row">
@@ -400,7 +416,7 @@ const Actualizar = ({
                               placeholder="Por favor ingrese el teléfono "
                               value={x.telefono}
                               name="telefono"
-                              onChange={(e) => handleInputChange(e, i)}
+                              onChange={(e) => handleInputChange1(e, i)}
                               fullWidth
                             />
                           </div>
@@ -437,48 +453,83 @@ const Actualizar = ({
                       );
                     })}
                   </div>
-                  <div className="form-group">
-                    <label>
-                      Correo electrónico<sup>*</sup>
-                    </label>
-                    <TextField
-                      margin="normal"
-                      variant="outlined"
-                      type="text"
-                      fullWidth
-                      placeholder="Por favor ingrese el correo electrónico de la plaza..."
-                      value={email2}
-                      name="email"
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
                 </div>
               </figure>
               <figure className="ps-block--form-box">
-                <figcaption style={{ color: "white" }}>Categorías</figcaption>
+                <figcaption style={{ color: "white" }}>
+                  Datos de la Plaza de mercado
+                </figcaption>
                 <div className="ps-block__content">
-                  <div className="form-group">
-                    <label>
-                      Categoría<sup>*</sup>
-                    </label>
-                    <Autocomplete
-                      multiple
-                      limitTags={2}
-                      id="multiple-limit-tags"
-                      value={cat}
-                      onChange={(event, newValue) => {
-                        setCat(newValue);
-                      }}
-                      options={categorias}
-                      getOptionLabel={(option) => option.label}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          placeholder="Categorías de las plazas"
-                        />
-                      )}
-                    />
+                  <div className="form-group row">
+                    <div className="col-sm-6">
+                      <label>
+                        Plaza de mercado<sup>*</sup>
+                      </label>
+                      <Autocomplete
+                        id="free-solo-demo"
+                        freeSolo
+                        options={plazastrues}
+                        getOptionLabel={(option) => option.nombre}
+                        value={plaza}
+                        onChange={(event, newValue) => {
+                          setPlaza(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="text"
+                            margin="normal"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="col-sm-6">
+                      <label>Localidad</label>
+                      <TextField
+                        margin="normal"
+                        variant="outlined"
+                        type="text"
+                        name="localidad1"
+                        fullWidth
+                        disabled
+                        value={
+                          plaza?.length !== 0
+                            ? plazastrues.filter(
+                                (item) => item.nombre === plaza?.nombre
+                              )[0]?.localidad_nombre
+                            : ""
+                        }
+                      />
+                    </div>
+                    <div className="col-sm-12">
+                      <label>
+                        Categoría<sup>*</sup>
+                      </label>
+                      <Autocomplete
+                        multiple
+                        limitTags={2}
+                        id="multiple-limit-tags"
+                        value={cat}
+                        onChange={(event, newValue) => {
+                          setCat(newValue);
+                        }}
+                        options={
+                          plaza?.length !== 0
+                            ? plazastrues.filter(
+                                (item) => item.nombre === plaza?.nombre
+                              )[0]?.categorias_nombres
+                            : "Vacio"
+                        }
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            placeholder="Categorías de las plazas"
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
               </figure>
@@ -750,13 +801,12 @@ const Actualizar = ({
                         Logo
                       </Button>
                     </div>
-                    {imglogo ==='img' ? (
+                    {imglogo === "img" ? (
                       <>
                         <label>
                           <br></br>
-                          Por favor verifique que la imagen tenga los
-                          siguientes formatos: 'png', 'jpg', 'JPG', 'jpeg',
-                          'gif'
+                          Por favor verifique que la imagen tenga los siguientes
+                          formatos: 'png', 'jpg', 'JPG', 'jpeg', 'gif'
                         </label>
                         <div className="form-group--nest row">
                           <div className="col-sm-12">
@@ -863,31 +913,34 @@ const Actualizar = ({
           </div>
         </div>
         {/* {plaza.map(item => {
-                  return( item.nombre === nomplaza 
-                          ? setEstado(false) 
-                          : setEstado(true)
-                    )
-                })}
-                {estado === true ? <div className="col-sm-12 text-center">
-                          <button className="ps-btn success" style={{marginBottom: '30px'}} onClick={setRegistro}>
-                              Registrar
-                          </button>
-                        </div> : false
-                } */}
-        {alerta === true ? (
-          <Alert severity="success">Información enviada exitosamente</Alert>
-        ) : (
-          false
-        )}
-
+                return( item.nombre === nomplaza 
+                        ? setEstado(false) 
+                        : setEstado(true)
+                  )
+              })}
+              {estado === true ? <div className="col-sm-12 text-center">
+                        <button className="ps-btn success" style={{marginBottom: '30px'}} onClick={setRegistro}>
+                            Registrar
+                        </button>
+                      </div> : false
+              } */}
+        <div className="col-sm-12 text-center">
+          {alerta === true ? (
+            <Alert severity="success">Información enviada exitosamente</Alert>
+          ) : (
+            false
+          )}
+          <br></br>
+        </div>
         <div className="col-sm-12 text-center">
           <button
             className="ps-btn success"
-            style={{ marginBottom: "30px" }}
-            onClick={setActulizar}
+            style={{ marginBottom: "30px", marginTop: "15px" }}
+            onClick={setActualizar}
           >
-            Actualizar datos de la plaza
+            Actualizar información
           </button>
+          <br></br>
         </div>
       </section>
     </Modal>

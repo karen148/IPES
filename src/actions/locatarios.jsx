@@ -18,11 +18,18 @@ export const getLocatario = () => {
           usuario: item.admin_id,
           plaza: item.plaza_id,
           nombre: item.nombre,
+          apellido: item.apellido,
           categorias: item.categorias,
           horarios: item.horarios,
           activo: item.activo,
           img: item.img,
+          logo: item.logo,
+          local: item.nombre_local,
+          cedula: item.cedula,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
+          email: item.email,
+          telefonos: item.telefonos,
+          activo: item.activo ? 'Activo' : 'Inactivo',
           acciones: [
             {
               name: "Editar",

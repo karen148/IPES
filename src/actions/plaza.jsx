@@ -15,7 +15,7 @@ export const getTrue = () => {
       let plazatrues = [] 
       data.map((item) => {
         if (item.activo === true) {
-          plazatrues.push ({ item })
+          plazatrues.push ( item )
         }
       });
       console.log(plazatrues);

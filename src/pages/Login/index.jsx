@@ -13,8 +13,6 @@ import Grid from "@material-ui/core/Grid";
 import PersonIcon from "@material-ui/icons/Person";
 import Typography from "@material-ui/core/Typography";
 
-import {ThemeProvider} from '@material-ui/core/styles';
-import theme from './../../theme'
 import useStyles from "./style";
 
 // function Copyright() {
@@ -50,7 +48,6 @@ export default function Login({ history }) {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <ThemeProvider theme={theme}>
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
@@ -104,7 +101,7 @@ export default function Login({ history }) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-pass" variant="body2" style={{fontSize: '14px'}} color='secondary'>
+                <Link href="/contraseña" variant="body2" style={{fontSize: '14px'}} color='secondary'>
                   Olvidó contraseña?
                 </Link>
               </Grid>
@@ -120,7 +117,6 @@ export default function Login({ history }) {
           </form>
         </div>
       </Grid>
-      </ThemeProvider>
     </Grid>
   );
 }

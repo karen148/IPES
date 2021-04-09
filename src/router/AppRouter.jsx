@@ -16,6 +16,7 @@ import Tablero from './../pages/Tablero'
 import Perfil from './../pages/Perfil'
 import Plazas from './../pages/Plazas'
 import Locatarios from './../pages/Locatarios'
+import ForgotPass from './../pages/ForgotPass'
 
 import useStyles from './style'
 
@@ -43,6 +44,12 @@ export const AppRouter = () => {
                         exact 
                         path="/login" 
                         component={Login} 
+                        isAuthenticated= {!!id}
+                    />
+                    <PublicRoute 
+                        exact 
+                        path="/contraseña" 
+                        component={ForgotPass} 
                         isAuthenticated= {!!id}
                     />
                     <PrivateRoute 
