@@ -13,9 +13,9 @@ export const getTrue = () => {
       console.log(response.data.plazas);
       let data = response.data.plazas;
       let plazatrues = [] 
-      plazatrues = data.map((item) => {
+      data.map((item) => {
         if (item.activo === true) {
-          return( item )
+          plazatrues.push( item )
         }
       });
       console.log(plazatrues);

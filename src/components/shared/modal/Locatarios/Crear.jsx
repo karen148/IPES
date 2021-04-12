@@ -365,7 +365,7 @@ const Crear = ({ open, handleClose }) => {
                         id="free-solo-demo"
                         freeSolo
                         options={plazastrues}
-                        getOptionLabel={(option) => option.nombre}
+                        getOptionLabel={(option) => option?.nombre}
                         value={plaza}
                         onChange={(event, newValue) => {
                           setPlaza(newValue);
@@ -392,7 +392,7 @@ const Crear = ({ open, handleClose }) => {
                         value={
                           plaza.length !== 0
                             ? plazastrues.filter(
-                                (item) => item.nombre === plaza.nombre
+                                (item) => item?.nombre === plaza.nombre
                               )[0].localidad_nombre
                             : ""
                         }
@@ -413,7 +413,7 @@ const Crear = ({ open, handleClose }) => {
                         options={
                           plaza.length !== 0
                             ? plazastrues.filter(
-                                (item) => item.nombre === plaza.nombre
+                                (item) => item?.nombre === plaza.nombre
                               )[0].categorias_nombres
                             : "Vacio"
                         }

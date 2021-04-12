@@ -40,8 +40,8 @@ const Plazas = () => {
     (state) => state.plaza
   );
 
-  const [currency1, setCurrency1] = React.useState(null);
-  const [currency2, setCurrency2] = React.useState(null);
+  const [currency1, setCurrency1] = React.useState('');
+  const [currency2, setCurrency2] = React.useState('');
 
   const [plazas, setPlaza] = useState([]);
   const [plaza1, setPlaza1] = useState(plazas);
@@ -297,11 +297,11 @@ const Plazas = () => {
     console.log(currency1 + " - " + currency2);
     let data = [];
     let data1 = [];
-    if (currency2 !== null && currency1 === null) {
+    if (currency2 !== '' && currency1 === '') {
       data = plaza1.filter((item) => item.localidad === currency2);
-    } else if (currency2 === null && currency1 !== null) {
+    } else if (currency2 === '' && currency1 !== '') {
       data = plaza1.map((item) => {
-        if (item.categorias !== null && item.categorias.length > 0) {
+        if (item.categorias !== '' && item.categorias.length > 0) {
           for (let i = 0; i < item.categorias.length; i++) {
             const element = item.categorias[i];
             console.log(element);
@@ -332,8 +332,8 @@ const Plazas = () => {
 
   const Restaurar = () => {
     setPlaza1(plazas);
-    setCurrency1(null);
-    setCurrency2(null);
+    setCurrency1('');
+    setCurrency2('');
   };
 
   const Buscar = () => {
