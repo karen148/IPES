@@ -1,13 +1,11 @@
-import { StarRateTwoTone } from "@material-ui/icons";
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
-import Alert from '@material-ui/lab/Alert';
 import useStyles from './styles.js'
 import { useSelector } from "react-redux";
 
 const FormAccountSettings = () => {
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const { id, rol} = useSelector(state => state.auth)
 
@@ -164,7 +162,7 @@ const FormAccountSettings = () => {
 
   const showPass1 = () =>{
     var cambio = document.getElementById("pass1");
-		if(cambio.type == "password"){
+		if(cambio.type === "password"){
 			cambio.type = "text";
       setOjo1('visibility')
 		}else{
@@ -175,7 +173,7 @@ const FormAccountSettings = () => {
 
   const showPass2 = () =>{
     var cambio = document.getElementById("pass2");
-		if(cambio.type == "password"){
+		if(cambio.type === "password"){
 			cambio.type = "text";
       setOjo2('visibility')
 		}else{
@@ -362,7 +360,7 @@ const FormAccountSettings = () => {
                     </button>
                 </div>
             )}
-            {state.contraseña != state.confirmar_contraseña && (
+            {state.contraseña !== state.confirmar_contraseña && (
                 <div className="ps-form text-center">
                     <h5 style={{marginBottom: '25px'}}>Por favor verifique que este bien escrita la contraseña</h5>
                 </div>

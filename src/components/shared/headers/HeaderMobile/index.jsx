@@ -17,12 +17,12 @@ const HeaderMobile = () => {
                 <img src="" alt="" />
             </div>
             <div className="header__center">
-                <a className="ps-logo" href="#">
+                <a className="ps-logo" href="/">
                     <img src="/img/logo.png" alt="" />
                 </a>
             </div>
             <div className="header__right">
-                <a className="header__site-link" href="#">
+                <a className="header__site-link" href="/">
                     <i className="lnr lnr-exit"></i>
                 </a>
             </div>

@@ -31,7 +31,6 @@ import theme from "./../../theme";
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import { KeyboardReturnRounded } from "@material-ui/icons";
 
 const Plazas = () => {
   const classes = useStyles();
@@ -333,8 +332,8 @@ const Plazas = () => {
 
   const Restaurar = () => {
     setPlaza1(plazas);
-    setCurrency1(undefined);
-    setCurrency2();
+    setCurrency1(null);
+    setCurrency2(null);
   };
 
   const Buscar = () => {

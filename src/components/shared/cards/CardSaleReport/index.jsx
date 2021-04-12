@@ -89,7 +89,7 @@ const CardSaleReport = () => {
                         <p>Artículos que generan ventas ($)</p>
                     </div>
                     <div className="col-md-4">
-                        <a href="#">
+                        <a href="/">
                                 Reporte de exportacion
                             <i className="lnr lnr-cloud-download ml-2"></i>
                         </a>

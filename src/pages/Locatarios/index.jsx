@@ -48,9 +48,9 @@ const Locatarios = () => {
   const { plazastrues, localidades } = useSelector((state) => state.plaza);
   const { locatarios } = useSelector((state) => state.locatario);
 
-  const [currency1, setCurrency1] = React.useState(null);
-  const [currency2, setCurrency2] = React.useState(null);
-  const [currency3, setCurrency3] = React.useState(null);
+  const [currency1, setCurrency1] = React.useState('');
+  const [currency2, setCurrency2] = React.useState('');
+  const [currency3, setCurrency3] = React.useState('');
 
   const [alerta, setAlerta] = useState(false);
   const [locatario1, setLocatarios1] = useState([]);
@@ -83,7 +83,7 @@ const Locatarios = () => {
 
   const handleClose = () => {
     setOpen(false);
-    getPlaz();
+    getLocatarioss();
     setAlerta(false);
   };
 
@@ -151,16 +151,16 @@ const Locatarios = () => {
   const Filtros = () => {
     let data2 = [];
 
-    if (currency1 !== null && currency2 === null && currency3 === null) {
+    if (currency1 !== '' && currency2 === '' && currency3 === '') {
       data2 = locatario1.filter((item) => item.plaza === currency1);
-    } else if (currency1 === null && currency2 !== null && currency3 === null) {
+      console.log(data2);
+    } else if (currency1 === '' && currency2 !== '' && currency3 === '') {
       data2 = locatario1.filter(
         (loc) =>
           loc.plaza ===
-          plazastrues.filter((item) => item.localidad_nombre === currency2)[0]
-            ?.id
+          plazastrues.filter((item) => item?.localidad_nombre === currency2)[0]?.id
       );
-    }else if (currency1 === null && currency2 === null && currency3 !== null) {
+    }else if (currency1 === '' && currency2 === '' && currency3 !== '') {
       data2 = locatario1.filter(item => item.activo === currency3)
     }
     // else {
@@ -181,12 +181,12 @@ const Locatarios = () => {
     // }
     setLocatarios1(data2);
   };
-
+  console.log(currency1);
   const RestaurarLista = () => {
     setLocatarios1(locatario2);
-    setCurrency1(null);
-    setCurrency2(null);
-    setCurrency3(null);
+    setCurrency1('');
+    setCurrency2('');
+    setCurrency3('');
   };
 
   console.log(locatario1);
@@ -226,8 +226,9 @@ const Locatarios = () => {
                   style={{ marginRight: "20px" }}
                 >
                   {plazastrues.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.nombre}
+                    option &&
+                    <MenuItem key={option?.id} value={option?.id}>
+                      {option?.nombre}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -333,7 +334,7 @@ const Locatarios = () => {
           {/* <Pagination /> */}
         </div>
       </section>
-      <Crear open={open} handleClose={handleClose} />
+      <Crear key="2015" open={open} handleClose={handleClose} />
     </ContainerDashboard>
   );
 };

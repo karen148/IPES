@@ -33,6 +33,10 @@ const Actualizar = ({
   const [horaSI, setHoraSI] = useState(false);
   const [alerta1, setAlerta1] = useState(false);
   const [imglogo, setImgLogo] = useState("img");
+  const [nombre2, setNombre2] = useState("");
+  const [cedula3, setCedula3] = useState("");
+  const [apellido2, setApellido2] = useState("");
+  const [local2, setLocal2] = useState("");
   const [horario_m1, setHorariom1] = useState("");
   const [horario_m2, setHorariom2] = useState("");
   const [horario_lm1, setHorariolm1] = useState("");
@@ -48,7 +52,7 @@ const Actualizar = ({
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
 
-  const [cedula, setCedula] = useState('');
+  
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
   const [telefonos, setTele] = useState([{ telefono: " " }]);
@@ -56,14 +60,10 @@ const Actualizar = ({
   const [plaza, setPlaza] = useState([]);
   const [cat, setCat] = useState([]);
   const [infoLocatarios, handleInputChange, setValues] = useForm({
-    local: '',
-    nombre: '',
-    apellido: '',
-    actividad: '',
     email: '',
   });
 
-  const { local, apellido, nombre, actividad, email } = infoLocatarios;
+  const { email } = infoLocatarios;
 
   useEffect(() => {
     if (ced1) {
@@ -73,12 +73,24 @@ const Actualizar = ({
           semana.push(horarios2[h].split("-", 2));
         }
       }
+      setCedula3(ced1);
+
+      setLocal2(loc1);
+
+      setNombre2(nom1);
+
+      setApellido2(ape1);
+
+      // setValues({infoLocatarios, actividad: '-'})
+
+      setValues({ infoLocatarios, email: email1 });
 
       if (semana.length) {
         setHorariom1(semana[0][0]);
         setHorariom2(semana[0][1]);
         setHorariolm1(semana[1][0]);
         setHorariolm2(semana[1][1]);
+        if(semana.length > 2){
         setHorariomm1(semana[2][0]);
         setHorariomm2(semana[2][1]);
         setHorariojm1(semana[3][0]);
@@ -89,6 +101,7 @@ const Actualizar = ({
         setHorariosm2(semana[5][1]);
         setHorariodm1(semana[6][0]);
         setHorariodm2(semana[6][1]);
+      }
       } else {
         setHorariom1("");
         setHorariom2("");
@@ -113,23 +126,12 @@ const Actualizar = ({
         }
       }
 
-      setCedula(ced1);
-
-      setValues({ infoLocatarios, local: loc1 });
-
-      setValues({ infoLocatarios, nombre: nom1 });
-
-      setValues({ infoLocatarios, apellido: ape1 });
-
-      // setValues({infoLocatarios, actividad: '-'})
-
-      setValues({ infoLocatarios, email: email1 });
 
       setTele(telefonos);
 
       setPlaza(
         plazastrues.length !== 0
-          ? plazastrues.filter((item) => item.id === plaza1)[0]
+          ? plazastrues.filter((item) => item?.id === plaza1)[0]
           : ""
       );
 
@@ -154,7 +156,7 @@ const Actualizar = ({
     logo2,
   ]);
 
-  console.log(ced1, loc1, nom1, ape1);
+  console.log(cedula3);
   console.log(plaza);
   const handleImg = (event) => {
     var reader = new FileReader();
@@ -232,11 +234,11 @@ const Actualizar = ({
         {
           admin_id: id,
           plaza_id: plaza.id,
-          nombre_local: local,
+          nombre_local: local2,
           categorias: cat,
-          nombre: nombre,
-          apellido: apellido,
-          cedula: cedula,
+          nombre: nombre2,
+          apellido: apellido2,
+          cedula: cedula3,
           horarios: horario,
           telefonos: tele,
           email: email,
@@ -302,8 +304,8 @@ const Actualizar = ({
                       placeholder="Por favor ingrese el nombre del establecimiento"
                       name="local"
                       fullWidth
-                      value={local}
-                      onChange={handleInputChange}
+                      value={local2}
+                      onChange={(e) => setLocal2(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
@@ -326,9 +328,9 @@ const Actualizar = ({
                       id="free-solo-demo"
                       freeSolo
                       options={locatarios.map((option) => option.cedula)}
-                      inputValue={cedula}
+                      inputValue={cedula3}
                       onInputChange={(event, newInputValue) => {
-                        setCedula(newInputValue);
+                        setCedula3(newInputValue);
                       }}
                       renderInput={(params) => (
                         <TextField
@@ -352,8 +354,8 @@ const Actualizar = ({
                         type="text"
                         name="nombre"
                         fullWidth
-                        value={nombre}
-                        onChange={handleInputChange}
+                        value={nombre2}
+                        onChange={(e) => setNombre2(e.target.value)}
                       />
                     </div>
                     <div className="col-sm-6">
@@ -366,13 +368,13 @@ const Actualizar = ({
                         type="text"
                         name="apellido"
                         fullWidth
-                        value={apellido}
-                        onChange={handleInputChange}
+                        value={apellido2}
+                        onChange={(e) =>setApellido2(e.target.value)}
                       />
                     </div>
                   </div>
                   <div className="form-group row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-12">
                       <label>
                         Correo electrónico<sup>*</sup>
                       </label>
@@ -386,7 +388,7 @@ const Actualizar = ({
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div className="col-sm-6">
+                    {/* <div className="col-sm-6">
                       <label>
                         Actividad económica<sup>*</sup>
                       </label>
@@ -399,7 +401,7 @@ const Actualizar = ({
                         value={actividad}
                         onChange={handleInputChange}
                       />
-                    </div>
+                    </div> */}
                   </div>
                   <div className="form-group row">
                     {telefonos.map((x, i) => {

@@ -13,7 +13,7 @@ import { getCantidades, getPlaz } from "../../../../actions/plaza";
 const TablaPlazas = ({ datos, getPlaza}) => {
 
   const dispatch = useDispatch();
-  const { funcionarios, cantidades, plazas } = useSelector(state => state.plaza)
+  const { funcionarios, cantidades } = useSelector(state => state.plaza)
   const [plaza, setPlaza] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);

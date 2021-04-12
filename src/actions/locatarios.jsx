@@ -21,7 +21,6 @@ export const getLocatario = () => {
           apellido: item.apellido,
           categorias: item.categorias,
           horarios: item.horarios,
-          activo: item.activo,
           img: item.img,
           logo: item.logo,
           local: item.nombre_local,

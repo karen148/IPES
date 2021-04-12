@@ -1,5 +1,4 @@
 import React from 'react';
-import FormHeaderSearch from '../../forms/FormHeaderSearch';
 
 const HeaderDashboard = ({
     title = 'Tablero',

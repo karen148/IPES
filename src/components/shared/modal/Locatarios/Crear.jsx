@@ -178,7 +178,7 @@ const Crear = ({ open, handleClose }) => {
       title="Crear locatario"
       tamaño="xl"
     >
-      <section className="ps-new-item">
+      <section className="ps-new-item" key='2021'>
         <div className="ps-form__content">
           <div className="row">
             <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -268,7 +268,7 @@ const Crear = ({ open, handleClose }) => {
                     </div>
                   </div>
                   <div className="form-group row">
-                    <div className="col-sm-6">
+                    <div className="col-sm-12">
                       <label>
                         Correo electrónico<sup>*</sup>
                       </label>
@@ -282,7 +282,7 @@ const Crear = ({ open, handleClose }) => {
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div className="col-sm-6">
+                    {/* <div className="col-sm-6">
                       <label>
                         Actividad económica<sup>*</sup>
                       </label>
@@ -295,7 +295,7 @@ const Crear = ({ open, handleClose }) => {
                         value={actividad}
                         onChange={handleInputChange}
                       />
-                    </div>
+                    </div> */}
                   </div>
                   <div className="form-group row">
                     {telefonos.map((x, i) => {

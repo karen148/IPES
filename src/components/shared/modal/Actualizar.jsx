@@ -48,12 +48,9 @@ const Actualizar = ({
   const [horario_sm2, setHorariosm2] = useState("");
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
-  const [horario, setHorario] = useState([]);
-  const [plaza1, setPlaza1] = useState([]);
   const [local, setLocal2] = useState("");
   const [cat, setCat] = useState([]);
   const [funcio, setFunci2] = useState([]);
-  const [telefonos2, setTele2] = useState([]);
   const [telefonos, setTele] = useState([{ telefono: " " }]);
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
@@ -116,7 +113,7 @@ const Actualizar = ({
       let admin = "";
       if (funcio2) {
         admin = funcionarios.filter((fu) => fu.id === funcio2);
-        setFunci2(admin[0].label);
+        setFunci2(admin[0]);
       } else {
         setFunci2("");
       }

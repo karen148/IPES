@@ -8,7 +8,6 @@ import _Actualizar from './../../modal/Locatarios/Actualizar'
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getCantidades, getTrue} from "../../../../actions/plaza";
-import { getLocatario } from "../../../../actions/locatarios";
 // import Tooltip from '@material-ui/core/Tooltip';
 
 const TablaLocatarios = ({ datos, getLocali}) => {
@@ -86,8 +85,6 @@ const TablaLocatarios = ({ datos, getLocali}) => {
   
   const tableItems = datos.map((item, index) => {
 
-    console.log(plazastrues.length && plazastrues.filter(pla => pla.id === item.plaza)[0]);
-
     // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
     if(datos.length){
       let data = [];
@@ -98,11 +95,12 @@ const TablaLocatarios = ({ datos, getLocali}) => {
         }
       }
       return (
-        <tr key={item.id}>
+        <tr key={`${item.id}`}>
           <td>{index + 1}</td>
           <td>
             <Button
               color="secondary"
+              key={`${item.local}`}
               onClick={() => {
                 handleClickOpen();
                 setIdp(item.id);
@@ -111,10 +109,10 @@ const TablaLocatarios = ({ datos, getLocali}) => {
               <b>{item.local}</b>
             </Button>
           </td>
-          <td>{plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0]?.localidad_nombre : '-'}</td>
-          <td>{plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0]?.nombre : '-'}</td>
-          <td>{item.activo}</td>
-          <td style={{ width: "180px" }}>
+          <td key={`${item.id}${item.plaza}`}>{plazastrues.length ? plazastrues.filter(pla => pla?.id === item.plaza)[0]?.localidad_nombre : '-'}</td>
+          <td key={`${item.local}${item.plaza}`}>{plazastrues.length ? plazastrues.filter(pla => pla?.id === item.plaza)[0]?.nombre : '-'}</td>
+          <td key={`${item.activo}`}>{item.activo}</td>
+          <td key={`${item.activo}${item.local}`} style={{ width: "180px" }}>
             {data.map((item) => {
               return (
                 <Button size="small" color="primary">
@@ -163,7 +161,7 @@ console.log(local3);
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody key='2015'>
           {tableItems}
         </tbody>
       </table>
