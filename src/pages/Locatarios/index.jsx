@@ -1,16 +1,11 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import TablasLocatarios from "./../../components/shared/tables/TablasLocatarios";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
-import {
-  getFuncionarios,
-  getPlaz,
-  getTrue,
-  getLocalidades,
-} from "./../../actions/plaza";
+import { getPlaz, getTrue, getLocalidades } from "./../../actions/plaza";
 import { getLocatario } from "../../actions/locatarios";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -48,11 +43,10 @@ const Locatarios = () => {
   const { plazastrues, localidades } = useSelector((state) => state.plaza);
   const { locatarios } = useSelector((state) => state.locatario);
 
-  const [currency1, setCurrency1] = React.useState('');
-  const [currency2, setCurrency2] = React.useState('');
-  const [currency3, setCurrency3] = React.useState('');
+  const [currency1, setCurrency1] = React.useState("");
+  const [currency2, setCurrency2] = React.useState("");
+  const [currency3, setCurrency3] = React.useState("");
 
-  const [alerta, setAlerta] = useState(false);
   const [locatario1, setLocatarios1] = useState([]);
   const [locatario2, setLocatarios2] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -76,7 +70,6 @@ const Locatarios = () => {
 
   console.log(locatario1);
 
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -84,7 +77,6 @@ const Locatarios = () => {
   const handleClose = () => {
     setOpen(false);
     getLocatarioss();
-    setAlerta(false);
   };
 
   const handleChange1 = (event) => {
@@ -115,7 +107,6 @@ const Locatarios = () => {
           apellido: item.apellido,
           categorias: item.categorias,
           horarios: item.horarios,
-          activo: item.activo,
           img: item.img,
           logo: item.logo,
           local: item.nombre_local,
@@ -151,17 +142,18 @@ const Locatarios = () => {
   const Filtros = () => {
     let data2 = [];
 
-    if (currency1 !== '' && currency2 === '' && currency3 === '') {
+    if (currency1 !== "" && currency2 === "" && currency3 === "") {
       data2 = locatario1.filter((item) => item.plaza === currency1);
       console.log(data2);
-    } else if (currency1 === '' && currency2 !== '' && currency3 === '') {
+    } else if (currency1 === "" && currency2 !== "" && currency3 === "") {
       data2 = locatario1.filter(
         (loc) =>
           loc.plaza ===
-          plazastrues.filter((item) => item?.localidad_nombre === currency2)[0]?.id
+          plazastrues.filter((item) => item?.localidad_nombre === currency2)[0]
+            ?.id
       );
-    }else if (currency1 === '' && currency2 === '' && currency3 !== '') {
-      data2 = locatario1.filter(item => item.activo === currency3)
+    } else if (currency1 === "" && currency2 === "" && currency3 !== "") {
+      data2 = locatario1.filter((item) => item.activo === currency3);
     }
     // else {
     //   console.log('hola');
@@ -184,18 +176,18 @@ const Locatarios = () => {
   console.log(currency1);
   const RestaurarLista = () => {
     setLocatarios1(locatario2);
-    setCurrency1('');
-    setCurrency2('');
-    setCurrency3('');
+    setCurrency1("");
+    setCurrency2("");
+    setCurrency3("");
   };
 
   console.log(locatario1);
 
   const Buscar = () => {
-    let data = []
-    data = locatario1.filter(item => item.nombre === nomplaza1)
-    setLocatarios1(data)
-  }
+    let data = [];
+    data = locatario1.filter((item) => item.nombre === nomplaza1);
+    setLocatarios1(data);
+  };
 
   console.log(locatario1);
   return (
@@ -225,12 +217,14 @@ const Locatarios = () => {
                   className={classes.margin}
                   style={{ marginRight: "20px" }}
                 >
-                  {plazastrues.map((option) => (
-                    option &&
-                    <MenuItem key={option?.id} value={option?.id}>
-                      {option?.nombre}
-                    </MenuItem>
-                  ))}
+                  {plazastrues.map(
+                    (option) =>
+                      option && (
+                        <MenuItem key={option?.id} value={option?.id}>
+                          {option?.nombre}
+                        </MenuItem>
+                      )
+                  )}
                 </TextField>
               </div>
               <div className="form-group">

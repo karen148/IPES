@@ -1,7 +1,7 @@
 import React from "react";
-import { useForm } from './../../hooks/useForm';
-import { useDispatch } from 'react-redux';
-import { startLogin } from './../../actions/auth';
+import { useForm } from "./../../hooks/useForm";
+import { useDispatch } from "react-redux";
+import { startLogin } from "./../../actions/auth";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -28,22 +28,21 @@ import useStyles from "./style";
 //   );
 // }
 
-export default function Login({ history }) {
-
+export default function Login() {
   const classes = useStyles();
 
   const dispatch = useDispatch();
 
-  const [ formLogin, handleInputChange ] = useForm({
+  const [formLogin, handleInputChange] = useForm({
     email: "",
     contraseña: "",
-  })
+  });
 
   const { email, contraseña } = formLogin;
 
   const handleChange = () => {
-    dispatch(startLogin(email, contraseña))
-  } 
+    dispatch(startLogin(email, contraseña));
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -52,13 +51,17 @@ export default function Login({ history }) {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <PersonIcon style={{fontSize: '20px'}}/>
+            <PersonIcon style={{ fontSize: "20px" }} />
           </Avatar>
-          <Typography component="h1" variant="h5" style={{fontSize: '20px'}}>
+          <Typography component="h1" variant="h5" style={{ fontSize: "20px" }}>
             Iniciar sesión
           </Typography>
-          <form className={classes.form} noValidate style={{fontSize: '20px'}}>
-            <label style={{fontSize: '15px'}}>Correo electrónico *</label>
+          <form
+            className={classes.form}
+            noValidate
+            style={{ fontSize: "20px" }}
+          >
+            <label style={{ fontSize: "15px" }}>Correo electrónico *</label>
             <TextField
               variant="outlined"
               margin="normal"
@@ -70,9 +73,9 @@ export default function Login({ history }) {
               onChange={handleInputChange}
               autoComplete="email"
               autoFocus
-              style={{fontSize: '20px'}}
+              style={{ fontSize: "20px" }}
             />
-            <label style={{fontSize: '15px'}}>Contraseña *</label>
+            <label style={{ fontSize: "15px" }}>Contraseña *</label>
             <TextField
               variant="outlined"
               margin="normal"
@@ -95,13 +98,18 @@ export default function Login({ history }) {
               color="secondary"
               className={classes.submit}
               onClick={handleChange}
-              style={{fontSize: '16px', color: 'white'}}
+              style={{ fontSize: "16px", color: "white" }}
             >
               Enviar
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/contraseña" variant="body2" style={{fontSize: '14px'}} color='secondary'>
+                <Link
+                  href="/contraseña"
+                  variant="body2"
+                  style={{ fontSize: "14px" }}
+                  color="secondary"
+                >
                   Olvidó contraseña?
                 </Link>
               </Grid>

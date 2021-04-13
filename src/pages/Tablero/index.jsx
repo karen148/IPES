@@ -1,14 +1,13 @@
-import React from 'react';
-import ContainerDashboard from './../../components/layaouts/ContainerDashboard';
-import CardRecentOrders from './../../components/shared/cards/CardRecentOrders';
-import CardSaleReport from './../../components/shared/cards/CardSaleReport';
-import CardEarning from './../../components/shared/cards/CardEarning';
-import CardStatics from './../../components/shared/cards/CardStatics';
-import HeaderDashboard from './../../components/shared/headers/HeaderDashboard';
+import React from "react";
+import ContainerDashboard from "./../../components/layaouts/ContainerDashboard";
+import CardRecentOrders from "./../../components/shared/cards/CardRecentOrders";
+import CardSaleReport from "./../../components/shared/cards/CardSaleReport";
+import CardEarning from "./../../components/shared/cards/CardEarning";
+import CardStatics from "./../../components/shared/cards/CardStatics";
+import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 // import { Provider } from 'react-redux';
 // import { toggleDrawerMenu } from './../../store/app/action';
-import CardTopCountries from './../../components/shared/cards/CardTopCountries';
-
+import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
 
 const Tablero = () => {
   // const dispatch = useDispatch();
@@ -17,29 +16,29 @@ const Tablero = () => {
   // }, []);
 
   return (
-      <ContainerDashboard>
-        {/* <Provider store={toggleDrawerMenu} > */}
-        <HeaderDashboard />
-        <section className="ps-dashboard" id="homepage">
-          <div className="ps-section__left">
-              <div className="row">
-                  <div className="col-xl-8 col-12">
-                      <CardSaleReport />
-                  </div>
-                  <div className="col-xl-4 col-12">
-                      <CardEarning />
-                  </div>
-              </div>
-              <CardRecentOrders />
+    <ContainerDashboard>
+      {/* <Provider store={toggleDrawerMenu} > */}
+      <HeaderDashboard />
+      <section className="ps-dashboard" id="homepage">
+        <div className="ps-section__left">
+          <div className="row">
+            <div className="col-xl-8 col-12">
+              <CardSaleReport />
+            </div>
+            <div className="col-xl-4 col-12">
+              <CardEarning />
+            </div>
           </div>
-          <div className="ps-section__right">
-              <CardStatics />
-              <CardTopCountries />
-          </div>
-        </section>
-        {/* </Provider> */}
-      </ContainerDashboard>
+          <CardRecentOrders />
+        </div>
+        <div className="ps-section__right">
+          <CardStatics />
+          <CardTopCountries />
+        </div>
+      </section>
+      {/* </Provider> */}
+    </ContainerDashboard>
   );
-}
+};
 
 export default Tablero;

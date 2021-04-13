@@ -1,20 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
-const fetchSinToken = (endpoint, data, method) =>{
-    
-    if (method === 'POST') {
-        axios.post(endpoint, {
-            data
-        })
-        .then
-    }
-}
+const fetchSinToken = (endpoint, data, method) => {
+  if (method === "POST") {
+    axios.post(endpoint, {
+      data,
+    }).then;
+  }
+};
 
-const fetchConToken = () =>{
-    
-}
+const fetchConToken = () => {};
 
-export {
-    fetchSinToken,
-    fetchConToken
-}
+export { fetchSinToken, fetchConToken };

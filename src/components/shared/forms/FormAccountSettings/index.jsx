@@ -1,18 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
-import useStyles from './styles.js'
 import { useSelector } from "react-redux";
 
 const FormAccountSettings = () => {
+  const { id, rol } = useSelector((state) => state.auth);
 
-  // const classes = useStyles();
-
-  const { id, rol} = useSelector(state => state.auth)
-
-  const [ojo1, setOjo1] = useState('visibility_off')
-  const [ojo2, setOjo2] = useState('visibility_off')
+  const [ojo1, setOjo1] = useState("visibility_off");
+  const [ojo2, setOjo2] = useState("visibility_off");
   const [img1, setImg] = useState(null);
-  const [email1, setEmail] = useState('');
+  const [email1, setEmail] = useState("");
   const [state, setState] = useState({
     nombre: "",
     apellido: "",
@@ -21,7 +17,7 @@ const FormAccountSettings = () => {
     cedula: 0,
     contraseña: "",
     confirmar_contraseña: "",
-    antigua: ""
+    antigua: "",
   });
 
   const handleState = (event) => {
@@ -30,15 +26,15 @@ const FormAccountSettings = () => {
   };
 
   const handleImg = (event) => {
-     var reader = new FileReader();
-      reader.readAsDataURL(event[0]);
-      reader.onload = function() {
-        setImg(event[0]);
-      };
-      
-      reader.onerror = function() {
-        console.log(reader.error);
-      };
+    var reader = new FileReader();
+    reader.readAsDataURL(event[0]);
+    reader.onload = function () {
+      setImg(event[0]);
+    };
+
+    reader.onerror = function () {
+      console.log(reader.error);
+    };
   };
 
   // const fecthApi2 = async () => {
@@ -74,17 +70,15 @@ const FormAccountSettings = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .get(process.env.REACT_APP_URL_API+`admins/getAdmin/${id}`,
-        config
-      )
+      .get(process.env.REACT_APP_URL_API + `admins/getAdmin/${id}`, config)
       .then((response) => {
         let data = response.data.admin;
-        setState({state, nombre:data.nombre})
-        setState({state, apellido:data.apellido})
-        setState({state, telefono:data.telefono})
-        setState({state, email:data.email})
-        setState({state, cedula:data.cedula})
-        setEmail(data.email)
+        setState({ state, nombre: data.nombre });
+        setState({ state, apellido: data.apellido });
+        setState({ state, telefono: data.telefono });
+        setState({ state, email: data.email });
+        setState({ state, cedula: data.cedula });
+        setEmail(data.email);
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -94,13 +88,13 @@ const FormAccountSettings = () => {
     getDatos();
   }, []);
 
-
   const fecthApi = async () => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .put(process.env.REACT_APP_URL_API+`admins/updateAdmin/${id}`,
+      .put(
+        process.env.REACT_APP_URL_API + `admins/updateAdmin/${id}`,
         {
           nombre: state.nombre,
           apellido: state.apellido,
@@ -110,7 +104,7 @@ const FormAccountSettings = () => {
       )
       .then((response) => {
         if (response.status === 200) {
-          getDatos()
+          getDatos();
           // return(<div className={classes.root}><Alert severity="success">Datos actualizados</Alert></div>)
           alert("Datos actualizados");
         }
@@ -121,16 +115,15 @@ const FormAccountSettings = () => {
   };
 
   const updateImg = async () => {
-
-      const formData = new FormData();
-      formData.append('imagen', img1)
-      // formData.append('tipoImg', img)
-      console.log(img1);
+    const formData = new FormData();
+    formData.append("imagen", img1);
+    // formData.append('tipoImg', img)
+    console.log(img1);
     let config = {
-      method: 'put',
-      url: process.env.REACT_APP_URL_API+`uploads/${rol}/${id}`,
+      method: "put",
+      url: process.env.REACT_APP_URL_API + `uploads/${rol}/${id}`,
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      data: formData
+      data: formData,
     };
     axios(config)
       .then((response) => {
@@ -139,48 +132,42 @@ const FormAccountSettings = () => {
         }
       })
       .catch((error) => {
-        if (error.response){
-
-            //do something
-            console.log(error.response)
-            
-            }else if(error.request){
-            
-            //do something else
-            console.log(error.request)
-            
-            }else if(error.message){
-            
-            //do something other than the other two
-            console.log(error.message)
-            
-            }
+        if (error.response) {
+          //do something
+          console.log(error.response);
+        } else if (error.request) {
+          //do something else
+          console.log(error.request);
+        } else if (error.message) {
+          //do something other than the other two
+          console.log(error.message);
+        }
       });
   };
 
   console.log(img1);
 
-  const showPass1 = () =>{
+  const showPass1 = () => {
     var cambio = document.getElementById("pass1");
-		if(cambio.type === "password"){
-			cambio.type = "text";
-      setOjo1('visibility')
-		}else{
-			cambio.type = "password";
-      setOjo1('visibility_off')
-		}
-  }
+    if (cambio.type === "password") {
+      cambio.type = "text";
+      setOjo1("visibility");
+    } else {
+      cambio.type = "password";
+      setOjo1("visibility_off");
+    }
+  };
 
-  const showPass2 = () =>{
+  const showPass2 = () => {
     var cambio = document.getElementById("pass2");
-		if(cambio.type === "password"){
-			cambio.type = "text";
-      setOjo2('visibility')
-		}else{
-			cambio.type = "password";
-      setOjo2('visibility_off')
-		}
-  }
+    if (cambio.type === "password") {
+      cambio.type = "text";
+      setOjo2("visibility");
+    } else {
+      cambio.type = "password";
+      setOjo2("visibility_off");
+    }
+  };
 
   const changePass = async () => {
     console.log(email1);
@@ -188,13 +175,14 @@ const FormAccountSettings = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .put(process.env.REACT_APP_URL_API+"admins/change-password",
+      .put(
+        process.env.REACT_APP_URL_API + "admins/change-password",
         {
           email: email1,
           oldPassword: state.antigua,
-          newPassword: state.contraseña
-        }
-        ,config
+          newPassword: state.contraseña,
+        },
+        config
       )
       .then((response) => {
         if (response.status === 200) {
@@ -204,29 +192,23 @@ const FormAccountSettings = () => {
         }
       })
       .catch((error) => {
-        if (error.response){
-
-            //do something
-            console.log(error.response)
-            
-            }else if(error.request){
-            
-            //do something else
-            console.log(error.request)
-            
-            }else if(error.message){
-            
-            //do something other than the other two
-            console.log(error.message)
-            
-            }
+        if (error.response) {
+          //do something
+          console.log(error.response);
+        } else if (error.request) {
+          //do something else
+          console.log(error.request);
+        } else if (error.message) {
+          //do something other than the other two
+          console.log(error.message);
+        }
       });
   };
 
   console.log(img1);
   return (
     <Fragment>
-      <div className="row" key={localStorage.getItem('id')}>
+      <div className="row" key={localStorage.getItem("id")}>
         <div className="col-sm-6">
           <div className="form-group">
             <label>Nombre</label>
@@ -290,14 +272,18 @@ const FormAccountSettings = () => {
           </div>
         </div>
         <div className="col-sm-12 text-center">
-          <button className="ps-btn success" onClick={fecthApi} style={{marginBottom: '30px'}}>
+          <button
+            className="ps-btn success"
+            onClick={fecthApi}
+            style={{ marginBottom: "30px" }}
+          >
             Actualizar información
           </button>
         </div>
         <div className="col-sm-12">
-            <div className="header__left">
-                <h3>Cambio de contraseña</h3>
-            </div>
+          <div className="header__left">
+            <h3>Cambio de contraseña</h3>
+          </div>
         </div>
         <div className="col-sm-12">
           <div className="form-group">
@@ -315,21 +301,27 @@ const FormAccountSettings = () => {
         <div className="col-sm-6">
           <div className="form-group">
             <label>Cambiar Contraseña</label>
-              <input
-                className="form-control"
-                type="password"
-                id="pass1"
-                placeholder=""
-                name="contraseña"
-                value={state.contraseña}
-                onChange={handleState}
-              />
-              <span className="material-icons icon" 
-                style={{ float: 'right', cursor: 'pointer', position: 'relative', margin: '-35px 10px 0 0'}}
-                onClick={showPass1}
-              >
-                {ojo1}
-              </span>
+            <input
+              className="form-control"
+              type="password"
+              id="pass1"
+              placeholder=""
+              name="contraseña"
+              value={state.contraseña}
+              onChange={handleState}
+            />
+            <span
+              className="material-icons icon"
+              style={{
+                float: "right",
+                cursor: "pointer",
+                position: "relative",
+                margin: "-35px 10px 0 0",
+              }}
+              onClick={showPass1}
+            >
+              {ojo1}
+            </span>
           </div>
         </div>
         <div className="col-sm-6">
@@ -344,50 +336,69 @@ const FormAccountSettings = () => {
               value={state.confirmar_contraseña}
               onChange={handleState}
             />
-            <span className="material-icons icon" 
-                style={{ float: 'right', cursor: 'pointer', position: 'relative', margin: '-35px 10px 0 0'}}
-                onClick={showPass2}
-              >
-                {ojo2}
+            <span
+              className="material-icons icon"
+              style={{
+                float: "right",
+                cursor: "pointer",
+                position: "relative",
+                margin: "-35px 10px 0 0",
+              }}
+              onClick={showPass2}
+            >
+              {ojo2}
             </span>
           </div>
         </div>
         <div className="col-sm-12">
-            {state.contraseña === state.confirmar_contraseña && (
-                <div className="ps-form text-center">
-                    <button className="ps-btn success" onClick={changePass} style={{marginBottom: '30px'}}>
-                        Actualizar contraseña
-                    </button>
-                </div>
-            )}
-            {state.contraseña !== state.confirmar_contraseña && (
-                <div className="ps-form text-center">
-                    <h5 style={{marginBottom: '25px'}}>Por favor verifique que este bien escrita la contraseña</h5>
-                </div>
-            )}
+          {state.contraseña === state.confirmar_contraseña && (
+            <div className="ps-form text-center">
+              <button
+                className="ps-btn success"
+                onClick={changePass}
+                style={{ marginBottom: "30px" }}
+              >
+                Actualizar contraseña
+              </button>
+            </div>
+          )}
+          {state.contraseña !== state.confirmar_contraseña && (
+            <div className="ps-form text-center">
+              <h5 style={{ marginBottom: "25px" }}>
+                Por favor verifique que este bien escrita la contraseña
+              </h5>
+            </div>
+          )}
         </div>
         <div className="col-sm-12">
-            <div className="header__left">
-                <h3>Agregar o actualizar foto</h3>
-            </div>
+          <div className="header__left">
+            <h3>Agregar o actualizar foto</h3>
+          </div>
         </div>
         <div className="col-sm-12">
           <div className="form-group">
-            <label className="form-label">Por favor verifique que la foto o imagen tenga los siguientes formatos: 'png', 'jpg', 'JPG', 'jpeg', 'gif'</label>
+            <label className="form-label">
+              Por favor verifique que la foto o imagen tenga los siguientes
+              formatos: 'png', 'jpg', 'JPG', 'jpeg', 'gif'
+            </label>
             <input
               style={{ paddingTop: "10px" }}
               className="form-control"
               type="file"
               placeholder=""
-              accept = ".png,.jpg,.JPG,.jpeg,.gif"
+              accept=".png,.jpg,.JPG,.jpeg,.gif"
               id="docs"
               name="imagen"
-              onChange={e => handleImg(e.target.files)}
+              onChange={(e) => handleImg(e.target.files)}
             />
           </div>
         </div>
         <div className="col-sm-12 text-center">
-          <button className="ps-btn success" onClick={updateImg} style={{marginBottom: '30px'}}>
+          <button
+            className="ps-btn success"
+            onClick={updateImg}
+            style={{ marginBottom: "30px" }}
+          >
             Actualizar foto
           </button>
         </div>

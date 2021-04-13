@@ -11,10 +11,10 @@ describe('Pruebas en <PrivateRoute />', () => {
         }
     }
 
-    test('Debe mostrar el componente si esta autenticado', () =>{
+    test('Debe mostrar el componente si esta autenticado', () => {
         const wrapper = mount(
             <MemoryRouter>
-                <PrivateRoute 
+                <PrivateRoute
                     isAuthenticated={true}
                     component={() => <span>Hola</span>}
                     {...props}

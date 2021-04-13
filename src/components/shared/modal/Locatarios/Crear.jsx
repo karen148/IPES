@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -7,13 +7,12 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
 
 import { useForm } from "./../../../../hooks/useForm";
 
 const Crear = ({ open, handleClose }) => {
-  const { plazastrues } = useSelector(
-    (state) => state.plaza
-  );
+  const { plazastrues } = useSelector((state) => state.plaza);
   const { locatarios } = useSelector((state) => state.locatario);
   const { id } = useSelector((state) => state.auth);
 
@@ -40,17 +39,15 @@ const Crear = ({ open, handleClose }) => {
   const [telefonos, setTele] = useState([{ telefono: " " }]);
   const [alerta, setAlerta] = useState(false);
   const [plaza, setPlaza] = useState([]);
-  const [localidad1, setLocalidad1] = useState("");
   const [cat, setCat] = useState([]);
   const [infoLocatarios, handleInputChange] = useForm({
     local: "",
     nombre: "",
     apellido: "",
-    actividad: "",
     email: "",
   });
 
-  const { local, apellido, nombre, actividad, email } = infoLocatarios;
+  const { local, apellido, nombre, email } = infoLocatarios;
 
   const handleImg = (event) => {
     var reader = new FileReader();
@@ -178,7 +175,7 @@ const Crear = ({ open, handleClose }) => {
       title="Crear locatario"
       tamaño="xl"
     >
-      <section className="ps-new-item" key='2021'>
+      <section className="ps-new-item" key="2021">
         <div className="ps-form__content">
           <div className="row">
             <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -803,6 +800,11 @@ const Crear = ({ open, handleClose }) => {
       </section>
     </Modal>
   );
+};
+
+Crear.propTypes = {
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
 };
 
 export default Crear;

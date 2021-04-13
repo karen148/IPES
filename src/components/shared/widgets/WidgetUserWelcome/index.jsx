@@ -4,18 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../../../actions/auth";
 
 const WidgetUserWelcome = () => {
-
   const dispatch = useDispatch();
-  const { name, img, rol } = useSelector(state => state.auth)
+  const { name, img, rol } = useSelector((state) => state.auth);
 
   const [img1, setImg] = useState("");
   const exitApp = () => {
-    dispatch( startLogout() )
+    dispatch(startLogout());
   };
 
   useEffect(() => {
-    setImg(process.env.REACT_APP_URL_API +`uploads/retorna/${rol}/`+img)
-  }, [])
+    setImg(process.env.REACT_APP_URL_API + `uploads/retorna/${rol}/` + img);
+  }, []);
 
   return (
     <div className="ps-block--user-wellcome">

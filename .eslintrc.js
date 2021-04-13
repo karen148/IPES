@@ -5,7 +5,11 @@ module.exports = {
     node: true,
     browser: true
   },
-  rules: { 'prettier/prettier': ['error', { endOfLine: 'auto' }] },
+  rules: { 
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
+  },
   parserOptions: {
     ecmaVersion: 6,
     sourceType: "module",

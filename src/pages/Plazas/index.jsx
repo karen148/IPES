@@ -40,13 +40,12 @@ const Plazas = () => {
     (state) => state.plaza
   );
 
-  const [currency1, setCurrency1] = React.useState('');
-  const [currency2, setCurrency2] = React.useState('');
+  const [currency1, setCurrency1] = React.useState("");
+  const [currency2, setCurrency2] = React.useState("");
 
   const [plazas, setPlaza] = useState([]);
   const [plaza1, setPlaza1] = useState(plazas);
   const [alerta, setAlerta] = useState(false);
-  const [estado, setEstado] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [telefonos, setTele] = useState([{ telefono: " " }]);
   const [local, setLocal2] = useState("");
@@ -212,7 +211,7 @@ const Plazas = () => {
           let id = response.data.plaza.id;
           const formData = new FormData();
           formData.append("imagen", img);
-          formData.append("plaza",imglogo);
+          formData.append("plaza", imglogo);
           console.log(img);
           let config1 = {
             method: "put",
@@ -296,12 +295,11 @@ const Plazas = () => {
   const Filtros = () => {
     console.log(currency1 + " - " + currency2);
     let data = [];
-    let data1 = [];
-    if (currency2 !== '' && currency1 === '') {
+    if (currency2 !== "" && currency1 === "") {
       data = plaza1.filter((item) => item.localidad === currency2);
-    } else if (currency2 === '' && currency1 !== '') {
+    } else if (currency2 === "" && currency1 !== "") {
       data = plaza1.map((item) => {
-        if (item.categorias !== '' && item.categorias.length > 0) {
+        if (item.categorias !== "" && item.categorias.length > 0) {
           for (let i = 0; i < item.categorias.length; i++) {
             const element = item.categorias[i];
             console.log(element);
@@ -332,8 +330,8 @@ const Plazas = () => {
 
   const Restaurar = () => {
     setPlaza1(plazas);
-    setCurrency1('');
-    setCurrency2('');
+    setCurrency1("");
+    setCurrency2("");
   };
 
   const Buscar = () => {
@@ -945,9 +943,7 @@ const Plazas = () => {
                                   type="time"
                                   value={horario_m1}
                                   name="horario_m1"
-                                  onChange={(e) =>
-                                    setHorariom1(e.target.value)
-                                  }
+                                  onChange={(e) => setHorariom1(e.target.value)}
                                 />
                               </div>
                               <div className="col-sm-6">
@@ -958,9 +954,7 @@ const Plazas = () => {
                                   type="time"
                                   value={horario_m2}
                                   name="horario_m2"
-                                  onChange={(e) =>
-                                    setHorariom2(e.target.value)
-                                  }
+                                  onChange={(e) => setHorariom2(e.target.value)}
                                 />
                               </div>
                             </>

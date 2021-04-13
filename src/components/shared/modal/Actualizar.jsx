@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
 
 const Actualizar = ({
   open,
@@ -21,7 +22,7 @@ const Actualizar = ({
   cat1,
   horarios1,
   telefonos1,
-  logo1
+  logo1,
 }) => {
   const { funcionarios, categorias, localidades } = useSelector(
     (state) => state.plaza
@@ -32,7 +33,7 @@ const Actualizar = ({
   const [nombre2, setNombre2] = useState("");
   const [email2, setEmail] = useState("");
   const [horaSI, setHoraSI] = useState(false);
-  const [imglogo, setImgLogo] = useState('img');
+  const [imglogo, setImgLogo] = useState("img");
   const [direccion2, setDireccion] = useState("");
   const [horario_m1, setHorariom1] = useState("");
   const [horario_m2, setHorariom2] = useState("");
@@ -128,7 +129,8 @@ const Actualizar = ({
       setDireccion(direccion1);
       setEmail(email1);
       setImg1(
-        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen ? imagen : logo1}`
+        process.env.REACT_APP_URL_API +
+          `uploads/retorna/PLAZA/${imagen ? imagen : logo1}`
       );
       setLocal2(locali);
 
@@ -161,11 +163,11 @@ const Actualizar = ({
   };
 
   const Logo = () => {
-    setImgLogo('logo');
+    setImgLogo("logo");
   };
 
   const Img = () => {
-    setImgLogo('img');
+    setImgLogo("img");
   };
 
   //agregar un telefono
@@ -210,7 +212,7 @@ const Actualizar = ({
       horario_jm1 + "-" + horario_jm2,
       horario_vm1 + "-" + horario_vm2,
       horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2,
+      horario_dm1 + "-" + horario_dm2
     );
     let tele = [];
     telefonos.map((item) => {
@@ -747,13 +749,12 @@ const Actualizar = ({
                         Logo
                       </Button>
                     </div>
-                    {imglogo ==='img' ? (
+                    {imglogo === "img" ? (
                       <>
                         <label>
                           <br></br>
-                          Por favor verifique que la imagen tenga los
-                          siguientes formatos: 'png', 'jpg', 'JPG', 'jpeg',
-                          'gif'
+                          Por favor verifique que la imagen tenga los siguientes
+                          formatos: 'png', 'jpg', 'JPG', 'jpeg', 'gif'
                         </label>
                         <div className="form-group--nest row">
                           <div className="col-sm-12">
@@ -829,9 +830,7 @@ const Actualizar = ({
                           </div>
                           <div className="col-sm-12 text-center">
                             {alerta1 === true ? (
-                              <Alert severity="success">
-                                Logo actualizado
-                              </Alert>
+                              <Alert severity="success">Logo actualizado</Alert>
                             ) : (
                               false
                             )}
@@ -889,6 +888,22 @@ const Actualizar = ({
       </section>
     </Modal>
   );
+};
+
+Actualizar.propTypes = {
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  idPlaza: PropTypes.string,
+  nombre1: PropTypes.string,
+  direccion1: PropTypes.string,
+  email1: PropTypes.string,
+  imagen: PropTypes.string,
+  locali: PropTypes.string,
+  funcio2: PropTypes.string,
+  cat1: PropTypes.array,
+  horarios1: PropTypes.array,
+  telefonos1: PropTypes.array,
+  logo1: PropTypes.string,
 };
 
 export default Actualizar;

@@ -1,23 +1,18 @@
-import {types} from './../types'
+import { types } from "./../types";
 
 const initialState = {
-    locatarios: [],
+  locatarios: [],
 };
 
+export const locatariosReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case types.locatariosDatos:
+      return {
+        ...state,
+        locatarios: [...action.locatario],
+      };
 
-export const locatariosReducer = ( state = initialState, action ) => {
- 
-    switch ( action.type ) {
-        
-        case types.locatariosDatos:
-            return {
-                ...state,
-                locatarios: [ ...action.locatario ]
-            }
-
-        default:
-            return state;
-    }
-
-    
-}
+    default:
+      return state;
+  }
+};

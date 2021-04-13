@@ -1,19 +1,18 @@
-import React, { useState, Fragment, useEffect} from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import TooltipE from "./../../tooltip";
 import Modal from "./../../modal";
-import _Eliminar from './../../modal/Eliminar.jsx'
-import _Actualizar from './../../modal/Actualizar.jsx'
+import _Eliminar from "./../../modal/Eliminar.jsx";
+import _Actualizar from "./../../modal/Actualizar.jsx";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getCantidades, getPlaz } from "../../../../actions/plaza";
-// import Tooltip from '@material-ui/core/Tooltip';
+import PropTypes from "prop-types";
 
-const TablaPlazas = ({ datos, getPlaza}) => {
-
+const TablaPlazas = ({ datos, getPlaza }) => {
   const dispatch = useDispatch();
-  const { funcionarios, cantidades } = useSelector(state => state.plaza)
+  const { funcionarios, cantidades } = useSelector((state) => state.plaza);
   const [plaza, setPlaza] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
@@ -23,12 +22,12 @@ const TablaPlazas = ({ datos, getPlaza}) => {
   const [idp2, setIdp2] = useState(0);
 
   useEffect(() => {
-    dispatch( getPlaz());
-  }, [dispatch])
+    dispatch(getPlaz());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch( getCantidades());
-  }, [dispatch])
+    dispatch(getCantidades());
+  }, [dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -44,7 +43,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
 
   const handleClose1 = () => {
     setOpen1(false);
-    getPlaza()
+    getPlaza();
   };
 
   const handleClickOpen2 = () => {
@@ -57,24 +56,26 @@ const TablaPlazas = ({ datos, getPlaza}) => {
   };
 
   const Eliminar = () => {
-    
     let config1 = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      };
-      axios.put(process.env.REACT_APP_URL_API+'plazas/delete/'+idp2,
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .put(
+        process.env.REACT_APP_URL_API + "plazas/delete/" + idp2,
         {
-            activo:false
-        }
-        ,config1)
-      .then(response => {
+          activo: false,
+        },
+        config1
+      )
+      .then((response) => {
         if (response.status) {
-          handleClose1()
+          handleClose1();
         }
       })
       .catch((e) => {
-        console.log('ERROR',e);
-      })
-  }
+        console.log("ERROR", e);
+      });
+  };
 
   const getPla = async (idP) => {
     let config = {
@@ -84,7 +85,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
       .get(process.env.REACT_APP_URL_API + `plazas/find/${idP}`, config)
       .then((response) => {
         let data = response.data.plaza;
-        setPlaza(data)
+        setPlaza(data);
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -92,7 +93,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
   };
 
   const tableItems = datos.map((item, index) => {
-    if(item !== undefined){
+    if (item !== undefined) {
       if (item.activo === true) {
         let data = [];
         if (item.categorias !== null && item.categorias.length > 0) {
@@ -116,11 +117,15 @@ const TablaPlazas = ({ datos, getPlaza}) => {
               </Button>
             </td>
             <td>{item.localidad}</td>
-            <td>{cantidades.map(can => { return ( item.id === can.id && can.total)})}</td>
+            <td>
+              {cantidades.map((can) => {
+                return item.id === can.id && can.total;
+              })}
+            </td>
             <td style={{ width: "180px" }}>
               {data.map((item) => {
                 return (
-                  <Button size="small" color="primary">
+                  <Button size="small" color="primary" key={item.categoria}>
                     <b>{item.categoria}</b>
                   </Button>
                 );
@@ -137,14 +142,23 @@ const TablaPlazas = ({ datos, getPlaza}) => {
               {item.acciones.map((cat) => {
                 return (
                   <TooltipE title={cat.name} key={cat.name}>
-                    <IconButton 
-                      color="default" 
-                      component="span" 
-                      key={cat.name} 
-                      onClick={cat.name === 'Editar' 
-                        ? ()=>{handleClickOpen2(); setIdp1(cat.id); getPla(cat.id)} 
-                        : ()=>{handleClickOpen1(); setIdp2(cat.id);}}
-                      >
+                    <IconButton
+                      color="default"
+                      component="span"
+                      key={cat.name}
+                      onClick={
+                        cat.name === "Editar"
+                          ? () => {
+                              handleClickOpen2();
+                              setIdp1(cat.id);
+                              getPla(cat.id);
+                            }
+                          : () => {
+                              handleClickOpen1();
+                              setIdp2(cat.id);
+                            }
+                      }
+                    >
                       {cat.icon}
                     </IconButton>
                   </TooltipE>
@@ -159,10 +173,7 @@ const TablaPlazas = ({ datos, getPlaza}) => {
   console.log(datos);
   return (
     <div className="table-responsive">
-      <table
-        className="table ps-table"
-        style={{ textAlign: "center" }}
-      >
+      <table className="table ps-table" style={{ textAlign: "center" }}>
         <thead>
           <tr>
             <th>ID</th>
@@ -191,17 +202,24 @@ const TablaPlazas = ({ datos, getPlaza}) => {
                 <div className="col-sm-12 text-center">
                   <div className="ps-block__left">
                     <img
-                      src={process.env.REACT_APP_URL_API+`uploads/retorna/PLAZA/${item.img ? item.img : item.logo}`}
+                      src={
+                        process.env.REACT_APP_URL_API +
+                        `uploads/retorna/PLAZA/${
+                          item.img ? item.img : item.logo
+                        }`
+                      }
                       alt=""
                       width="200px"
                       height="200px"
                     />
                   </div>
-                  <p>{item.img ? 'Imagen' : 'Logo'}</p>
+                  <p>{item.img ? "Imagen" : "Logo"}</p>
                   <br></br>
                 </div>
                 <b>Funcionario: </b>
-                {funcionarios.map(fun => {return ( item.usuario === fun.id ? fun.label :'')})}
+                {funcionarios.map((fun) => {
+                  return item.usuario === fun.id ? fun.label : "";
+                })}
                 <br></br>
                 <b>Dirección: </b>
                 {item.direccion}
@@ -220,13 +238,15 @@ const TablaPlazas = ({ datos, getPlaza}) => {
           }
         })}
       </Modal>
-      <_Eliminar 
+      <_Eliminar
         open={open1}
         handleClose={handleClose1}
         eliminar={Eliminar}
-        titulo3='Eliminar plaza'
-        titulo2='la plaza'
-        titulo={datos.map(item => {return (item !== undefined && item.id === idp2 && item.nombre)})}
+        titulo3="Eliminar plaza"
+        titulo2="la plaza"
+        titulo={datos.map((item) => {
+          return item !== undefined && item.id === idp2 && item.nombre;
+        })}
       />
       <_Actualizar
         open={open2}
@@ -241,10 +261,15 @@ const TablaPlazas = ({ datos, getPlaza}) => {
         funcio2={plaza.admin_id}
         cat1={plaza.categorias_nombres}
         horarios1={plaza.horarios}
-        telefonos1={plaza. telefonos}
+        telefonos1={plaza.telefonos}
       />
     </div>
   );
+};
+
+TablaPlazas.propTypes = {
+  datos: PropTypes.array,
+  getPlaza: PropTypes.func,
 };
 
 export default TablaPlazas;

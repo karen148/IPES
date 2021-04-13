@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
 
 import { useForm } from "./../../../../hooks/useForm";
 
@@ -52,7 +53,6 @@ const Actualizar = ({
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
 
-  
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
   const [telefonos, setTele] = useState([{ telefono: " " }]);
@@ -60,7 +60,7 @@ const Actualizar = ({
   const [plaza, setPlaza] = useState([]);
   const [cat, setCat] = useState([]);
   const [infoLocatarios, handleInputChange, setValues] = useForm({
-    email: '',
+    email: "",
   });
 
   const { email } = infoLocatarios;
@@ -90,18 +90,18 @@ const Actualizar = ({
         setHorariom2(semana[0][1]);
         setHorariolm1(semana[1][0]);
         setHorariolm2(semana[1][1]);
-        if(semana.length > 2){
-        setHorariomm1(semana[2][0]);
-        setHorariomm2(semana[2][1]);
-        setHorariojm1(semana[3][0]);
-        setHorariojm2(semana[3][1]);
-        setHorariovm1(semana[4][0]);
-        setHorariovm2(semana[4][1]);
-        setHorariosm1(semana[5][0]);
-        setHorariosm2(semana[5][1]);
-        setHorariodm1(semana[6][0]);
-        setHorariodm2(semana[6][1]);
-      }
+        if (semana.length > 2) {
+          setHorariomm1(semana[2][0]);
+          setHorariomm2(semana[2][1]);
+          setHorariojm1(semana[3][0]);
+          setHorariojm2(semana[3][1]);
+          setHorariovm1(semana[4][0]);
+          setHorariovm2(semana[4][1]);
+          setHorariosm1(semana[5][0]);
+          setHorariosm2(semana[5][1]);
+          setHorariodm1(semana[6][0]);
+          setHorariodm2(semana[6][1]);
+        }
       } else {
         setHorariom1("");
         setHorariom2("");
@@ -125,7 +125,6 @@ const Actualizar = ({
           telefonos.push({ telefono: telefonos1[h] });
         }
       }
-
 
       setTele(telefonos);
 
@@ -207,7 +206,6 @@ const Actualizar = ({
     setTele(list);
   };
 
-
   const setActualizar = async () => {
     let horario = [];
     horario.push(
@@ -247,7 +245,7 @@ const Actualizar = ({
       )
       .then((response) => {
         if (response.status === 200) {
-            setAlerta(true);
+          setAlerta(true);
         }
       })
       .catch((e) => {
@@ -369,7 +367,7 @@ const Actualizar = ({
                         name="apellido"
                         fullWidth
                         value={apellido2}
-                        onChange={(e) =>setApellido2(e.target.value)}
+                        onChange={(e) => setApellido2(e.target.value)}
                       />
                     </div>
                   </div>
@@ -884,9 +882,7 @@ const Actualizar = ({
                           </div>
                           <div className="col-sm-12 text-center">
                             {alerta1 === true ? (
-                              <Alert severity="success">
-                                Logo actualizado
-                              </Alert>
+                              <Alert severity="success">Logo actualizado</Alert>
                             ) : (
                               false
                             )}
@@ -947,6 +943,24 @@ const Actualizar = ({
       </section>
     </Modal>
   );
+};
+
+Actualizar.propTypes = {
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  idPlaza: PropTypes.string,
+  nom1: PropTypes.string,
+  ape1: PropTypes.string,
+  loc1: PropTypes.string,
+  ced1: PropTypes.string,
+  email1: PropTypes.string,
+  plaza1: PropTypes.string,
+  imagen2: PropTypes.string,
+  locali: PropTypes.string,
+  categorias1: PropTypes.array,
+  horarios2: PropTypes.array,
+  telefonos1: PropTypes.array,
+  logo2: PropTypes.string,
 };
 
 export default Actualizar;

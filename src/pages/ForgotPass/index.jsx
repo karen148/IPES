@@ -1,17 +1,18 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
 
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockIcon from '@material-ui/icons/Lock';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockIcon from "@material-ui/icons/Lock";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
 
-import useStyles from './style';
+import useStyles from "./style";
 
 // function Copyright() {
 //   return (
@@ -26,11 +27,11 @@ import useStyles from './style';
 //   );
 // }
 
-export default function ChangePass({history}) {
+export default function ChangePass({ history }) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    email: ''
+    email: "",
   });
 
   const handleState = (event) => {
@@ -38,24 +39,20 @@ export default function ChangePass({history}) {
     setState((_state) => ({ ..._state, [name]: value }));
   };
 
-  let fecthApi = async () =>{
+  let fecthApi = async () => {
     axios
-      .post(process.env.REACT_APP_URL_AUTH+"admin-auth/forgot-password",
-        {
-          email: state.email,
-        }
-      )
-      .then(response => {
+      .post(process.env.REACT_APP_URL_AUTH + "admin-auth/forgot-password", {
+        email: state.email,
+      })
+      .then((response) => {
         console.log(response.status);
         if (response.status === 200) {
-          alert('Por favor revice su correo')
-          console.log('CORREO');
-          return history.push('/');
-        }else{
-          return history.push('/sign-up');
+          alert("Por favor revice su correo");
+          console.log("CORREO");
+          return history.push("/");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log("ERROR!!!!!", e);
       });
   };
@@ -65,9 +62,9 @@ export default function ChangePass({history}) {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockIcon style={{fontSize: '20px'}}/>
+          <LockIcon style={{ fontSize: "20px" }} />
         </Avatar>
-        <Typography component="h1" variant="h5" style={{fontSize: '20px'}}>
+        <Typography component="h1" variant="h5" style={{ fontSize: "20px" }}>
           Olvidó de contraseña
         </Typography>
         <form className={classes.form} noValidate>
@@ -83,7 +80,7 @@ export default function ChangePass({history}) {
                 values={state.email}
                 onChange={handleState}
                 autoComplete="email"
-                style={{fontSize: '20px'}}
+                style={{ fontSize: "20px" }}
               />
             </Grid>
             {/* <Grid item xs={12}>
@@ -99,14 +96,19 @@ export default function ChangePass({history}) {
             color="primary"
             onClick={fecthApi}
             className={classes.submit}
-            style={{fontSize: '16px', color: 'white'}}
+            style={{ fontSize: "16px", color: "white" }}
           >
             Enviar
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/login" variant="body2" style={{fontSize: '14px'}} color='grey'>
-                ¿Ya tienes una cuenta? Inicia sesión 
+              <Link
+                href="/login"
+                variant="body2"
+                style={{ fontSize: "14px" }}
+                color="grey"
+              >
+                ¿Ya tienes una cuenta? Inicia sesión
               </Link>
             </Grid>
           </Grid>
@@ -118,3 +120,7 @@ export default function ChangePass({history}) {
     </Container>
   );
 }
+
+ChangePass.propTypes = {
+  history: PropTypes.array,
+};

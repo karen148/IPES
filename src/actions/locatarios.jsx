@@ -3,7 +3,6 @@ import { types } from "./../types";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-
 export const getLocatario = () => {
   return async (dispatch) => {
     let config = {
@@ -28,17 +27,17 @@ export const getLocatario = () => {
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           email: item.email,
           telefonos: item.telefonos,
-          activo: item.activo ? 'Activo' : 'Inactivo',
+          activo: item.activo ? "Activo" : "Inactivo",
           acciones: [
             {
               name: "Editar",
               icon: <EditIcon />,
-              id: item.id
+              id: item.id,
             },
             {
               name: "Eliminar",
               icon: <DeleteIcon />,
-              id: item.id
+              id: item.id,
             },
           ],
         }));
