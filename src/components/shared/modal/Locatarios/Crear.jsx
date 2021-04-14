@@ -266,6 +266,16 @@ const Crear = ({ open, handleClose }) => {
                   </div>
                   <div className="form-group row">
                     <div className="col-sm-12">
+                      {locatarios.map((option) => {
+                        return (
+                          option.email === email && (
+                            <Alert severity="error">
+                              El correo ya existe por favor ingrese otro
+                            </Alert>
+                          )
+                        );
+                      })}
+                      <br></br>
                       <label>
                         Correo electrónico<sup>*</sup>
                       </label>
@@ -377,52 +387,56 @@ const Crear = ({ open, handleClose }) => {
                         )}
                       />
                     </div>
-                    <div className="col-sm-6">
-                      <label>Localidad</label>
-                      <TextField
-                        margin="normal"
-                        variant="outlined"
-                        type="text"
-                        name="localidad1"
-                        fullWidth
-                        disabled
-                        value={
-                          plaza.length !== 0
-                            ? plazastrues.filter(
-                                (item) => item?.nombre === plaza.nombre
-                              )[0].localidad_nombre
-                            : ""
-                        }
-                      />
-                    </div>
-                    <div className="col-sm-12">
-                      <label>
-                        Categoría<sup>*</sup>
-                      </label>
-                      <Autocomplete
-                        multiple
-                        limitTags={2}
-                        id="multiple-limit-tags"
-                        value={cat}
-                        onChange={(event, newValue) => {
-                          setCat(newValue);
-                        }}
-                        options={
-                          plaza.length !== 0
-                            ? plazastrues.filter(
-                                (item) => item?.nombre === plaza.nombre
-                              )[0].categorias_nombres
-                            : "Vacio"
-                        }
-                        renderInput={(params) => (
+                    {plaza?.nombre ? (
+                      <>
+                        <div className="col-sm-6">
+                          <label>Localidad</label>
                           <TextField
-                            {...params}
+                            margin="normal"
                             variant="outlined"
-                            placeholder="Categorías de las plazas"
+                            type="text"
+                            name="localidad1"
+                            fullWidth
+                            disabled
+                            value={
+                              plazastrues.filter(
+                                (item) => item?.nombre === plaza.nombre
+                              )[0]?.localidad_nombre
+                            }
                           />
-                        )}
-                      />
-                    </div>
+                        </div>
+                        <div className="col-sm-12">
+                          <label>
+                            Categoría<sup>*</sup>
+                          </label>
+                          <Autocomplete
+                            multiple
+                            limitTags={2}
+                            id="multiple-limit-tags"
+                            value={cat}
+                            onChange={(event, newValue) => {
+                              setCat(newValue);
+                            }}
+                            options={
+                              plaza?.nombre
+                                ? plazastrues.filter(
+                                    (item) => item?.nombre === plaza?.nombre
+                                  )[0]?.categorias_nombres
+                                : "Vacio"
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                placeholder="Categorías de las plazas"
+                              />
+                            )}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </figure>
@@ -787,6 +801,13 @@ const Crear = ({ open, handleClose }) => {
           )}
           <br></br>
         </div>
+        {/* {locatarios.filter((option) => {
+          option.cedula === cedula;
+        }) === cedula ? (
+          <Alert severity="error"> El locatario ya existe </Alert>
+        ) : (
+          
+        )} */}
         <div className="col-sm-12 text-center">
           <button
             className="ps-btn success"

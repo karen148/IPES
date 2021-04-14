@@ -28,7 +28,7 @@ const Actualizar = ({
   logo2,
 }) => {
   const { plazastrues } = useSelector((state) => state.plaza);
-  const { locatarios } = useSelector((state) => state.locatario);
+  // const { locatarios } = useSelector((state) => state.locatario);
   const { id } = useSelector((state) => state.auth);
 
   const [horaSI, setHoraSI] = useState(false);
@@ -322,23 +322,16 @@ const Actualizar = ({
                       })}
                       <br></br>
                     </div> */}
-                    <Autocomplete
-                      id="free-solo-demo"
-                      freeSolo
-                      options={locatarios.map((option) => option.cedula)}
-                      inputValue={cedula3}
-                      onInputChange={(event, newInputValue) => {
-                        setCedula3(newInputValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          margin="normal"
-                          variant="outlined"
-                          type="text"
-                          placeholder="Por favor ingrese el número del documento..."
-                        />
-                      )}
+                    <TextField
+                      margin="normal"
+                      variant="outlined"
+                      type="text"
+                      placeholder="Por favor ingrese el teléfono "
+                      value={cedula3}
+                      name="cedula"
+                      onChange={(e) => setCedula3(e.target.value)}
+                      fullWidth
+                      disabled
                     />
                   </div>
                   <div className="form-group row">
@@ -484,7 +477,57 @@ const Actualizar = ({
                         )}
                       />
                     </div>
-                    <div className="col-sm-6">
+                    {plaza?.nombre ? (
+                      <>
+                        <div className="col-sm-6">
+                          <label>Localidad</label>
+                          <TextField
+                            margin="normal"
+                            variant="outlined"
+                            type="text"
+                            name="localidad1"
+                            fullWidth
+                            disabled
+                            value={
+                              plazastrues.filter(
+                                (item) => item?.nombre === plaza.nombre
+                              )[0]?.localidad_nombre
+                            }
+                          />
+                        </div>
+                        <div className="col-sm-12">
+                          <label>
+                            Categoría<sup>*</sup>
+                          </label>
+                          <Autocomplete
+                            multiple
+                            limitTags={2}
+                            id="multiple-limit-tags"
+                            value={cat}
+                            onChange={(event, newValue) => {
+                              setCat(newValue);
+                            }}
+                            options={
+                              plaza?.nombre
+                                ? plazastrues.filter(
+                                    (item) => item?.nombre === plaza?.nombre
+                                  )[0]?.categorias_nombres
+                                : "Vacio"
+                            }
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                placeholder="Categorías de las plazas"
+                              />
+                            )}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {/* <div className="col-sm-6">
                       <label>Localidad</label>
                       <TextField
                         margin="normal"
@@ -529,7 +572,7 @@ const Actualizar = ({
                           />
                         )}
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </figure>

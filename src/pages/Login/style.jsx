@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import img from "./plaza.jpg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -6,8 +7,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "16px !important",
   },
   image: {
-    backgroundImage:
-      "url(http://komodolarevista.co/wp-content/uploads/sites/40/2018/03/Puesto-de-frutas-en-la-plaza-de-paloquemado-Bogota%CC%81-Cortesia-Mario-Carvajal1-1.jpg)",
+    backgroundImage: `url(${img})`,
+    // backgroundImage:
+    //   "url(http://komodolarevista.co/wp-content/uploads/sites/40/2018/03/Puesto-de-frutas-en-la-plaza-de-paloquemado-Bogota%CC%81-Cortesia-Mario-Carvajal1-1.jpg)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"

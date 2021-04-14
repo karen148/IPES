@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import TablasPlazas from "./../../components/shared/tables/TablaPlazas";
@@ -30,7 +31,6 @@ import Modal from "./../../components/shared/modal";
 import theme from "./../../theme";
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
-import { useDispatch, useSelector } from "react-redux";
 
 const Plazas = () => {
   const classes = useStyles();
