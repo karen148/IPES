@@ -11,6 +11,8 @@ import Perfil from "./../pages/Perfil";
 import Plazas from "./../pages/Plazas";
 import Locatarios from "./../pages/Locatarios";
 import ForgotPass from "./../pages/ForgotPass";
+import Categorias from "./../pages/Categorias";
+import Productos from "./../pages/Productos";
 
 import useStyles from "./style";
 
@@ -69,6 +71,18 @@ export const AppRouter = () => {
             exact
             path="/locatario"
             component={Locatarios}
+            isAuthenticated={!!id}
+          />
+          <PrivateRoute
+            exact
+            path="/categorias"
+            component={Categorias}
+            isAuthenticated={!!id}
+          />
+          <PrivateRoute
+            exact
+            path="/productos"
+            component={Productos}
             isAuthenticated={!!id}
           />
           <Redirect to="/" />

@@ -32,12 +32,12 @@ const MenuSidebar = () => {
     },
     {
       text: "Categorías",
-      url: "/tablero",
+      url: "/categorias",
       icon: "lnr lnr-tag",
     },
     {
       text: "Productos",
-      url: "/tablero",
+      url: "/productos",
       icon: "lnr lnr-leaf",
     },
     {

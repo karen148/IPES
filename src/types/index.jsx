@@ -16,4 +16,7 @@ export const types = {
   plazaCategorias: "[plaza] Obtener categorias",
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
+
+  categoriaCrear: "[categoria] Crear categoria",
+  categoriaDatos: "[categoria] Obtener datos de la categoria",
 };

@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
-import TablasLocatarios from "./../../components/shared/tables/TablasLocatarios";
+import TablaProductos from "./../../components/shared/tables/TablaProductos";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
-import { getPlaz, getTrue, getLocalidades } from "./../../actions/plaza";
+import {
+  getPlaz,
+  getTrue,
+  getLocalidades,
+  getCategorias,
+} from "./../../actions/plaza";
 import { getLocatario } from "../../actions/locatarios";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -23,7 +28,7 @@ import NotesIcon from "@material-ui/icons/Notes";
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import Crear from "../../components/shared/modal/Locatarios/Crear";
+import Crear from "../../components/shared/modal/Productos/Crear";
 
 const estados = [
   {
@@ -34,18 +39,27 @@ const estados = [
     value: "Activo",
     label: "Activo",
   },
+  {
+    value: "Stock",
+    label: "Stock",
+  },
+  {
+    value: "Sin Stock",
+    label: "Sin Stock",
+  },
 ];
 
-const Locatarios = () => {
+const Productos = () => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const { plazastrues, localidades } = useSelector((state) => state.plaza);
+  const { plazastrues, categorias } = useSelector((state) => state.plaza);
   const { locatarios } = useSelector((state) => state.locatario);
 
   const [currency1, setCurrency1] = React.useState("");
   const [currency2, setCurrency2] = React.useState("");
   const [currency3, setCurrency3] = React.useState("");
+  const [currency4, setCurrency4] = React.useState("");
 
   const [locatario1, setLocatarios1] = useState([]);
   const [locatario2, setLocatarios2] = useState([]);
@@ -66,6 +80,10 @@ const Locatarios = () => {
 
   useEffect(() => {
     dispatch(getLocalidades());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCategorias());
   }, [dispatch]);
 
   console.log(locatario1);
@@ -89,6 +107,10 @@ const Locatarios = () => {
 
   const handleChange3 = (event) => {
     setCurrency3(event.target.value);
+  };
+
+  const handleChange4 = (event) => {
+    setCurrency4(event.target.value);
   };
 
   const getLocatarioss = async () => {
@@ -193,14 +215,14 @@ const Locatarios = () => {
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
-        title="Locatarios"
-        description="Información de los locatarios de las plazas"
+        title="Productos"
+        description="Información de los productos de las plazas"
       />
       <section className="ps-items-listing">
         <div className="ps-section__actions">
           <a className="ps-btn success" onClick={handleClickOpen}>
             <AddIcon />
-            Nuevo Locatario
+            Nuevo Producto
           </a>
         </div>
         <div className="ps-section__header">
@@ -231,14 +253,32 @@ const Locatarios = () => {
                 <TextField
                   id="filled-select-currency"
                   select
-                  label="Localidad"
+                  label="Locatarios"
                   value={currency2}
                   onChange={handleChange2}
                   fullWidth
                   style={{ marginRight: "20px" }}
                   className={classes.margin}
                 >
-                  {localidades.map((option) => (
+                  {locatarios.map((option) => (
+                    <MenuItem key={option.id} value={option.nombre}>
+                      {option.nombre} {option.apellido}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </div>
+              <div className="form-group">
+                <TextField
+                  id="filled-select-currency"
+                  select
+                  label="Categorias"
+                  value={currency3}
+                  onChange={handleChange3}
+                  fullWidth
+                  style={{ marginRight: "20px" }}
+                  className={classes.margin}
+                >
+                  {categorias.map((option) => (
                     <MenuItem key={option.id} value={option.label}>
                       {option.label}
                     </MenuItem>
@@ -250,8 +290,8 @@ const Locatarios = () => {
                   id="filled-select-currency"
                   select
                   label="Estados"
-                  value={currency3}
-                  onChange={handleChange3}
+                  value={currency4}
+                  onChange={handleChange4}
                   fullWidth
                   style={{ marginRight: "20px" }}
                   className={classes.margin}
@@ -310,7 +350,7 @@ const Locatarios = () => {
                     type="text"
                     id="standard-basic"
                     style={{ width: "300px", marginTop: "5px" }}
-                    placeholder="Nombre"
+                    placeholder="Producto"
                   />
                 )}
               />
@@ -323,10 +363,10 @@ const Locatarios = () => {
           </div>
         </div>
         <div className="ps-section__content">
-          <TablasLocatarios datos={locatario1} getLocali={getLocatarioss} />
+          <TablaProductos />
         </div>
         <div className="ps-section__footer">
-          <p>Mostrar 10 de 30 artículos.</p>
+          {/* <p>Mostrar 10 de 30 artículos.</p> */}
           {/* <Pagination /> */}
         </div>
       </section>
@@ -334,5 +374,5 @@ const Locatarios = () => {
     </ContainerDashboard>
   );
 };
-export default Locatarios;
+export default Productos;
 // export default connect((state) => state.app)(SettingsPage);

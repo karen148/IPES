@@ -45,7 +45,7 @@ const ContainerDashboard = ({ children }) => {
 };
 
 ContainerDashboard.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.array,
 };
 
 export default ContainerDashboard;

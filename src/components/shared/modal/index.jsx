@@ -35,7 +35,7 @@ Modal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
   title: PropTypes.string,
-  children: PropTypes.element,
+  children: PropTypes.array,
   tamaño: PropTypes.string,
 };
 
