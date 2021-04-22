@@ -1,30 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import ModalForm from "./../modalForm";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
-import Alert from "@material-ui/lab/Alert";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import useStyles from "components/shared/forms/style";
-import Locatario from "components/shared/forms/FormCreateLocatarios/Locatario";
-import Horarios from "components/shared/forms/FormCreateLocatarios/horarios";
-import Imagen from "components/shared/forms/FormCreateLocatarios/Imagen";
-import Plaza from "components/shared/forms/FormCreateLocatarios/Plaza";
-import { useDispatch, useSelector } from "react-redux";
-import { setPlazasMercado } from "actions/plaza";
+import Plaza from "components/shared/forms/FormCreatePlaza/Plaza";
+import Horarios from "components/shared/forms/FormCreatePlaza/horarios";
+import Categoria from "components/shared/forms/FormCreatePlaza/categoria";
+import Imagen from "components/shared/forms/FormCreatePlaza/Imagen";
+import { UpdatePlazasMercado, UpdateBanner, UpdateLogo } from "actions/plaza";
 
-const Crear = ({ open, handleClose }) => {
-  const { msg } = useSelector((state) => state.locatario);
-  // const { id } = useSelector((state) => state.auth);
+const Actualizar = ({
+  open,
+  handleClose,
+  idPlaza,
+  nombre1,
+  direccion1,
+  email1,
+  imagen,
+  locali,
+  funcio2,
+  cat1,
+  horarios1,
+  telefonos1,
+  logo1,
+}) => {
+  const { funcionarios, msg } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ["Locatario", "Plaza", "Horarios", "Imagen"];
+  const steps = ["Plaza", "Horarios", "Categoria", "Imagen"];
+
+  const [cat, setCat] = useState([]);
+
+  const [alerta, setAlerta] = useState("Actualizar plaza");
 
   const [imglogo, setImgLogo] = useState("img");
   const [img, setImg] = useState(null);
@@ -47,85 +63,139 @@ const Crear = ({ open, handleClose }) => {
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
 
-  const [cedula, setCedula] = useState("");
-  const [local, setLocal] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [email, setEmail] = useState("");
+  const [plaza, setPlaza] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [funcionario, setFuncionarios] = useState([]);
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
-  const [mensaje, setMensaje] = useState("");
-  const [alerta1, setAlerta1] = useState(false);
-  const [alerta, setAlerta] = useState(false);
+  const [email, setEmail] = useState("");
 
-  const [plaza, setPlaza] = useState([]);
-  const [cat, setCat] = useState([]);
+  useEffect(() => {
+    if (nombre1) {
+      let semana = [];
+      if (horarios1) {
+        for (let h = 0; h < horarios1.length; h++) {
+          semana.push(horarios1[h].split("-", 2));
+        }
+      }
+      if (semana.length) {
+        setHorariom1(semana[0][0]);
+        setHorariom2(semana[0][1]);
+        setHorariolm1(semana[1][0]);
+        setHorariolm2(semana[1][1]);
+        setHorariomm1(semana[2][0]);
+        setHorariomm2(semana[2][1]);
+        setHorariojm1(semana[3][0]);
+        setHorariojm2(semana[3][1]);
+        setHorariovm1(semana[4][0]);
+        setHorariovm2(semana[4][1]);
+        setHorariosm1(semana[5][0]);
+        setHorariosm2(semana[5][1]);
+        setHorariodm1(semana[6][0]);
+        setHorariodm2(semana[6][1]);
+      } else {
+        setHorariom1("");
+        setHorariom2("");
+        setHorariolm1("");
+        setHorariolm2("");
+        setHorariomm1("");
+        setHorariomm2("");
+        setHorariojm1("");
+        setHorariojm2("");
+        setHorariovm1("");
+        setHorariovm2("");
+        setHorariosm1("");
+        setHorariosm2("");
+        setHorariodm1("");
+        setHorariodm2("");
+      }
 
-  const validarEmail = (email) => {
-    if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)) {
-      return true;
-    } else {
-      return false;
+      let telefonos = [];
+      if (telefonos1) {
+        for (let h = 0; h < telefonos1.length; h++) {
+          telefonos.push({ telefono: telefonos1[h] });
+        }
+      }
+
+      let categorias = [];
+      if (cat1) {
+        for (let h = 0; h < cat1.length; h++) {
+          categorias.push({ id: h, label: cat1[h] });
+        }
+      }
+      console.log(categorias);
+      let admin = [];
+      if (funcio2 !== null && funcio2.length > 0) {
+        for (let i = 0; i <= funcio2.length; i++) {
+          const element = funcio2[i];
+          funcionarios.map((item) => {
+            if (item.id === element) {
+              admin.push(item);
+            }
+          });
+        }
+      }
+      setFuncionarios(admin);
+      console.log(telefonos);
+      setPlaza(nombre1);
+      setDireccion(direccion1);
+      setEmail(email1);
+      setImg1(
+        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen}`
+      );
+      setImg3(process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${logo1}`);
+      setLocalidad(locali);
+
+      setTelefonos(telefonos);
+      setCat(categorias);
     }
-  };
+  }, [
+    nombre1,
+    direccion1,
+    email1,
+    imagen,
+    locali,
+    funcio2,
+    cat1,
+    horarios1,
+    telefonos1,
+    logo1,
+  ]);
 
   const handleNext = () => {
-    if (validarEmail(email)) {
-      if (local && cedula && nombre && apellido) {
-        setActiveStep(activeStep + 1);
-      } else {
-        setAlerta1(true);
-        setMensaje("Faltan datos en el formulario");
-        setTimeout(() => {
-          setAlerta1(false);
-        }, 3000);
-      }
-    } else {
-      setAlerta1(true);
-      setMensaje("El correo electrónico no es valido");
-      setTimeout(() => {
-        setAlerta1(false);
-      }, 3600);
-    }
+    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+  console.log(idPlaza);
 
   const getStepContent = (step) => {
     switch (step) {
       case 0:
         return (
-          <Locatario
-            si="no"
-            cedula={cedula}
-            setCedula={setCedula}
-            local={local}
-            setLocal={setLocal}
-            nombre={nombre}
-            setNombre={setNombre}
-            apellido={apellido}
-            setApellido={setApellido}
+          <Plaza
+            si="si"
+            plaza={plaza}
+            setPlaza={setPlaza}
+            direccion={direccion}
+            setDireccion={setDireccion}
+            localidad={localidad}
+            setLocalidad={setLocalidad}
+            funcionario={funcionario}
+            setFuncionarios={setFuncionarios}
             telefonos={telefonos}
             setTelefonos={setTelefonos}
             email={email}
             setEmail={setEmail}
           />
         );
+
       case 1:
         return (
-          <Plaza
-            local={local}
-            cat={cat}
-            setCat={setCat}
-            plaza={plaza}
-            setPlaza={setPlaza}
-          />
-        );
-      case 2:
-        return (
           <Horarios
-            local={local}
+            plaza={plaza}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
             horario_m2={horario_m2}
@@ -156,10 +226,14 @@ const Crear = ({ open, handleClose }) => {
             setHorariodm2={setHorariodm2}
           />
         );
+
+      case 2:
+        return <Categoria plaza={plaza} cat={cat} setCat={setCat} />;
+
       case 3:
         return (
           <Imagen
-            local={local}
+            plaza={plaza}
             imglogo={imglogo}
             setImgLogo={setImgLogo}
             img={img}
@@ -177,10 +251,26 @@ const Crear = ({ open, handleClose }) => {
     }
   };
 
-  const Registrar = () => {
+  const ActualizarLogo = () => {
+    dispatch(UpdateLogo(img2, idPlaza));
+    setAlerta(msg);
+    setTimeout(() => {
+      setAlerta("Actualizar plaza");
+    }, 3000);
+  };
+
+  const ActualizarImagen = () => {
+    dispatch(UpdateBanner(img, idPlaza));
+    setAlerta(msg);
+    setTimeout(() => {
+      setAlerta("Actualizar plaza");
+    }, 3000);
+  };
+
+  const ActualizarPlaza = () => {
     console.log(telefonos);
     dispatch(
-      setPlazasMercado(
+      UpdatePlazasMercado(
         horario_m1,
         horario_m2,
         horario_lm1,
@@ -197,48 +287,29 @@ const Crear = ({ open, handleClose }) => {
         horario_dm2,
         telefonos,
         cat,
+        funcionario,
+        localidad,
         plaza,
         email,
-        img,
-        img2
+        direccion,
+        idPlaza
       )
     );
-    setAlerta(true);
+    setAlerta(msg);
     setTimeout(() => {
-      setAlerta(false);
+      setAlerta("Actualizar plaza");
     }, 3000);
   };
-  console.log(telefonos);
 
   const Limpiar = () => {
-    setImg(null);
-    setImg1(null);
-    setImg2(null);
-    setImg3(null);
-    setHorariom1("");
-    setHorariom2("");
-    setHorariolm1("");
-    setHorariolm2("");
-    setHorariomm1("");
-    setHorariomm2("");
-    setHorariojm1("");
-    setHorariojm2("");
-    setHorariovm1("");
-    setHorariovm2("");
-    setHorariosm1("");
-    setHorariosm2("");
-    setHorariodm1("");
-    setHorariodm2("");
-    setPlaza("");
-    setTelefonos([{ telefono: "" }]);
-    setEmail("");
+    setActiveStep(0);
   };
-  console.log(telefonos);
+
   return (
     <ModalForm
       open={open}
       handleClose={handleClose}
-      title="Crear Locatario"
+      title={alerta}
       tamaño="sm"
       Limpiar={Limpiar}
     >
@@ -277,31 +348,31 @@ const Crear = ({ open, handleClose }) => {
                   )}
                   {activeStep === steps.length - 1 ? (
                     <>
-                      {alerta && (
-                        <Alert
-                          severity="success"
-                          style={{ marginBottom: "10px" }}
-                        >
-                          {msg}
-                        </Alert>
-                      )}
                       <Button
                         variant="contained"
                         color="primary"
                         style={{ color: "white" }}
-                        onClick={Registrar}
+                        onClick={
+                          imglogo === "img" ? ActualizarImagen : ActualizarLogo
+                        }
                         className={classes.button}
                       >
-                        Enviar
+                        {imglogo === "img"
+                          ? "Actualizar Imagen"
+                          : "Actualizar Logo"}
                       </Button>
                     </>
                   ) : (
                     <>
-                      {alerta1 && (
-                        <Alert severity="error" style={{ width: "100%" }}>
-                          {mensaje}
-                        </Alert>
-                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ color: "white" }}
+                        onClick={ActualizarPlaza}
+                        className={classes.button}
+                      >
+                        Actualizar información
+                      </Button>
                       <Button
                         variant="contained"
                         color="primary"
@@ -324,9 +395,20 @@ const Crear = ({ open, handleClose }) => {
   );
 };
 
-Crear.propTypes = {
+Actualizar.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
+  idPlaza: PropTypes.string,
+  nombre1: PropTypes.string,
+  direccion1: PropTypes.string,
+  email1: PropTypes.string,
+  imagen: PropTypes.string,
+  locali: PropTypes.string,
+  funcio2: PropTypes.string,
+  cat1: PropTypes.array,
+  horarios1: PropTypes.array,
+  telefonos1: PropTypes.array,
+  logo1: PropTypes.string,
 };
 
-export default Crear;
+export default Actualizar;

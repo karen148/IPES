@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 
 const TablaLocatarios = ({ datos, getLocali }) => {
   const dispatch = useDispatch();
-  const { plazastrues } = useSelector((state) => state.plaza);
+  const { plazastrues, categorias } = useSelector((state) => state.plaza);
   const [local3, setLocal3] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
@@ -85,12 +85,17 @@ const TablaLocatarios = ({ datos, getLocali }) => {
     // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
     if (datos.length) {
       let data = [];
-      if (item?.categorias !== null && item.categorias?.length > 0) {
-        for (let i = 0; i <= item.categorias.length; i++) {
-          const element = item.categorias[i];
-          data.push({ categoria: element });
+      if (item?.categorias !== null && item?.categorias.length > 0) {
+        for (let i = 0; i <= item?.categorias.length; i++) {
+          const element = item?.categorias[i];
+          categorias.map((item) => {
+            if (item.label === element) {
+              data.push(item);
+            }
+          });
         }
       }
+      console.log(item?.categorias);
       return (
         <tr key={`${item.id}`}>
           <td>{index + 1}</td>
@@ -121,9 +126,18 @@ const TablaLocatarios = ({ datos, getLocali }) => {
           <td key={`${item.activo}${item.local}`} style={{ width: "180px" }}>
             {data.map((item) => {
               return (
-                <Button size="small" color="primary" key={item.categoria}>
-                  <b>{item.categoria}</b>
-                </Button>
+                <TooltipE title={item.label} key={item.id}>
+                  <img
+                    src={
+                      process.env.REACT_APP_URL_API +
+                      `uploads/retorna/CATEGORIA/${item.icono}`
+                    }
+                    alt=""
+                    width="30px"
+                    height="30px"
+                    style={{ marginRight: "5px" }}
+                  />
+                </TooltipE>
               );
             })}
           </td>

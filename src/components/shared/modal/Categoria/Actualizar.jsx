@@ -31,18 +31,18 @@ const Actualizar = ({
       width: "auto",
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-        width: 600,
+      [theme.breakpoints.up("100%" + theme.spacing(2) * 2)]: {
+        width: "100%",
         marginLeft: "auto",
         marginRight: "auto",
       },
     },
     paper: {
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(2),
       marginBottom: theme.spacing(3),
       padding: theme.spacing(2),
       [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-        marginTop: theme.spacing(6),
+        marginTop: theme.spacing(1),
         marginBottom: theme.spacing(6),
         padding: theme.spacing(3),
       },
@@ -95,7 +95,7 @@ const Actualizar = ({
       open={open}
       handleClose={handleClose}
       title="Actualizar categoría"
-      tamaño="md"
+      tamaño="sm"
     >
       <Fragment>
         <CssBaseline />
@@ -159,7 +159,7 @@ const Actualizar = ({
 Actualizar.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  idCategoria: PropTypes.string,
+  idCategoria: PropTypes.number,
   nombre: PropTypes.string,
   slug: PropTypes.string,
   img: PropTypes.string,

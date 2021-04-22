@@ -47,6 +47,12 @@ export const plazaReducer = (state = initialState, action) => {
         plazastrues: [...action.plazatrue],
       };
 
+    case types.plazaMensaje:
+      return {
+        ...state,
+        ...action.payload,
+      };
+
     default:
       return state;
   }

@@ -10,21 +10,26 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import useStyles from "components/shared/forms/style";
-import Locatario from "components/shared/forms/FormCreateLocatarios/Locatario";
-import Horarios from "components/shared/forms/FormCreateLocatarios/horarios";
-import Imagen from "components/shared/forms/FormCreateLocatarios/Imagen";
-import Plaza from "components/shared/forms/FormCreateLocatarios/Plaza";
+import Plaza from "components/shared/forms/FormCreatePlaza/Plaza";
+import Horarios from "components/shared/forms/FormCreatePlaza/horarios";
+import Categoria from "components/shared/forms/FormCreatePlaza/categoria";
+import Imagen from "components/shared/forms/FormCreatePlaza/Imagen";
 import { useDispatch, useSelector } from "react-redux";
 import { setPlazasMercado } from "actions/plaza";
 
 const Crear = ({ open, handleClose }) => {
-  const { msg } = useSelector((state) => state.locatario);
-  // const { id } = useSelector((state) => state.auth);
+  const { msg } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ["Locatario", "Plaza", "Horarios", "Imagen"];
+  const steps = ["Plaza", "Horarios", "Categoria", "Imagen"];
+
+  const [cat, setCat] = useState([]);
+
+  const [alerta, setAlerta] = useState(false);
+  const [alerta1, setAlerta1] = useState(false);
+  const [mensaje1, setMensaje1] = useState("");
 
   const [imglogo, setImgLogo] = useState("img");
   const [img, setImg] = useState(null);
@@ -47,18 +52,12 @@ const Crear = ({ open, handleClose }) => {
   const [horario_dm1, setHorariodm1] = useState("");
   const [horario_dm2, setHorariodm2] = useState("");
 
-  const [cedula, setCedula] = useState("");
-  const [local, setLocal] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [email, setEmail] = useState("");
+  const [plaza, setPlaza] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [funcionario, setFuncionarios] = useState([]);
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
-  const [mensaje, setMensaje] = useState("");
-  const [alerta1, setAlerta1] = useState(false);
-  const [alerta, setAlerta] = useState(false);
-
-  const [plaza, setPlaza] = useState([]);
-  const [cat, setCat] = useState([]);
+  const [email, setEmail] = useState("");
 
   const validarEmail = (email) => {
     if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)) {
@@ -70,18 +69,18 @@ const Crear = ({ open, handleClose }) => {
 
   const handleNext = () => {
     if (validarEmail(email)) {
-      if (local && cedula && nombre && apellido) {
+      if (plaza && localidad && funcionario) {
         setActiveStep(activeStep + 1);
       } else {
         setAlerta1(true);
-        setMensaje("Faltan datos en el formulario");
+        setMensaje1("Falta datos en el formulario");
         setTimeout(() => {
           setAlerta1(false);
-        }, 3000);
+        }, 3600);
       }
     } else {
       setAlerta1(true);
-      setMensaje("El correo electrónico no es valido");
+      setMensaje1("El correo electrónico no es valido");
       setTimeout(() => {
         setAlerta1(false);
       }, 3600);
@@ -96,36 +95,27 @@ const Crear = ({ open, handleClose }) => {
     switch (step) {
       case 0:
         return (
-          <Locatario
+          <Plaza
             si="no"
-            cedula={cedula}
-            setCedula={setCedula}
-            local={local}
-            setLocal={setLocal}
-            nombre={nombre}
-            setNombre={setNombre}
-            apellido={apellido}
-            setApellido={setApellido}
+            plaza={plaza}
+            setPlaza={setPlaza}
+            direccion={direccion}
+            setDireccion={setDireccion}
+            localidad={localidad}
+            setLocalidad={setLocalidad}
+            funcionario={funcionario}
+            setFuncionarios={setFuncionarios}
             telefonos={telefonos}
             setTelefonos={setTelefonos}
             email={email}
             setEmail={setEmail}
           />
         );
+
       case 1:
         return (
-          <Plaza
-            local={local}
-            cat={cat}
-            setCat={setCat}
-            plaza={plaza}
-            setPlaza={setPlaza}
-          />
-        );
-      case 2:
-        return (
           <Horarios
-            local={local}
+            plaza={plaza}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
             horario_m2={horario_m2}
@@ -156,10 +146,14 @@ const Crear = ({ open, handleClose }) => {
             setHorariodm2={setHorariodm2}
           />
         );
+
+      case 2:
+        return <Categoria plaza={plaza} cat={cat} setCat={setCat} />;
+
       case 3:
         return (
           <Imagen
-            local={local}
+            plaza={plaza}
             imglogo={imglogo}
             setImgLogo={setImgLogo}
             img={img}
@@ -197,8 +191,11 @@ const Crear = ({ open, handleClose }) => {
         horario_dm2,
         telefonos,
         cat,
+        funcionario,
+        localidad,
         plaza,
         email,
+        direccion,
         img,
         img2
       )
@@ -230,15 +227,18 @@ const Crear = ({ open, handleClose }) => {
     setHorariodm1("");
     setHorariodm2("");
     setPlaza("");
+    setDireccion("");
+    setLocalidad("");
+    setFuncionarios([]);
     setTelefonos([{ telefono: "" }]);
     setEmail("");
   };
-  console.log(telefonos);
+
   return (
     <ModalForm
       open={open}
       handleClose={handleClose}
-      title="Crear Locatario"
+      title="Crear plaza"
       tamaño="sm"
       Limpiar={Limpiar}
     >
@@ -278,10 +278,7 @@ const Crear = ({ open, handleClose }) => {
                   {activeStep === steps.length - 1 ? (
                     <>
                       {alerta && (
-                        <Alert
-                          severity="success"
-                          style={{ marginBottom: "10px" }}
-                        >
+                        <Alert severity="success" style={{ width: "100%" }}>
                           {msg}
                         </Alert>
                       )}
@@ -299,7 +296,7 @@ const Crear = ({ open, handleClose }) => {
                     <>
                       {alerta1 && (
                         <Alert severity="error" style={{ width: "100%" }}>
-                          {mensaje}
+                          {mensaje1}
                         </Alert>
                       )}
                       <Button

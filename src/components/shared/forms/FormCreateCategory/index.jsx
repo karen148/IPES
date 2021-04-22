@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { setCategorias } from "actions/categoria";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "hooks/useForm";
 import Alert from "@material-ui/lab/Alert";
-import { getCategorias } from "actions/categoria";
 import PropTypes from "prop-types";
 
-const FormCreateCategory = ({ get }) => {
+const FormCreateCategory = ({ getDatos }) => {
   const dispatch = useDispatch();
+
+  const { msg } = useSelector((state) => state.categoria);
+
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
   const [alerta, setAlerta] = useState(false);
   const [alerta1, setAlerta1] = useState(false);
-  const [categoria, handleCategoria] = useForm({
+  const [categoria, handleCategoria, setValues] = useForm({
     nombre: "",
     slug: "",
     descripcion: "",
@@ -34,9 +36,19 @@ const FormCreateCategory = ({ get }) => {
     };
   };
 
+  const Limpiar = () => {
+    setValues({ categoria, nombre: "" });
+    setValues({ categoria, slug: "" });
+    setValues({ categoria, descripcion: "" });
+    setImg(null);
+    setImg1(null);
+  };
+
   const crearCategoria = () => {
     if (nombre && slug && descripcion) {
       dispatch(setCategorias(nombre, slug, descripcion, img));
+      getDatos();
+      Limpiar();
       setAlerta(true);
       setTimeout(() => {
         setAlerta(false);
@@ -47,8 +59,6 @@ const FormCreateCategory = ({ get }) => {
         setAlerta1(false);
       }, 3000);
     }
-    dispatch(getCategorias());
-    get();
   };
 
   return (
@@ -118,9 +128,13 @@ const FormCreateCategory = ({ get }) => {
         </div>
       </div>
       <div className="form-group" style={{ textAlign: "center" }}>
-        {alerta && <Alert severity="success"> Se envió la información</Alert>}
+        {alerta && (
+          <Alert severity="success" style={{ marginBottom: "10px" }}>
+            {msg}
+          </Alert>
+        )}
         {alerta1 && (
-          <Alert severity="error">
+          <Alert severity="error" style={{ marginBottom: "10px" }}>
             Faltan datos (Nombre, slug o descripción)
           </Alert>
         )}
@@ -133,7 +147,7 @@ const FormCreateCategory = ({ get }) => {
 };
 
 FormCreateCategory.propTypes = {
-  get: PropTypes.func,
+  getDatos: PropTypes.func,
 };
 
 export default FormCreateCategory;

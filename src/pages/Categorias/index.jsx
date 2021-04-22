@@ -13,6 +13,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 const CategoriesPage = () => {
   const dispatch = useDispatch();
   const { categorias } = useSelector((state) => state.categoria);
+  const [mostrar, setMostrar] = useState(false);
   const [cate, setCate] = useState("");
   const [cat, setCat] = useState([]);
   // useEffect(() => {
@@ -21,9 +22,10 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     dispatch(getCategorias());
-  }, []);
+  }, [dispatch]);
 
   const filtrar2 = (e) => {
+    setMostrar(true);
     setCate(e.target.value);
     let data = categorias.filter((item) => {
       if (cate === "") {
@@ -47,7 +49,8 @@ const CategoriesPage = () => {
   };
 
   const getDatos = () => {
-    setCat(categorias);
+    dispatch(getCategorias());
+    setMostrar(false);
   };
 
   return (
@@ -76,14 +79,14 @@ const CategoriesPage = () => {
           </TooltipE>
           <div className="ps-section__content">
             <TableCategoryItems
-              datos={cat.length === 0 ? categorias : cat}
-              get={getDatos}
+              datos={mostrar ? cat : categorias}
+              getDatos={getDatos}
             />
             <div className="ps-section__footer"></div>
           </div>
         </div>
         <div className="ps-section__right">
-          <FormCreateCategory get={getDatos} />
+          <FormCreateCategory getDatos={getDatos} />
         </div>
       </section>
     </ContainerDashboard>

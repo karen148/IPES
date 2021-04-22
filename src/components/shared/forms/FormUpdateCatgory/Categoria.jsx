@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { UpdateCategoria } from "actions/categoria";
+import PropTypes from "prop-types";
+
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import { UpdateCategoria } from "actions/categoria";
 import Button from "@material-ui/core/Button";
-import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import Alert from "@material-ui/lab/Alert";
 
 const Categoria = ({ idCategoria, nombre, slug, descripcion }) => {
   const dispatch = useDispatch();
 
+  const { msg } = useSelector((state) => state.categoria);
+
   const [nombre1, setNombre1] = useState("");
+  const [alerta, setAlerta] = useState(false);
   const [slug1, setSlug1] = useState("");
   const [descripcion1, setDescripcion1] = useState("");
 
@@ -25,6 +30,10 @@ const Categoria = ({ idCategoria, nombre, slug, descripcion }) => {
 
   const ActualizarCategoria = () => {
     dispatch(UpdateCategoria(nombre1, slug1, descripcion1, idCategoria));
+    setAlerta(true);
+    setTimeout(() => {
+      setAlerta(false);
+    }, 3000);
   };
 
   return (
@@ -61,7 +70,7 @@ const Categoria = ({ idCategoria, nombre, slug, descripcion }) => {
             type="text"
             variant="outlined"
             value={slug1}
-            name="nombre"
+            name="slug"
             onChange={(e) => setSlug1(e.target.value)}
             fullWidth
           />
@@ -79,6 +88,11 @@ const Categoria = ({ idCategoria, nombre, slug, descripcion }) => {
           />
         </Grid>
         <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
+          {alerta && (
+            <Alert severity="success" style={{ marginBottom: "10px" }}>
+              {msg}
+            </Alert>
+          )}
           <Button
             variant="contained"
             color="primary"
@@ -94,7 +108,7 @@ const Categoria = ({ idCategoria, nombre, slug, descripcion }) => {
 };
 
 Categoria.propTypes = {
-  idCategoria: PropTypes.string,
+  idCategoria: PropTypes.number,
   nombre: PropTypes.string,
   slug: PropTypes.string,
   descripcion: PropTypes.string,

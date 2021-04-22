@@ -1,10 +1,12 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import TooltipE from "./../../tooltip";
 import Modal from "./../../modal";
 import _Eliminar from "./../../modal/Eliminar.jsx";
-import _Actualizar from "./../../modal/Actualizar.jsx";
+import _Actualizar from "../../modal/Plaza/Actualizar.jsx";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { getCantidades, getPlaz } from "../../../../actions/plaza";
@@ -12,8 +14,10 @@ import PropTypes from "prop-types";
 
 const TablaPlazas = ({ datos, getPlaza }) => {
   const dispatch = useDispatch();
-  const { funcionarios, cantidades } = useSelector((state) => state.plaza);
-  const [plaza, setPlaza] = React.useState([]);
+  const { funcionarios, cantidades, categorias } = useSelector(
+    (state) => state.plaza
+  );
+  const [plazas, setPlaza] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -85,6 +89,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
       .get(process.env.REACT_APP_URL_API + `plazas/find/${idP}`, config)
       .then((response) => {
         let data = response.data.plaza;
+        console.log(data);
         setPlaza(data);
       })
       .catch((e) => {
@@ -96,10 +101,14 @@ const TablaPlazas = ({ datos, getPlaza }) => {
     if (item !== undefined) {
       if (item.activo === true) {
         let data = [];
-        if (item.categorias !== null && item.categorias.length > 0) {
-          for (let i = 0; i <= item.categorias.length; i++) {
-            const element = item.categorias[i];
-            data.push({ categoria: element });
+        if (item?.categorias !== null && item?.categorias.length > 0) {
+          for (let i = 0; i <= item?.categorias.length; i++) {
+            const element = item?.categorias[i];
+            categorias.map((item) => {
+              if (item.label === element) {
+                data.push(item);
+              }
+            });
           }
         }
         return (
@@ -125,9 +134,18 @@ const TablaPlazas = ({ datos, getPlaza }) => {
             <td style={{ width: "180px" }}>
               {data.map((item) => {
                 return (
-                  <Button size="small" color="primary" key={item.categoria}>
-                    <b>{item.categoria}</b>
-                  </Button>
+                  <TooltipE title={item.label} key={item.id}>
+                    <img
+                      src={
+                        process.env.REACT_APP_URL_API +
+                        `uploads/retorna/CATEGORIA/${item.icono}`
+                      }
+                      alt=""
+                      width="30px"
+                      height="30px"
+                      style={{ marginRight: "5px" }}
+                    />
+                  </TooltipE>
                 );
               })}
             </td>
@@ -170,7 +188,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
       }
     }
   });
-  console.log(datos);
+  console.log(plazas);
   return (
     <div className="table-responsive">
       <table className="table ps-table" style={{ textAlign: "center" }}>
@@ -193,47 +211,138 @@ const TablaPlazas = ({ datos, getPlaza }) => {
         title={datos.map((item) => {
           return item !== undefined && item.id === idp && item.nombre;
         })}
-        tamaño="xs"
+        tamaño="sm"
       >
         {datos.map((item) => {
+          let funcionarioss = [];
+          let telefonos = [];
+          let horarios = [];
+          if (item?.usuario !== null && item?.usuario.length > 0) {
+            for (let i = 0; i <= item?.usuario.length; i++) {
+              const element = item?.usuario[i];
+              funcionarios.map((item) => {
+                if (item.id === element) {
+                  funcionarioss.push(item);
+                }
+              });
+            }
+          }
+          if (item?.telefonos !== null && item?.telefonos.length > 0) {
+            for (let i = 0; i <= item?.telefonos.length; i++) {
+              const element = item?.telefonos[i];
+              telefonos.push({ telefono: element });
+            }
+          }
+          if (item?.horarios !== null && item?.horarios.length > 0) {
+            for (let i = 0; i <= item?.horarios.length; i++) {
+              horarios.push(item?.horarios[i]);
+            }
+          }
+          console.log(horarios[2]);
+          console.log(horarios[1] === "-" ? "una hora" : "HORAS");
           if (item !== undefined && item.id === idp) {
             return (
-              <Fragment>
-                <div className="col-sm-12 text-center">
-                  <div className="ps-block__left">
-                    <img
-                      src={
-                        process.env.REACT_APP_URL_API +
-                        `uploads/retorna/PLAZA/${
-                          item.img ? item.img : item.logo
-                        }`
-                      }
-                      alt=""
-                      width="200px"
-                      height="200px"
-                    />
-                  </div>
-                  <p>{item.img ? "Imagen" : "Logo"}</p>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+              >
+                <Grid item xs={12} sm={12}>
+                  <img
+                    src={
+                      process.env.REACT_APP_URL_API +
+                      `uploads/retorna/PLAZA/${item.img}`
+                    }
+                    alt=""
+                    width="100%"
+                    height="150px"
+                  />
+                  <p style={{ textAlign: "center" }}>
+                    <i>Banner</i>
+                  </p>
+                  <Divider variant="middle" />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={12} sm={4} style={{ textAlign: "center" }}>
+                      <img
+                        src={
+                          process.env.REACT_APP_URL_API +
+                          `uploads/retorna/PLAZA/${item.logo}`
+                        }
+                        alt=""
+                        width="150px"
+                        height="150px"
+                      />
+                      <p style={{ textAlign: "center" }}>
+                        <i>Logo</i>
+                      </p>
+                    </Grid>
+                    <Grid item xs={12} sm={8} style={{ textAlign: "center" }}>
+                      <h4>Funcionarios</h4>
+                      {funcionarioss.map((item) => {
+                        return (
+                          <p key={item.id} style={{ marginBottom: "-5px" }}>
+                            {item.label}
+                          </p>
+                        );
+                      })}
+                      <br></br>
+                      <h4>Dirección</h4>
+                      <p>{item.direccion}</p>
+                    </Grid>
+                  </Grid>
+                  <Divider variant="middle" />
                   <br></br>
-                </div>
-                <b>Funcionario: </b>
-                {funcionarios.map((fun) => {
-                  return item.usuario === fun.id ? fun.label : "";
-                })}
-                <br></br>
-                <b>Dirección: </b>
-                {item.direccion}
-                <br></br>
-                <b>Telefonos: </b>
-                {item.telefonos + "."}
-                <br></br>
-                <b>Horario de atención: </b>
-                {item.horarios + "."}
-                <br></br>
-                <b>Correo oficial: </b>
-                {item.email}
-                <br></br>
-              </Fragment>
+                  <Grid item xs={12} sm={12}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
+                        <h4>Teléfonos</h4>
+                        {telefonos.map((item) => {
+                          return <p key={item?.telefono}> {item?.telefono}</p>;
+                        })}
+                        <h4>Correo electrónico</h4>
+                        <p>{item.email}</p>
+                      </Grid>
+                      <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
+                        <h4>Horarios</h4>
+                        {horarios[1] === "-" ? (
+                          <>
+                            <p>Lunes: {horarios[0]}</p>
+                            <p>Martes: {horarios[0]}</p>
+                            <p>Miercoles: {horarios[0]}</p>
+                            <p>Jueves: {horarios[0]}</p>
+                            <p>Viernes: {horarios[0]}</p>
+                            <p>Sabado: {horarios[0]}</p>
+                            <p>Domingo: {horarios[0]}</p>
+                          </>
+                        ) : (
+                          <>
+                            <p>Lunes: {horarios[0]}</p>
+                            <p>Martes: {horarios[1]}</p>
+                            <p>Miercoles: {horarios[2]}</p>
+                            <p>Jueves: {horarios[3]}</p>
+                            <p>Viernes: {horarios[4]}</p>
+                            <p>Sabado: {horarios[5]}</p>
+                            <p>Domingo: {horarios[6]}</p>
+                          </>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
             );
           }
         })}
@@ -252,16 +361,16 @@ const TablaPlazas = ({ datos, getPlaza }) => {
         open={open2}
         handleClose={handleClose2}
         idPlaza={idp1}
-        nombre1={plaza.nombre}
-        direccion1={plaza.direccion}
-        email1={plaza.email}
-        imagen={plaza.img}
-        logo1={plaza.logo}
-        locali={plaza.localidad_nombre}
-        funcio2={plaza.admin_id}
-        cat1={plaza.categorias_nombres}
-        horarios1={plaza.horarios}
-        telefonos1={plaza.telefonos}
+        nombre1={plazas.nombre}
+        direccion1={plazas.direccion}
+        email1={plazas.email}
+        imagen={plazas.img}
+        logo1={plazas.logo}
+        locali={plazas.localidad_nombre}
+        funcio2={plazas.admin_id}
+        cat1={plazas.categorias_nombres}
+        horarios1={plazas.horarios}
+        telefonos1={plazas.telefonos}
       />
     </div>
   );

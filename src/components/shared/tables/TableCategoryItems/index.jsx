@@ -1,17 +1,21 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 // import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import TooltipE from "./../../tooltip";
 import Modal from "./../../modal";
 import _Eliminar from "./../../modal/Eliminar.jsx";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { DeleteCategoria } from "actions/categoria";
 import _Actualizar from "components/shared/modal/Categoria/Actualizar";
+import useStyles from "./style";
 
-const TableCategoryItems = ({ datos, get }) => {
+const TableCategoryItems = ({ datos, getDatos }) => {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -23,7 +27,6 @@ const TableCategoryItems = ({ datos, get }) => {
   /*INFORMACIÓN*/
   const handleClickOpen = () => {
     setOpen(true);
-    get;
   };
 
   const handleClose = () => {
@@ -37,6 +40,7 @@ const TableCategoryItems = ({ datos, get }) => {
 
   const handleClose2 = () => {
     setOpen2(false);
+    getDatos();
   };
 
   const Eliminar = () => {
@@ -50,6 +54,7 @@ const TableCategoryItems = ({ datos, get }) => {
 
   const handleClose1 = () => {
     setOpen1(false);
+    getDatos();
   };
 
   const datoActualizar = (idL) => {
@@ -57,52 +62,58 @@ const TableCategoryItems = ({ datos, get }) => {
   };
 
   const tableItems = datos.map((item, index) => {
-    return (
-      <tr key={item.id}>
-        <td>{index + 1}</td>
-        <td>
-          <Button
-            color="secondary"
-            onClick={() => {
-              handleClickOpen();
-              setIdp(item.id);
-            }}
-          >
-            <b>{item.nombre}</b>
-          </Button>
-        </td>
-        <td>
-          {item.fecha === null ? <p>No hay fecha</p> : item.fecha.slice(0, 10)}
-        </td>
-        <td>
-          {item.acciones.map((cat) => {
-            return (
-              <TooltipE title={cat.name} key={cat.name}>
-                <IconButton
-                  color="default"
-                  component="span"
-                  key={cat.name}
-                  onClick={
-                    cat.name === "Editar"
-                      ? () => {
-                          handleClickOpen1();
-                          setIdp1(cat.id);
-                          datoActualizar(cat.id);
-                        }
-                      : () => {
-                          handleClickOpen2();
-                          setIdp2(cat.id);
-                        }
-                  }
-                >
-                  {cat.icon}
-                </IconButton>
-              </TooltipE>
-            );
-          })}
-        </td>
-      </tr>
-    );
+    if (item.activo === true) {
+      return (
+        <tr key={item.id}>
+          <td>{index + 1}</td>
+          <td>
+            <Button
+              color="secondary"
+              onClick={() => {
+                handleClickOpen();
+                setIdp(item.id);
+              }}
+            >
+              <b>{item.nombre}</b>
+            </Button>
+          </td>
+          <td>
+            {item.fecha === null ? (
+              <p>No hay fecha</p>
+            ) : (
+              item.fecha.slice(0, 10)
+            )}
+          </td>
+          <td>
+            {item.acciones.map((cat) => {
+              return (
+                <TooltipE title={cat.name} key={cat.name}>
+                  <IconButton
+                    color="default"
+                    component="span"
+                    key={cat.name}
+                    onClick={
+                      cat.name === "Editar"
+                        ? () => {
+                            handleClickOpen1();
+                            setIdp1(cat.id);
+                            datoActualizar(cat.id);
+                          }
+                        : () => {
+                            handleClickOpen2();
+                            setIdp2(cat.id);
+                          }
+                    }
+                  >
+                    {cat.icon}
+                  </IconButton>
+                </TooltipE>
+              );
+            })}
+          </td>
+        </tr>
+      );
+    }
   });
 
   return (
@@ -118,20 +129,45 @@ const TableCategoryItems = ({ datos, get }) => {
         </thead>
         <tbody>{tableItems}</tbody>
       </table>
-      <Modal
-        open={open}
-        handleClose={handleClose}
-        title={datos.map((item) => {
-          return item !== undefined && item.id === idp2 && item.nombre;
-        })}
-        tamaño="xs"
-      >
+      <Modal open={open} handleClose={handleClose} title="" tamaño="xs">
         {datos.map((item) => {
           if (item !== undefined && item.id === idp) {
             return (
-              <Fragment>
-                <p>{item.nombre}</p>
-              </Fragment>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+              >
+                <Grid item sm={12} xs={12} style={{ textAlign: "center" }}>
+                  <img
+                    src={
+                      process.env.REACT_APP_URL_API +
+                      `uploads/retorna/CATEGORIA/${item.icono}`
+                    }
+                    alt=""
+                    width="100px"
+                    height="100px"
+                    style={{ marginTop: "10px" }}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12} style={{ textAlign: "center" }}>
+                  <p className={classes.text} style={{ marginTop: "5px" }}>
+                    <b className={classes.text1}>Nombre: </b> {item.nombre} |{" "}
+                    <b className={classes.text1}> Slug:</b> {item.slug}
+                  </p>
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider variant="middle" style={{ marginTop: "5px" }} />
+                  <h4
+                    className={classes.text2}
+                    style={{ textAlign: "center", marginTop: "10px" }}
+                  >
+                    <b>Descripción: </b>
+                  </h4>
+                  <p>{item.descripcion}</p>
+                </Grid>
+              </Grid>
             );
           }
         })}
@@ -161,7 +197,7 @@ const TableCategoryItems = ({ datos, get }) => {
 
 TableCategoryItems.propTypes = {
   datos: PropTypes.array,
-  get: PropTypes.func,
+  getDatos: PropTypes.func,
 };
 
 export default TableCategoryItems;

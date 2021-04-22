@@ -20,6 +20,12 @@ export const categoriaReducer = (state = initialState, action) => {
         categorias: [...action.categoria],
       };
 
+    case types.categoriaMensaje:
+      return {
+        ...state,
+        ...action.payload,
+      };
+
     default:
       return state;
   }

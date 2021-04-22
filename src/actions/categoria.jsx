@@ -5,7 +5,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
 export const setCategorias = (nombre, slug, descripcion, img) => {
-  return async () => {
+  return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
@@ -21,6 +21,13 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
       )
       .then((response) => {
         console.log(response.data);
+        let data = response.data;
+        dispatch(
+          categoriasMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
         if (response.status === 200) {
           let id = response.data.categoria.id;
           const formData = new FormData();
@@ -36,10 +43,14 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
           };
           axios(config1)
             .then((response) => {
-              if (response.status) {
-                let data = true;
-                return data;
-              }
+              let data = response.data;
+              getCategorias();
+              dispatch(
+                categoriasMensaje({
+                  ok: data.ok,
+                  msg: data.msg,
+                })
+              );
             })
             .catch((e) => {
               console.log("ERROR", e);
@@ -69,6 +80,7 @@ export const getCategorias = () => {
           slug: item.slug,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           icono: item.icono,
+          activo: item.activo,
           acciones: [
             {
               name: "Editar",
@@ -96,29 +108,35 @@ const categoriasDatos = (categorias) => ({
 });
 
 export const DeleteCategoria = (idp2) => {
-  let config1 = {
-    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  return async (dispatch) => {
+    let config1 = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .put(
+        process.env.REACT_APP_URL_API + "categorias/delete/" + idp2,
+        {
+          activo: false,
+        },
+        config1
+      )
+      .then((response) => {
+        let data = response.data;
+        dispatch(
+          categoriasMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        console.log("ERROR", e);
+      });
   };
-  axios
-    .put(
-      process.env.REACT_APP_URL_API + "locatarios/delete/" + idp2,
-      {
-        activo: false,
-      },
-      config1
-    )
-    .then((response) => {
-      if (response.status) {
-        console.log("ENVIADO");
-      }
-    })
-    .catch((e) => {
-      console.log("ERROR", e);
-    });
 };
 
 export const UpdateCategoria = (nombre, slug, descripcion, idp2) => {
-  return async () => {
+  return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
@@ -133,20 +151,23 @@ export const UpdateCategoria = (nombre, slug, descripcion, idp2) => {
         config
       )
       .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
-          Swal.fire("Enviado", "Se actualizo la información", "success");
-        }
+        console.log(response);
+        let data = response.data;
+        dispatch(
+          categoriasMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
-        Swal.fire("Error", "Datos incorrectos", "error");
       });
   };
 };
 
 export const setImagen = (img, idp2) => {
-  return async () => {
+  return async (dispatch) => {
     const formData = new FormData();
     formData.append("imagen", img);
     console.log(img);
@@ -158,9 +179,13 @@ export const setImagen = (img, idp2) => {
     };
     axios(config1)
       .then((response) => {
-        if (response.status) {
-          Swal.fire("Enviado", "Se actualizo el icono", "success");
-        }
+        let data = response.data;
+        dispatch(
+          categoriasMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
       })
       .catch((e) => {
         console.log("ERROR", e);
@@ -168,3 +193,8 @@ export const setImagen = (img, idp2) => {
       });
   };
 };
+
+const categoriasMensaje = (mensajes) => ({
+  type: types.categoriaMensaje,
+  payload: mensajes,
+});

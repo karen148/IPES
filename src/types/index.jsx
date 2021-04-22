@@ -1,4 +1,7 @@
 export const types = {
+  TOGGLE_DRAWER_MENU: "TOGGLE_DRAWER_MENU",
+  TOGGLE_DRAWER_MENU_SUCCESS: "TOGGLE_DRAWER_MENU_SUCCESS",
+
   authCheckingFinish: "[auth] Finish checking login state",
   authStartLogin: "[auth] Start login",
   authLogin: "[auth] Login",
@@ -14,9 +17,11 @@ export const types = {
   plazaLocalidades: "[plaza] Obtener localidades",
   plazaFuncionario: "[plaza] Obtener funcionarios",
   plazaCategorias: "[plaza] Obtener categorias",
+  plazaMensaje: "[plaza] Mensaje que se envió la información",
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
 
   categoriaCrear: "[categoria] Crear categoria",
   categoriaDatos: "[categoria] Obtener datos de la categoria",
+  categoriaMensaje: "[categoria] Mensaje que se envió la información",
 };

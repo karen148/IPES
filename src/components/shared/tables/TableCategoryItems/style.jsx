@@ -1,11 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    "& > * + *": {
-      marginTop: theme.spacing(2),
-    },
+  text: {
+    color: "#8c8989",
+  },
+  text1: {
+    color: "#5a4848",
+  },
+  text2: {
+    color: theme.palette.primary.main,
   },
 }));
 

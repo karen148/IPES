@@ -1,17 +1,21 @@
+import { toggleDrawerMenu } from "actions/menu";
 import React from "react";
+import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 // import { connect, useDispatch } from 'react-redux';
 // import { toggleDrawerMenu } from './../../../../store/app/action';
 // // { isDrawerMenu }
-const HeaderMobile = () => {
-  //     // const dispatch = useDispatch();
-  //     // const handleOpenDrawer = () => {
-  //     //     dispatch(toggleDrawerMenu(true));
-  //     // };
-  // //  onClick={handleOpenDrawer}
+const HeaderMobile = ({ isDrawerMenu }) => {
+  const dispatch = useDispatch();
+  const handleOpenDrawer = () => {
+    dispatch(toggleDrawerMenu(true));
+    console.log(dispatch(toggleDrawerMenu(true)));
+  };
+  console.log(isDrawerMenu);
   return (
     <header className="header--mobile">
       <div className="header__left">
-        <button className="ps-drawer-toggle">
+        <button className="ps-drawer-toggle" onClick={handleOpenDrawer}>
           <i className="lnr lnr-menu"></i>
         </button>
         <img src="" alt="" />
@@ -28,6 +32,10 @@ const HeaderMobile = () => {
       </div>
     </header>
   );
+};
+
+HeaderMobile.propTypes = {
+  isDrawerMenu: PropTypes.bool,
 };
 
 export default HeaderMobile;

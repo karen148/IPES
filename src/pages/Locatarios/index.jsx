@@ -24,6 +24,7 @@ import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import Crear from "../../components/shared/modal/Locatarios/Crear";
+import { getCategorias } from "actions/plaza";
 
 const estados = [
   {
@@ -66,6 +67,10 @@ const Locatarios = () => {
 
   useEffect(() => {
     dispatch(getLocalidades());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCategorias());
   }, [dispatch]);
 
   console.log(locatario1);

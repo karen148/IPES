@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 
 // import useStyles from "./styles"
 import "./style.css";
+import DrawerMenu from "components/shared/menus/DrawerMenu";
 
 const ContainerDashboard = ({ children }) => {
   // const class2 = useStyles();
@@ -38,6 +39,7 @@ const ContainerDashboard = ({ children }) => {
         <div className="ps-main__wrapper">
           <HeaderMobile />
           {children}
+          <DrawerMenu />
         </div>
       </main>
     </div>
