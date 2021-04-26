@@ -24,4 +24,7 @@ export const types = {
   categoriaCrear: "[categoria] Crear categoria",
   categoriaDatos: "[categoria] Obtener datos de la categoria",
   categoriaMensaje: "[categoria] Mensaje que se envió la información",
+
+  productoMensaje: "[producto] Mensaje que se envió la información",
+  productoDatos: "[producto] Obtener datos productos",
 };

@@ -7,7 +7,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Button from "@material-ui/core/Button";
 import Imagenes from "./Imagenes";
-import Inventario from "./Inventario";
+import Inventario from "./Categorias";
 import Producto from "./Producto";
 import Typography from "@material-ui/core/Typography";
 

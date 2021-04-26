@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPlazasMercado } from "actions/plaza";
 
 const Crear = ({ open, handleClose }) => {
-  const { msg } = useSelector((state) => state.locatario);
+  const { msg, locatarios } = useSelector((state) => state.locatario);
   // const { id } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -68,10 +68,28 @@ const Crear = ({ open, handleClose }) => {
     }
   };
 
+  const verficarDatos = (cedula, email) => {
+    let ced = locatarios.filter((item) => item.cedula === cedula)[0]?.cedula;
+    let correo = locatarios.filter((item) => item.cedula === email)[0]?.email;
+    if (ced === cedula || correo === email) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const handleNext = () => {
     if (validarEmail(email)) {
       if (local && cedula && nombre && apellido) {
-        setActiveStep(activeStep + 1);
+        if (verficarDatos(cedula, email)) {
+          setActiveStep(activeStep + 1);
+        } else {
+          setAlerta1(true);
+          setMensaje("El usuario ya existe");
+          setTimeout(() => {
+            setAlerta1(false);
+          }, 3000);
+        }
       } else {
         setAlerta1(true);
         setMensaje("Faltan datos en el formulario");

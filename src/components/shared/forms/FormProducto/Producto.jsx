@@ -1,115 +1,93 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import { useForm } from "hooks/useForm";
+import PropTypes from "prop-types";
 
-const Producto = () => {
-  const { plazastrues, locatarios } = useSelector((state) => state.plaza);
-  const [plaza, setPlaza] = useState("");
-  const [locatario, setLocatario] = useState("");
-
-  const [producto, handleProducto] = useForm({
-    nombre: "",
-    normal: "",
-    rebajado: "",
-    descripcion: "",
-  });
-
-  const { nombre, normal, rebajado, descripcion } = producto;
-
+const Producto = ({
+  plaza,
+  setPlaza,
+  nombre,
+  setNombre,
+  descripcion,
+  setDescripion,
+  sku,
+  setSku,
+}) => {
+  const { plazastrues } = useSelector((state) => state.plaza);
+  console.log(plazastrues);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Ingresar la información del producto
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Autocomplete
-            id="free-solo-demo"
-            freeSolo
-            options={plazastrues?.map((option) => option?.nombre)}
-            inputValue={plaza}
-            onInputChange={(event, newInputValue) => {
-              setPlaza(newInputValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                type="text"
-                margin="normal"
-                variant="outlined"
-                label="Plaza"
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Autocomplete
-            id="free-solo-demo"
-            freeSolo
-            options={locatarios?.map((option) => option?.nombre)}
-            inputValue={locatario}
-            onInputChange={(event, newInputValue) => {
-              setLocatario(newInputValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                type="text"
-                margin="normal"
-                variant="outlined"
-                label="Locatario"
-              />
-            )}
-          />
-        </Grid>
+        {plazastrues.length !== 0 ? (
+          <Grid item xs={12} sm={12}>
+            <label>Plaza</label>
+            <Autocomplete
+              multiple
+              limitTags={2}
+              id="multiple-limit-tags"
+              options={plazastrues}
+              getOptionLabel={(option) => option?.nombre}
+              value={plaza}
+              onChange={(event, newValue) => {
+                setPlaza(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  type="text"
+                  margin="normal"
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
+        ) : (
+          <Typography
+            variant="subtitle1"
+            gutterBottom
+            style={{ marginLeft: "2%", marginTop: "10px" }}
+          >
+            No hay plazas registradas
+          </Typography>
+        )}
         <Grid item xs={12}>
+          <label>Nombre del producto</label>
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
             value={nombre}
             name="nombre"
-            onChange={handleProducto}
+            onChange={(e) => setNombre(e.target.value)}
             fullWidth
-            label="Nombre del producto"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
+          <label>SKU</label>
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
-            value={normal}
-            name="normal"
-            onChange={handleProducto}
+            value={sku}
+            name="sku"
+            onChange={(e) => setSku(e.target.value)}
             fullWidth
-            label="Precio normal"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            margin="normal"
-            variant="outlined"
-            type="text"
-            value={rebajado}
-            name="rebajado"
-            onChange={handleProducto}
-            fullWidth
-            label="Precio de rebaja"
           />
         </Grid>
         <Grid item xs={12} sm={12}>
+          <label>Descripción del producto</label>
           <TextareaAutosize
             aria-label="minimum height"
             variant="outlined"
-            placeholder="Descripción del producto"
             value={descripcion}
-            onChange={handleProducto}
+            onChange={(e) => setDescripion(e.target.value)}
             fullWidth
             style={{ width: "100%", height: " 100px" }}
           />
@@ -117,6 +95,17 @@ const Producto = () => {
       </Grid>
     </React.Fragment>
   );
+};
+
+Producto.propTypes = {
+  plaza: PropTypes.array,
+  setPlaza: PropTypes.func,
+  nombre: PropTypes.string,
+  setNombre: PropTypes.func,
+  descripcion: PropTypes.string,
+  setDescripion: PropTypes.func,
+  sku: PropTypes.string,
+  setSku: PropTypes.func,
 };
 
 export default Producto;

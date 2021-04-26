@@ -105,7 +105,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
           for (let i = 0; i <= item?.categorias.length; i++) {
             const element = item?.categorias[i];
             categorias.map((item) => {
-              if (item.label === element) {
+              if (item.id === element) {
                 data.push(item);
               }
             });

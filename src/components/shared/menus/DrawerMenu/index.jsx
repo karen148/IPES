@@ -14,7 +14,7 @@ const DrawerMenu = () => {
       <div className="ps-drawer__header">
         <h4> Menu</h4>
         <button className="ps-drawer__close" onClick={handleCloseDrawer}>
-          <i className="icon icon-cross"></i>
+          <i className="lnr lnr-cross"></i>
         </button>
       </div>
       <div className="ps-drawer__content">

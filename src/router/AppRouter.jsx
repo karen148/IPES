@@ -73,13 +73,13 @@ export const AppRouter = () => {
             component={Locatarios}
             isAuthenticated={!!id}
           />
-          <PrivateRoute
+          <PublicRoute
             exact
             path="/categorias"
             component={Categorias}
             isAuthenticated={!!id}
           />
-          <PrivateRoute
+          <PublicRoute
             exact
             path="/productos"
             component={Productos}

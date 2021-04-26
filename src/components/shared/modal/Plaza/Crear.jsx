@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPlazasMercado } from "actions/plaza";
 
 const Crear = ({ open, handleClose }) => {
-  const { msg } = useSelector((state) => state.plaza);
+  const { msg, plazastrues } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -67,10 +67,28 @@ const Crear = ({ open, handleClose }) => {
     }
   };
 
+  const verficarDatos = (plaza, email) => {
+    let plaz = plazastrues.filter((item) => item.nombre === plaza)[0]?.nombre;
+    let correo = plazastrues.filter((item) => item.email === email)[0]?.email;
+    if (plaza === plaz || correo === email) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const handleNext = () => {
     if (validarEmail(email)) {
       if (plaza && localidad && funcionario) {
-        setActiveStep(activeStep + 1);
+        if (verficarDatos(plaza, email)) {
+          setActiveStep(activeStep + 1);
+        } else {
+          setAlerta1(true);
+          setMensaje1("La plaza ya existe");
+          setTimeout(() => {
+            setAlerta1(false);
+          }, 3000);
+        }
       } else {
         setAlerta1(true);
         setMensaje1("Falta datos en el formulario");

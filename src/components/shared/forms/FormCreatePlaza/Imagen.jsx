@@ -176,8 +176,6 @@ const Imagen = ({
 
 Imagen.propTypes = {
   plaza: PropTypes.string,
-  cat: PropTypes.string,
-  setCat: PropTypes.func,
   imglogo: PropTypes.string,
   setImgLogo: PropTypes.func,
   img: PropTypes.array,

@@ -1,182 +1,207 @@
-import React from "react";
+import React, { useState } from "react";
 // import { useSelector } from "react-redux";
 // import axios from "axios";
 
-import Modal from "./../index";
-// import TextField from "@material-ui/core/TextField";
-// import Alert from "@material-ui/lab/Alert";
-// import Autocomplete from "@material-ui/lab/Autocomplete";
-// import Button from "@material-ui/core/Button";
+import ModalForm from "./../modalForm";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import Alert from "@material-ui/lab/Alert";
+import StepLabel from "@material-ui/core/StepLabel";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import Formulario from "./../../forms/FormProducto/Formulario";
+import useStyles from "components/shared/forms/style";
+import Producto from "components/shared/forms/FormProducto/Producto";
+import Imagenes from "components/shared/forms/FormProducto/Imagenes";
+import Categorias from "components/shared/forms/FormProducto/Categorias";
+import { setProductos } from "actions/producto";
+import { useDispatch, useSelector } from "react-redux";
 // import { useForm } from "./../../../../hooks/useForm";
 
 const Crear = ({ open, handleClose }) => {
-  // const { plazastrues } = useSelector((state) => state.plaza);
-  // const { locatarios } = useSelector((state) => state.locatario);
-  // const { id } = useSelector((state) => state.auth);
+  const { msg } = useSelector((state) => state.producto);
+  const dispatch = useDispatch();
 
-  // const [horaSI, setHoraSI] = useState(false);
-  // const [imglogo, setImgLogo] = useState("img");
-  // const [horario_m1, setHorariom1] = useState("");
-  // const [horario_m2, setHorariom2] = useState("");
-  // const [horario_lm1, setHorariolm1] = useState("");
-  // const [horario_lm2, setHorariolm2] = useState("");
-  // const [horario_mm1, setHorariomm1] = useState("");
-  // const [horario_mm2, setHorariomm2] = useState("");
-  // const [horario_jm1, setHorariojm1] = useState("");
-  // const [horario_jm2, setHorariojm2] = useState("");
-  // const [horario_vm1, setHorariovm1] = useState("");
-  // const [horario_vm2, setHorariovm2] = useState("");
-  // const [horario_sm1, setHorariosm1] = useState("");
-  // const [horario_sm2, setHorariosm2] = useState("");
-  // const [horario_dm1, setHorariodm1] = useState("");
-  // const [horario_dm2, setHorariodm2] = useState("");
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ["Producto", "Imagenes", "Categorías"];
+  const [alerta, setAlerta] = useState(false);
 
-  // const [cedula, setCedula] = useState("");
-  // const [img, setImg] = useState(null);
-  // const [img1, setImg1] = useState(null);
-  // const [telefonos, setTele] = useState([{ telefono: " " }]);
-  // const [alerta, setAlerta] = useState(false);
-  // const [plaza, setPlaza] = useState([]);
-  // const [cat, setCat] = useState([]);
-  // const [infoLocatarios, handleInputChange] = useForm({
-  //   local: "",
-  //   nombre: "",
-  //   apellido: "",
-  //   email: "",
-  // });
+  const [plaza, setPlaza] = useState([]);
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripion] = useState("");
+  const [sku, setSku] = useState("");
 
-  // const { local, apellido, nombre, email } = infoLocatarios;
+  const [imggaleria, setImgGaleria] = useState("img");
+  const [img1, setImg1] = useState(null);
+  const [img2, setImg2] = useState(null);
+  const [img3, setImg3] = useState(null);
+  const [img4, setImg4] = useState(null);
+  const [img5, setImg5] = useState(null);
+  const [img6, setImg6] = useState(null);
 
-  // const handleImg = (event) => {
-  //   var reader = new FileReader();
-  //   reader.readAsDataURL(event[0]);
-  //   reader.onload = function () {
-  //     setImg(event[0]);
-  //     setImg1(reader.result);
-  //   };
+  const [cat, setCat] = useState([]);
 
-  //   reader.onerror = function () {
-  //     console.log(reader.error);
-  //   };
-  // };
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
 
-  // const HoraSi = () => {
-  //   setHoraSI(true);
-  // };
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
-  // const HoraNO = () => {
-  //   setHoraSI(false);
-  // };
+  const Registrar = () => {
+    dispatch(
+      setProductos(plaza, nombre, descripcion, sku, img1, img3, img5, cat)
+    );
+    setAlerta(true);
+    setTimeout(() => {
+      setAlerta(false);
+    }, 3000);
+  };
 
-  // const Logo = () => {
-  //   setImgLogo("logo");
-  // };
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <Producto
+            plaza={plaza}
+            setPlaza={setPlaza}
+            nombre={nombre}
+            setNombre={setNombre}
+            descripcion={descripcion}
+            setDescripion={setDescripion}
+            sku={sku}
+            setSku={setSku}
+          />
+        );
+      case 1:
+        return (
+          <Imagenes
+            nombre={nombre}
+            imggaleria={imggaleria}
+            setImgGaleria={setImgGaleria}
+            img1={img1}
+            setImg1={setImg1}
+            img2={img2}
+            setImg2={setImg2}
+            img3={img3}
+            setImg3={setImg3}
+            img4={img4}
+            setImg4={setImg4}
+            img5={img5}
+            setImg5={setImg5}
+            img6={img6}
+            setImg6={setImg6}
+          />
+        );
+      case 2:
+        return (
+          <Categorias plaza={plaza} nombre={nombre} cat={cat} setCat={setCat} />
+        );
+      default:
+        throw new Error("Error");
+    }
+  }
 
-  // const Img = () => {
-  //   setImgLogo("img");
-  // };
-
-  // //agregar un telefono
-  // const handleAddTel = () => {
-  //   setTele([...telefonos, { telefono: "" }]);
-  // };
-
-  // //evento para modificar input
-  // const handleInputChange1 = (e, index) => {
-  //   const { name, value } = e.target;
-  //   const list = [...telefonos];
-  //   list[index][name] = value;
-  //   setTele(list);
-  // };
-
-  // // evento para remover un hijo
-  // const handleRemoveClick = (index) => {
-  //   const list = [...telefonos];
-  //   list.splice(index, 1);
-  //   setTele(list);
-  // };
-
-  // const setRegistro = async () => {
-  //   let horario = [];
-  //   horario.push(
-  //     horario_m1 + "-" + horario_m2,
-  //     horario_lm1 + "-" + horario_lm2,
-  //     horario_mm1 + "-" + horario_mm2,
-  //     horario_jm1 + "-" + horario_jm2,
-  //     horario_vm1 + "-" + horario_vm2,
-  //     horario_sm1 + "-" + horario_sm2,
-  //     horario_dm1 + "-" + horario_dm2
-  //   );
-  //   let tele = [];
-  //   telefonos.map((item) => {
-  //     Array.prototype.push.apply(tele, [item.telefono]);
-  //   });
-
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
-
-  //   axios
-  //     .post(
-  //       process.env.REACT_APP_URL_API + "locatarios/crear",
-  //       {
-  //         admin_id: id,
-  //         plaza_id: plaza.id,
-  //         nombre_local: local,
-  //         categorias: cat,
-  //         nombre: nombre,
-  //         apellido: apellido,
-  //         cedula: cedula,
-  //         horarios: horario,
-  //         telefonos: tele,
-  //         email: email,
-  //       },
-  //       config
-  //     )
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         console.log("SE REGISTRO");
-  //         console.log(response);
-  //         let id = response.data.locatario.id;
-  //         const formData = new FormData();
-  //         formData.append("imagen", img);
-  //         formData.append("locatario", imglogo);
-  //         console.log(img);
-  //         let config1 = {
-  //           method: "put",
-  //           url: process.env.REACT_APP_URL_API + "uploads/LOCATARIO/" + id,
-  //           headers: {
-  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //           },
-  //           data: formData,
-  //         };
-  //         axios(config1)
-  //           .then((response) => {
-  //             if (response.status) {
-  //               setAlerta(true);
-  //             }
-  //           })
-  //           .catch((e) => {
-  //             console.log("ERROR", e);
-  //           });
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR!!!!!", e);
-  //     });
-  // };
+  const Limpiar = () => {
+    setPlaza([]);
+    setNombre("");
+    setDescripion("");
+    setSku("");
+    setImgGaleria("img");
+    setImg1(null);
+    setImg2(null);
+    setImg3(null);
+    setImg4(null);
+    setImg5(null);
+    setImg6(null);
+    setCat([]);
+  };
 
   return (
-    <Modal
+    <ModalForm
       open={open}
       handleClose={handleClose}
       title="Crear Producto"
-      tamaño="md"
+      tamaño="sm"
+      Limpiar={Limpiar}
     >
-      <Formulario></Formulario>
-    </Modal>
+      <React.Fragment>
+        <CssBaseline />
+        <main className={classes.layout}>
+          {/* <Paper className={classes.paper}> */}
+          <Typography component="h1" variant="h4" align="center"></Typography>
+          <Stepper activeStep={activeStep} className={classes.stepper}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <React.Fragment>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography variant="h5" gutterBottom></Typography>
+                {/* <Typography variant="subtitle1">
+                  Your order number is #2001539. We have emailed your order
+                  confirmation, and will send you an update when your order has
+                  shipped.
+                </Typography> */}
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {getStepContent(activeStep)}
+                <div className={classes.buttons}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} className={classes.button}>
+                      Regresar
+                    </Button>
+                  )}
+                  {activeStep === steps.length - 1 ? (
+                    <>
+                      {alerta && (
+                        <Alert severity="success" style={{ width: "100%" }}>
+                          {msg}
+                        </Alert>
+                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ color: "white" }}
+                        onClick={Registrar}
+                        className={classes.button}
+                      >
+                        Enviar
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {/* {alerta1 && (
+                        <Alert severity="error" style={{ width: "100%" }}>
+                          {mensaje1}
+                        </Alert>
+                      )} */}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ color: "white" }}
+                        onClick={handleNext}
+                        className={classes.button}
+                      >
+                        Siguiente
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </React.Fragment>
+            )}
+          </React.Fragment>
+          {/* </Paper> */}
+        </main>
+      </React.Fragment>
+    </ModalForm>
   );
 };
 

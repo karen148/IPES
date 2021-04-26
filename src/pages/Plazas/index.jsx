@@ -104,7 +104,7 @@ const Plazas = () => {
               direccion: item.direccion,
               telefonos: item.telefonos,
               email: item.email,
-              categorias: item.categorias_nombres,
+              categorias: item.categorias_id,
               horarios: item.horarios,
               activo: item.activo,
               img: item.img,

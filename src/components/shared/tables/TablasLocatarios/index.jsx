@@ -254,17 +254,17 @@ const TablaLocatarios = ({ datos, getLocali }) => {
         open={open2}
         handleClose={handleClose2}
         idPlaza={idp1}
-        loc1={local3.length !== 0 ? local3[0].local : ""}
-        ced1={local3.length !== 0 ? local3[0].cedula : "*"}
-        nom1={local3.length !== 0 ? local3[0].nombre : ""}
-        ape1={local3.length !== 0 ? local3[0].apellido : ""}
-        email1={local3.length !== 0 ? local3[0].email : ""}
-        telefonos1={local3.length !== 0 ? local3[0].telefonos : ""}
-        plaza1={local3.length !== 0 ? local3[0].plaza : ""}
-        categorias1={local3.length !== 0 ? local3[0].categorias : ""}
-        horarios2={local3.length !== 0 ? local3[0].horarios : ""}
-        imagen2={local3.length !== 0 ? local3[0].img : ""}
-        logo2={local3.length !== 0 ? local3[0].logo : ""}
+        loc1={local3?.length !== 0 ? local3[0]?.local : ""}
+        ced1={local3?.length !== 0 ? local3[0]?.cedula : "*"}
+        nom1={local3?.length !== 0 ? local3[0]?.nombre : ""}
+        ape1={local3?.length !== 0 ? local3[0]?.apellido : ""}
+        email1={local3?.length !== 0 ? local3[0]?.email : ""}
+        telefonos1={local3?.length !== 0 ? local3[0]?.telefonos : ""}
+        plaza1={local3?.length !== 0 ? local3[0]?.plaza : ""}
+        categorias1={local3?.length !== 0 ? local3[0]?.categorias : ""}
+        horarios2={local3?.length !== 0 ? local3[0]?.horarios : ""}
+        imagen2={local3?.length !== 0 ? local3[0]?.img : ""}
+        logo2={local3?.length !== 0 ? local3[0]?.logo : ""}
       />
     </div>
   );

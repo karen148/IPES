@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -31,6 +31,8 @@ const Plaza = ({
     (state) => state.plaza
   );
 
+  const [disabled, setHabilitar] = useState(false);
+  console.log(disabled);
   const classes = useStyles();
   //agregar un telefono
   const handleAddTel = () => {
@@ -59,18 +61,25 @@ const Plaza = ({
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
-          <label>Nombre de la plaza*</label>
+          {disabled ? (
+            <label style={{ color: "red" }}>Nombre de la plaza*</label>
+          ) : (
+            <label>Nombre de la plaza*</label>
+          )}
           {si === "no"
             ? plazastrues?.map((option) => {
                 return (
                   option?.nombre === plaza && (
-                    <Alert severity="error" className={classes.alerta}>
-                      La plaza de mercado ya existe
-                    </Alert>
+                    <>
+                      <Alert severity="error" className={classes.alerta}>
+                        La plaza de mercado ya existe
+                      </Alert>
+                      {setHabilitar(true)}
+                    </>
                   )
                 );
               })
-            : ""}
+            : setHabilitar(false)}
           {plazas?.map((option) => {
             return (
               option?.nombre === plaza &&
