@@ -54,7 +54,7 @@ const Crear = ({ open, handleClose }) => {
 
   const [plaza, setPlaza] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [localidad, setLocalidad] = useState("");
+  const [localidad, setLocalidad] = useState([]);
   const [funcionario, setFuncionarios] = useState([]);
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
   const [email, setEmail] = useState("");
@@ -190,7 +190,6 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Registrar = () => {
-    console.log(telefonos);
     dispatch(
       setPlazasMercado(
         horario_m1,
@@ -223,7 +222,6 @@ const Crear = ({ open, handleClose }) => {
       setAlerta(false);
     }, 3000);
   };
-  console.log(telefonos);
 
   const Limpiar = () => {
     setImg(null);

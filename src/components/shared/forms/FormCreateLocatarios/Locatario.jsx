@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { useSelector } from "react-redux";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import Alert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcCallIcon from "@material-ui/icons/AddIcCall";
+import StoreIcon from "@material-ui/icons/Store";
 // import classes from "*.module.css";
 import PropTypes from "prop-types";
 import useStyles from "../style";
@@ -18,20 +17,18 @@ const Locatario = ({
   setCedula,
   local,
   setLocal,
+  numerolocal,
+  setnumeroLocal,
   nombre,
   setNombre,
-  apellido,
-  setApellido,
   telefonos,
   setTelefonos,
   email,
   setEmail,
+  locatarios,
 }) => {
-  const { locatarios } = useSelector((state) => state.locatario);
-
-  const [disabled, setHabilitar] = useState(false);
-  console.log(disabled);
   const classes = useStyles();
+
   //agregar un telefono
   const handleAddTel = () => {
     setTelefonos([...telefonos, { telefono: "" }]);
@@ -52,6 +49,29 @@ const Locatario = ({
     setTelefonos(list);
   };
 
+  //agregar el numero del local
+  const handleAddLocal = () => {
+    setnumeroLocal([...numerolocal, { local1: "" }]);
+  };
+
+  //evento para modificar input
+  const handleInputChangeLocal = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...numerolocal];
+    list[index][name] = value;
+    setnumeroLocal(list);
+  };
+
+  // evento para remover un hijo
+  const handleRemoveClickLocal = (index) => {
+    const list = [...numerolocal];
+    list.splice(index, 1);
+    setnumeroLocal(list);
+  };
+
+  // let actual = locatarios.filter((item) => item.local !== "");
+  // console.log(actual);
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -59,50 +79,67 @@ const Locatario = ({
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Nombre del establecimiento*</label>
-          ) : (
-            <label>Nombre del establecimiento*</label>
-          )}
-          {si === "no"
-            ? locatarios?.map((option) => {
-                return (
-                  option?.local === local && (
-                    <>
-                      <Alert severity="error" className={classes.alerta}>
-                        El establecimiento ya existe
-                      </Alert>
-                      {setHabilitar(true)}
-                    </>
-                  )
-                );
-              })
-            : setHabilitar(false)}
-          <Autocomplete
-            id="free-solo-demo"
-            freeSolo
-            disabled={disabled}
-            options={locatarios?.map((option) => option?.local)}
-            inputValue={local}
-            onInputChange={(event, newInputValue) => {
-              setLocal(newInputValue);
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            )}
+          <label>Nombre del establecimiento*</label>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            type="text"
+            value={local}
+            name="local"
+            onChange={(e) => setLocal(e.target.value)}
+            fullWidth
           />
         </Grid>
         <Grid item xs={12} sm={12}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Cédula*</label>
-          ) : (
-            <label>Cédula*</label>
-          )}
+          <label>Número del local</label>
+          {numerolocal.map((x, i) => {
+            return (
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                key={i + 1}
+              >
+                <Grid item xs={8} sm={8}>
+                  <TextField
+                    margin="normal"
+                    variant="outlined"
+                    type="number"
+                    value={x.local1}
+                    name="local1"
+                    onChange={(e) => handleInputChangeLocal(e, i)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={4} sm={4} style={{ textAlign: "center" }}>
+                  {numerolocal.length !== 1 && (
+                    <IconButton
+                      onClick={() => handleRemoveClickLocal(i)}
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
+                  {numerolocal.length - 1 === i && (
+                    <IconButton
+                      onClick={handleAddLocal}
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <StoreIcon />
+                    </IconButton>
+                  )}
+                </Grid>
+              </Grid>
+            );
+          })}
+        </Grid>
+        <Grid item xs={12} sm={12}>
+          <label>Cédula*</label>
           {si === "no"
             ? locatarios?.map((option) => {
                 return (
@@ -111,63 +148,47 @@ const Locatario = ({
                       <Alert severity="error" className={classes.alerta}>
                         El locatario ya esxiste
                       </Alert>
-                      {setHabilitar(true)}
                     </>
                   )
                 );
               })
-            : setHabilitar(false)}
+            : ""}
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
             value={cedula}
             name="cedula"
-            disabled={disabled}
             onChange={(e) => setCedula(e.target.value)}
             fullWidth
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Nombre*</label>
-          ) : (
-            <label>Nombre*</label>
-          )}
+        <Grid item xs={12} sm={12}>
+          <label>Nombre Completo*</label>
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
             value={nombre}
             name="nombre"
-            disabled={disabled}
             onChange={(e) => setNombre(e.target.value)}
             fullWidth
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Apellido*</label>
-          ) : (
-            <label>Apellido*</label>
-          )}
+        {/* <Grid item xs={12} sm={6}>
+          <label>Apellido*</label>
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
             value={apellido}
-            disabled={disabled}
             name="apellido"
             onChange={(e) => setApellido(e.target.value)}
             fullWidth
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={12}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Teléfonos</label>
-          ) : (
-            <label>Teléfonos</label>
-          )}
+          <label>Teléfonos</label>
           {telefonos.map((x, i) => {
             return (
               <Grid
@@ -184,7 +205,6 @@ const Locatario = ({
                     type="text"
                     value={x.telefono}
                     name="telefono"
-                    disabled={disabled}
                     onChange={(e) => handleInputChange(e, i)}
                     fullWidth
                   />
@@ -216,11 +236,7 @@ const Locatario = ({
           })}
         </Grid>
         <Grid item xs={12} sm={12}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Correo electrónico*</label>
-          ) : (
-            <label>Correo electrónico*</label>
-          )}
+          <label>Correo electrónico*</label>
           {si === "no"
             ? locatarios?.map((option) => {
                 return (
@@ -229,18 +245,16 @@ const Locatario = ({
                       <Alert severity="error" className={classes.alerta}>
                         El correo electrónico ya existe
                       </Alert>
-                      {setHabilitar(true)}
                     </>
                   )
                 );
               })
-            : setHabilitar(false)}
+            : ""}
           <TextField
             margin="normal"
             variant="outlined"
             type="text"
             value={email}
-            disabled={disabled}
             name="email"
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
@@ -257,14 +271,15 @@ Locatario.propTypes = {
   setCedula: PropTypes.func,
   local: PropTypes.string,
   setLocal: PropTypes.func,
+  numerolocal: PropTypes.array,
+  setnumeroLocal: PropTypes.func,
   nombre: PropTypes.string,
   setNombre: PropTypes.func,
-  apellido: PropTypes.string,
-  setApellido: PropTypes.func,
   telefonos: PropTypes.array,
   setTelefonos: PropTypes.func,
   email: PropTypes.string,
   setEmail: PropTypes.func,
+  locatarios: PropTypes.array,
 };
 
 export default Locatario;

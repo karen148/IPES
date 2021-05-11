@@ -32,6 +32,7 @@ import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import { getTrue } from "actions/plaza";
 import { toggleDrawerMenu } from "actions/menu";
+import { getCantidades } from "actions/plaza";
 
 const Plazas = () => {
   const classes = useStyles();
@@ -64,6 +65,10 @@ const Plazas = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(getCantidades());
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(toggleDrawerMenu(false));
   }, []);
 
@@ -91,7 +96,6 @@ const Plazas = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "plazas/getAll", config)
       .then((response) => {
-        console.log(response.data.plazas);
         let data = response.data.plazas;
         let data1 = [];
         data.map((item) => {
@@ -99,7 +103,7 @@ const Plazas = () => {
             data1.push({
               id: item.id,
               usuario: item.admin_id,
-              localidad: item.localidad_nombre,
+              localidad: item.localidad_id,
               nombre: item.nombre,
               direccion: item.direccion,
               telefonos: item.telefonos,
@@ -172,7 +176,8 @@ const Plazas = () => {
     }
     setPlaza1(data);
   };
-
+  console.log(currency1);
+  console.log(currency2);
   const Restaurar = () => {
     setPlaza1(plazas);
     setCurrency1("");
@@ -214,7 +219,7 @@ const Plazas = () => {
                     style={{ marginRight: "20px" }}
                   >
                     {categorias.map((option) => (
-                      <MenuItem key={option.id} value={option.label}>
+                      <MenuItem key={option.id} value={option.id}>
                         {option.label}
                       </MenuItem>
                     ))}
@@ -232,7 +237,7 @@ const Plazas = () => {
                     className={classes.margin}
                   >
                     {localidades.map((option) => (
-                      <MenuItem key={option.id} value={option.label}>
+                      <MenuItem key={option.id} value={option.id}>
                         {option.label}
                       </MenuItem>
                     ))}

@@ -20,6 +20,7 @@ export const types = {
   plazaMensaje: "[plaza] Mensaje que se envió la información",
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
+  locatariosMensaje: "[locatario] Mensaje que se envió la información",
 
   categoriaCrear: "[categoria] Crear categoria",
   categoriaDatos: "[categoria] Obtener datos de la categoria",
@@ -27,4 +28,6 @@ export const types = {
 
   productoMensaje: "[producto] Mensaje que se envió la información",
   productoDatos: "[producto] Obtener datos productos",
+
+  clienteMensaje: "[cliente] Mensaje que se envió la información",
 };

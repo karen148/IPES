@@ -99,6 +99,7 @@ const FormAccountSettings = () => {
           nombre: state.nombre,
           apellido: state.apellido,
           telefono: state.telefono,
+          cedula: state.cedula,
         },
         config
       )
@@ -146,6 +147,21 @@ const FormAccountSettings = () => {
   };
 
   console.log(img1);
+  console.log(state.cedula);
+  console.log(state.telefono);
+
+  const ValiContraseña = (confirmar_contraseña) => {
+    if (
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
+        confirmar_contraseña
+      )
+    ) {
+      return true;
+    } else {
+      console.log("MALLLL");
+      return false;
+    }
+  };
 
   const showPass1 = () => {
     var cambio = document.getElementById("pass1");
@@ -174,38 +190,41 @@ const FormAccountSettings = () => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
-    axios
-      .put(
-        process.env.REACT_APP_URL_API + "admins/change-password",
-        {
-          email: email1,
-          oldPassword: state.antigua,
-          newPassword: state.contraseña,
-        },
-        config
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          alert("Se atualizo la contraseña");
-        } else {
-          alert("No se atualizo la contraseña");
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          //do something
-          console.log(error.response);
-        } else if (error.request) {
-          //do something else
-          console.log(error.request);
-        } else if (error.message) {
-          //do something other than the other two
-          console.log(error.message);
-        }
-      });
+    if (ValiContraseña(state.confirmar_contraseña)) {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + "admins/change-password",
+          {
+            email: email1,
+            oldPassword: state.antigua,
+            newPassword: state.contraseña,
+          },
+          config
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            alert("Se atualizo la contraseña");
+          } else {
+            alert("No se atualizo la contraseña");
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            //do something
+            console.log(error.response);
+          } else if (error.request) {
+            //do something else
+            console.log(error.request);
+          } else if (error.message) {
+            //do something other than the other two
+            console.log(error.message);
+          }
+        });
+    }
   };
 
   console.log(img1);
+  console.log(email1);
   return (
     <Fragment>
       <div className="row" key={localStorage.getItem("id")}>
@@ -351,22 +370,38 @@ const FormAccountSettings = () => {
           </div>
         </div>
         <div className="col-sm-12">
-          {state.contraseña === state.confirmar_contraseña && (
-            <div className="ps-form text-center">
-              <button
-                className="ps-btn success"
-                onClick={changePass}
-                style={{ marginBottom: "30px" }}
-              >
-                Actualizar contraseña
-              </button>
-            </div>
-          )}
-          {state.contraseña !== state.confirmar_contraseña && (
-            <div className="ps-form text-center">
-              <h5 style={{ marginBottom: "25px" }}>
-                Por favor verifique que este bien escrita la contraseña
-              </h5>
+          {/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
+            state.contraseña
+          ) ? (
+            <>
+              {state.contraseña === state.confirmar_contraseña && (
+                <div className="ps-form text-center">
+                  <button
+                    className="ps-btn success"
+                    onClick={changePass}
+                    style={{ marginBottom: "30px" }}
+                  >
+                    Actualizar contraseña
+                  </button>
+                </div>
+              )}
+              {state.contraseña !== state.confirmar_contraseña && (
+                <div className="ps-form text-center">
+                  <h5 style={{ marginBottom: "25px" }}>
+                    Por favor verifique que este bien escrita la contraseña
+                  </h5>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="ps-form">
+              <h5 style={{ marginBottom: "25px" }}>La contraseña debe tener</h5>
+              <ul>
+                <li>Al menos una letra en minúscula</li>
+                <li>Al menos una letra en Mayúscula</li>
+                <li>Al menos un número</li>
+                <li>Al menos 8 carácteres</li>
+              </ul>
             </div>
           )}
         </div>

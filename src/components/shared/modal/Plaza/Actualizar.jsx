@@ -31,7 +31,9 @@ const Actualizar = ({
   telefonos1,
   logo1,
 }) => {
-  const { funcionarios, msg } = useSelector((state) => state.plaza);
+  const { funcionarios, msg, localidades, categorias } = useSelector(
+    (state) => state.plaza
+  );
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -65,7 +67,7 @@ const Actualizar = ({
 
   const [plaza, setPlaza] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [localidad, setLocalidad] = useState("");
+  const [localidad, setLocalidad] = useState([]);
   const [funcionario, setFuncionarios] = useState([]);
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
   const [email, setEmail] = useState("");
@@ -83,16 +85,18 @@ const Actualizar = ({
         setHorariom2(semana[0][1]);
         setHorariolm1(semana[1][0]);
         setHorariolm2(semana[1][1]);
-        setHorariomm1(semana[2][0]);
-        setHorariomm2(semana[2][1]);
-        setHorariojm1(semana[3][0]);
-        setHorariojm2(semana[3][1]);
-        setHorariovm1(semana[4][0]);
-        setHorariovm2(semana[4][1]);
-        setHorariosm1(semana[5][0]);
-        setHorariosm2(semana[5][1]);
-        setHorariodm1(semana[6][0]);
-        setHorariodm2(semana[6][1]);
+        if (semana.length > 2) {
+          setHorariomm1(semana[2][0]);
+          setHorariomm2(semana[2][1]);
+          setHorariojm1(semana[3][0]);
+          setHorariojm2(semana[3][1]);
+          setHorariovm1(semana[4][0]);
+          setHorariovm2(semana[4][1]);
+          setHorariosm1(semana[5][0]);
+          setHorariosm2(semana[5][1]);
+          setHorariodm1(semana[6][0]);
+          setHorariodm2(semana[6][1]);
+        }
       } else {
         setHorariom1("");
         setHorariom2("");
@@ -110,20 +114,32 @@ const Actualizar = ({
         setHorariodm2("");
       }
 
-      let telefonos = [];
+      let telefonos1 = [];
       if (telefonos1) {
-        for (let h = 0; h < telefonos1.length; h++) {
-          telefonos.push({ telefono: telefonos1[h] });
+        if (telefonos1.length > 0) {
+          for (let h = 0; h < telefonos1.length; h++) {
+            telefonos1.push({ telefono: telefonos1[h] });
+          }
+        } else {
+          telefonos1.push({ telefeno: "" });
+          setTelefonos(telefonos1);
         }
       }
 
-      let categorias = [];
+      let categorias1 = [];
       if (cat1) {
-        for (let h = 0; h < cat1.length; h++) {
-          categorias.push({ id: h, label: cat1[h] });
+        for (let i = 0; i < cat1.length; i++) {
+          const element = cat1[i];
+          console.log(cat1[i]);
+          categorias.map((item) => {
+            if (item.id === element) {
+              categorias1.push(item);
+            }
+          });
         }
       }
-      console.log(categorias);
+      console.log(categorias1);
+      console.log(cat1);
       let admin = [];
       if (funcio2 !== null && funcio2.length > 0) {
         for (let i = 0; i <= funcio2.length; i++) {
@@ -136,7 +152,6 @@ const Actualizar = ({
         }
       }
       setFuncionarios(admin);
-      console.log(telefonos);
       setPlaza(nombre1);
       setDireccion(direccion1);
       setEmail(email1);
@@ -144,10 +159,10 @@ const Actualizar = ({
         process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen}`
       );
       setImg3(process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${logo1}`);
-      setLocalidad(locali);
+      setLocalidad(localidades.filter((item) => item.id === locali)[0]);
 
-      setTelefonos(telefonos);
-      setCat(categorias);
+      setTelefonos(telefonos1);
+      setCat(categorias1);
     }
   }, [
     nombre1,
@@ -169,7 +184,6 @@ const Actualizar = ({
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-  console.log(idPlaza);
 
   const getStepContent = (step) => {
     switch (step) {
@@ -268,7 +282,6 @@ const Actualizar = ({
   };
 
   const ActualizarPlaza = () => {
-    console.log(telefonos);
     dispatch(
       UpdatePlazasMercado(
         horario_m1,
@@ -303,8 +316,11 @@ const Actualizar = ({
 
   const Limpiar = () => {
     setActiveStep(0);
+    setImg2(null);
+    setImg(null);
   };
-
+  console.log(img2);
+  console.log(img);
   return (
     <ModalForm
       open={open}
@@ -348,19 +364,28 @@ const Actualizar = ({
                   )}
                   {activeStep === steps.length - 1 ? (
                     <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ color: "white" }}
-                        onClick={
-                          imglogo === "img" ? ActualizarImagen : ActualizarLogo
-                        }
-                        className={classes.button}
-                      >
-                        {imglogo === "img"
-                          ? "Actualizar Imagen"
-                          : "Actualizar Logo"}
-                      </Button>
+                      {img && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ color: "white" }}
+                          onClick={ActualizarImagen}
+                          className={classes.button}
+                        >
+                          Actualizar Imagen
+                        </Button>
+                      )}
+                      {img2 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ color: "white" }}
+                          onClick={ActualizarLogo}
+                          className={classes.button}
+                        >
+                          Actualizar Logo
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -398,7 +423,7 @@ const Actualizar = ({
 Actualizar.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  idPlaza: PropTypes.string,
+  idPlaza: PropTypes.number,
   nombre1: PropTypes.string,
   direccion1: PropTypes.string,
   email1: PropTypes.string,

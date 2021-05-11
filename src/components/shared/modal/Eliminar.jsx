@@ -12,6 +12,11 @@ const Eliminar = ({
   titulo2,
   titulo3,
 }) => {
+  const Salir = () => {
+    eliminar();
+    handleClose();
+  };
+
   return (
     <Modal open={open} handleClose={handleClose} title={titulo3} tamaño="xs">
       <Grid
@@ -30,7 +35,7 @@ const Eliminar = ({
           <Button
             variant="contained"
             color="primary"
-            onClick={eliminar}
+            onClick={Salir}
             style={{ color: "white" }}
           >
             SI

@@ -18,7 +18,7 @@ const Producto = ({
   setSku,
 }) => {
   const { plazastrues } = useSelector((state) => state.plaza);
-  console.log(plazastrues);
+  console.log(plaza);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

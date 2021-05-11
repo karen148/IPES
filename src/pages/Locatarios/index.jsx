@@ -25,6 +25,8 @@ import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import Crear from "../../components/shared/modal/Locatarios/Crear";
 import { getCategorias } from "actions/plaza";
+import { getProducto } from "actions/producto";
+import Archivo from "components/shared/modal/Locatarios/Archivo";
 
 const estados = [
   {
@@ -41,16 +43,14 @@ const Locatarios = () => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const { plazastrues, localidades } = useSelector((state) => state.plaza);
-  const { locatarios } = useSelector((state) => state.locatario);
+  const { plazastrues } = useSelector((state) => state.plaza);
 
-  const [currency1, setCurrency1] = React.useState("");
-  const [currency2, setCurrency2] = React.useState("");
+  const [currency1, setCurrency1] = React.useState("12");
   const [currency3, setCurrency3] = React.useState("");
 
-  const [locatario1, setLocatarios1] = useState([]);
   const [locatario2, setLocatarios2] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
   const [nomplaza1, setNomplaza1] = useState("");
 
   useEffect(() => {
@@ -73,7 +73,9 @@ const Locatarios = () => {
     dispatch(getCategorias());
   }, [dispatch]);
 
-  console.log(locatario1);
+  useEffect(() => {
+    dispatch(getProducto());
+  }, [dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,12 +86,17 @@ const Locatarios = () => {
     getLocatarioss();
   };
 
-  const handleChange1 = (event) => {
-    setCurrency1(event.target.value);
+  const handleClickOpen1 = () => {
+    setOpen1(true);
   };
 
-  const handleChange2 = (event) => {
-    setCurrency2(event.target.value);
+  const handleClose1 = () => {
+    setOpen1(false);
+    getLocatarioss();
+  };
+
+  const handleChange1 = (event) => {
+    setCurrency1(event.target.value);
   };
 
   const handleChange3 = (event) => {
@@ -101,25 +108,36 @@ const Locatarios = () => {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
-      .get(process.env.REACT_APP_URL_API + "locatarios/getAll", config)
+      .get(
+        process.env.REACT_APP_URL_API +
+          "locatarios/locatariosPorPlaza/" +
+          currency1,
+        config
+      )
       .then((response) => {
         let data = response.data.locatarios;
-        let locatarios = data.map((item) => ({
+        let locatarios = data.map((item, index) => ({
+          conteo: index + 1,
           id: item.id,
           usuario: item.admin_id,
           plaza: item.plaza_id,
           nombre: item.nombre,
           apellido: item.apellido,
-          categorias: item.categorias,
+          categorias: item.categorias_id === null ? [] : item.categorias_id,
           horarios: item.horarios,
           img: item.img,
           logo: item.logo,
-          local: item.nombre_local,
+          local:
+            item.nombre_local === null
+              ? "El local no tiene nombre"
+              : item.nombre_local,
           cedula: item.cedula,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
-          email: item.email,
+          email: item.email === null ? "" : item.email,
           telefonos: item.telefonos,
           activo: item.activo ? "Activo" : "Inactivo",
+          numero_local: item.numero_local,
+          productos: item.productos_locatarios_id,
           acciones: [
             {
               name: "Editar",
@@ -133,8 +151,13 @@ const Locatarios = () => {
             },
           ],
         }));
-        setLocatarios1(locatarios);
-        setLocatarios2(locatarios);
+        if (currency3 !== "") {
+          let data2 = [];
+          data2 = locatario2.filter((item) => item.activo === currency3);
+          setLocatarios2(data2);
+        } else if (currency3 === "") {
+          setLocatarios2(locatarios);
+        }
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -145,56 +168,19 @@ const Locatarios = () => {
   }, []);
 
   const Filtros = () => {
-    let data2 = [];
-
-    if (currency1 !== "" && currency2 === "" && currency3 === "") {
-      data2 = locatario1.filter((item) => item.plaza === currency1);
-      console.log(data2);
-    } else if (currency1 === "" && currency2 !== "" && currency3 === "") {
-      data2 = locatario1.filter(
-        (loc) =>
-          loc.plaza ===
-          plazastrues.filter((item) => item?.localidad_nombre === currency2)[0]
-            ?.id
-      );
-    } else if (currency1 === "" && currency2 === "" && currency3 !== "") {
-      data2 = locatario1.filter((item) => item.activo === currency3);
-    }
-    // else {
-    //   console.log('hola');
-    //   data2 = locatarios.map(item => {
-    //     if(item.localidad === currency2) {
-    //       if (item.categorias !== null && item.categorias.length > 0) {
-    //         for (let i = 0; i < item.categorias.length; i++) {
-    //           const element = item.categorias[i];
-    //           console.log(element);
-    //           if (element === currency1) {
-    //              return item
-    //           }
-    //         }
-    //       }
-    //     }
-    //   })
-    // }
-    setLocatarios1(data2);
+    getLocatarioss();
   };
-  console.log(currency1);
+  console.log(locatario2);
   const RestaurarLista = () => {
-    setLocatarios1(locatario2);
-    setCurrency1("");
-    setCurrency2("");
+    getLocatarioss();
     setCurrency3("");
   };
 
-  console.log(locatario1);
-
   const Buscar = () => {
-    let data = [];
-    data = locatario1.filter((item) => item.nombre === nomplaza1);
-    setLocatarios1(data);
+    let data = [...locatario2];
+    setLocatarios2(data.filter((item) => item.nombre === nomplaza1.trim()));
   };
 
-  console.log(locatario1);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -206,6 +192,10 @@ const Locatarios = () => {
           <a className="ps-btn success" onClick={handleClickOpen}>
             <AddIcon />
             Nuevo Locatario
+          </a>
+          <a className="ps-btn success" onClick={handleClickOpen1}>
+            <AddIcon />
+            Subir archivo
           </a>
         </div>
         <div className="ps-section__header">
@@ -232,24 +222,15 @@ const Locatarios = () => {
                   )}
                 </TextField>
               </div>
-              <div className="form-group">
-                <TextField
-                  id="filled-select-currency"
-                  select
-                  label="Localidad"
-                  value={currency2}
-                  onChange={handleChange2}
-                  fullWidth
-                  style={{ marginRight: "20px" }}
-                  className={classes.margin}
-                >
-                  {localidades.map((option) => (
-                    <MenuItem key={option.id} value={option.label}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
+              {/* <div style={{ width: "20px" }}>
+                <TooltipE title="Buscar">
+                  <IconButton color="primary" component="span" onClick={Buscar}>
+                    <SearchIcon
+                      style={{ fontSize: "35px", marginTop: "0px" }}
+                    />
+                  </IconButton>
+                </TooltipE>
+              </div> */}
               <div className="form-group">
                 <TextField
                   id="filled-select-currency"
@@ -301,9 +282,7 @@ const Locatarios = () => {
               <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                options={locatarios.map(
-                  (option) => option.nombre + " " + option.apellido
-                )}
+                options={locatario2.map((option) => option.nombre)}
                 inputValue={nomplaza1}
                 onInputChange={(event, newInputValue) => {
                   setNomplaza1(newInputValue);
@@ -328,14 +307,16 @@ const Locatarios = () => {
           </div>
         </div>
         <div className="ps-section__content">
-          <TablasLocatarios datos={locatario1} getLocali={getLocatarioss} />
-        </div>
-        <div className="ps-section__footer">
-          <p>Mostrar 10 de 30 artículos.</p>
-          {/* <Pagination /> */}
+          <TablasLocatarios datos={locatario2} getLocali={getLocatarioss} />
         </div>
       </section>
-      <Crear key="2015" open={open} handleClose={handleClose} />
+      <Crear
+        key="2015"
+        open={open}
+        handleClose={handleClose}
+        locatarios={locatario2}
+      />
+      <Archivo open={open1} handleClose={handleClose1} />
     </ContainerDashboard>
   );
 };

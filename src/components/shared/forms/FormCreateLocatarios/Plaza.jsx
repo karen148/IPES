@@ -11,7 +11,32 @@ const Plaza = ({ local, cat, setCat, plaza, setPlaza }) => {
   const { plazastrues, localidades, categorias } = useSelector(
     (state) => state.plaza
   );
-  console.log(plaza);
+  let data = [];
+  let local1 = [];
+  if (plaza) {
+    plazastrues.map((item) => {
+      if (item.id === plaza) {
+        if (item.categorias_id.length > 0) {
+          for (let index = 0; index < item.categorias_id.length; index++) {
+            const element = item.categorias_id[index];
+            categorias.map((cat) => {
+              if (cat.id === element) {
+                data.push(cat);
+              }
+            });
+          }
+        }
+      }
+    });
+  }
+  local1 = localidades?.map((item) => {
+    if (
+      item.id ===
+      plazastrues.filter((item2) => item2.id === plaza)[0]?.localidad_id
+    ) {
+      return item.label;
+    }
+  });
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -45,14 +70,8 @@ const Plaza = ({ local, cat, setCat, plaza, setPlaza }) => {
                 variant="outlined"
                 type="text"
                 style={{ marginTop: "1px" }}
-                value={localidades?.map((item) => {
-                  if (
-                    item.id ===
-                    plazastrues.filter((item2) => item2.id === plaza)[0]
-                      ?.localidad_id
-                  ) {
-                    return item.label;
-                  }
+                value={local1.filter((item) => {
+                  return item !== undefined;
                 })}
                 name="localidad"
                 fullWidth
@@ -69,12 +88,8 @@ const Plaza = ({ local, cat, setCat, plaza, setPlaza }) => {
                 onChange={(event, newValue) => {
                   setCat(newValue);
                 }}
-                options={categorias}
+                options={data}
                 getOptionLabel={(option) => option?.label}
-                // options={
-                //   plazastrues.filter((item) => item.id === plaza)[0]
-                //     ?.categorias_id
-                // }
                 renderInput={(params) => (
                   <TextField
                     {...params}

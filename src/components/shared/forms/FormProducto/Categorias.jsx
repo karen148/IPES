@@ -10,19 +10,20 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const Categorias = ({ plaza, nombre, cat, setCat }) => {
   const { categorias } = useSelector((state) => state.plaza);
-  let data = [];
-  if (plaza.length > 0) {
-    if (plaza?.categorias_id !== null && plaza?.categorias_id.length > 0) {
-      for (let index = 0; index < plaza?.categorias_id.length; index++) {
-        const element = plaza?.categorias_id[index];
-        categorias?.map((item) => {
-          if (item?.id === element) {
-            data.push(item);
-          }
-        });
-      }
-    }
-  }
+  // let data = [];
+  // console.log(plaza);
+  // if (plaza.length > 0) {
+  //   if (plaza?.categorias_id !== null && plaza?.categorias_id.length > 0) {
+  //     for (let index = 0; index < plaza?.categorias_id.length; index++) {
+  //       const element = plaza?.categorias_id[index];
+  //       categorias?.map((item) => {
+  //         if (item?.id === element) {
+  //           data.push(item);
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -40,7 +41,7 @@ const Categorias = ({ plaza, nombre, cat, setCat }) => {
               onChange={(event, newValue) => {
                 setCat(newValue);
               }}
-              options={data}
+              options={categorias}
               getOptionLabel={(option) => option?.label}
               renderInput={(params) => (
                 <TextField

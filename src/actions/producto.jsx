@@ -3,91 +3,65 @@ import { types } from "./../types";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-export const UpdateGaleria = (img3, img5, idProducto) => {
+export const UpdateImagen1 = (img3, idProducto) => {
   return async (dispatch) => {
-    if (img3 && img5) {
-      const formData = new FormData();
-      formData.append("imagen1", img3);
-      formData.append("imagen2", img5);
-      formData.append("producto", "galeria");
-      console.log(img3);
-      let config1 = {
-        method: "put",
-        url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + idProducto,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        data: formData,
-      };
-      axios(config1)
-        .then((response) => {
-          console.log(response);
-          let data = response.data;
-          dispatch(
-            ProductoMensaje({
-              ok: data.ok,
-              msg: data.msg,
-            })
-          );
-        })
-        .catch((e) => {
-          console.log("ERROR", e);
-        });
-    } else if (img3) {
-      const formData = new FormData();
-      formData.append("imagen1", img3);
-      formData.append("producto", "galeria");
-      console.log(img3);
-      let config1 = {
-        method: "put",
-        url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + idProducto,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        data: formData,
-      };
-      axios(config1)
-        .then((response) => {
-          console.log(response);
-          let data = response.data;
-          dispatch(
-            ProductoMensaje({
-              ok: data.ok,
-              msg: data.msg,
-            })
-          );
-        })
-        .catch((e) => {
-          console.log("ERROR", e);
-        });
-    } else {
-      const formData = new FormData();
-      formData.append("imagen1", img5);
-      formData.append("producto", "galeria");
-      console.log(img3);
-      let config1 = {
-        method: "put",
-        url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + idProducto,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        data: formData,
-      };
-      axios(config1)
-        .then((response) => {
-          console.log(response);
-          let data = response.data;
-          dispatch(
-            ProductoMensaje({
-              ok: data.ok,
-              msg: data.msg,
-            })
-          );
-        })
-        .catch((e) => {
-          console.log("ERROR", e);
-        });
-    }
+    const formData = new FormData();
+    formData.append("imagen", img3);
+    formData.append("producto", "imagen_1");
+    console.log(img3);
+    let config1 = {
+      method: "put",
+      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      data: formData,
+    };
+    axios(config1)
+      .then((response) => {
+        console.log(response);
+        let data = response.data;
+        dispatch(
+          ProductoMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        console.log("ERROR", e);
+      });
+  };
+};
+
+export const UpdateImagen2 = (img5, idProducto) => {
+  return async (dispatch) => {
+    const formData = new FormData();
+    formData.append("imagen", img5);
+    formData.append("producto", "imagen_2");
+    console.log(img5);
+    let config1 = {
+      method: "put",
+      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      data: formData,
+    };
+    axios(config1)
+      .then((response) => {
+        console.log(response);
+        let data = response.data;
+        dispatch(
+          ProductoMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        console.log("ERROR", e);
+      });
   };
 };
 
@@ -95,11 +69,11 @@ export const UpdateImagen = (img1, idProducto) => {
   return async (dispatch) => {
     const formData = new FormData();
     formData.append("imagen", img1);
-    formData.append("producto", "img");
+    formData.append("producto", "imagen_principal");
     console.log(img1);
     let config1 = {
       method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + idProducto,
+      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -145,7 +119,7 @@ export const UpdateProductos = (
 
     axios
       .put(
-        process.env.REACT_APP_URL_API + "productos/update" + idProducto,
+        process.env.REACT_APP_URL_API + "productos/update/" + idProducto,
         {
           nombre: nombre,
           categorias_id: cate,
@@ -221,11 +195,11 @@ export const setProductos = (
           if (img1) {
             const formData = new FormData();
             formData.append("imagen", img1);
-            formData.append("producto", "img");
+            formData.append("producto", "imagen_principal");
             console.log(img1);
             let config1 = {
               method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + ids,
+              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -246,15 +220,42 @@ export const setProductos = (
                 console.log("ERROR", e);
               });
           }
-          if (img3 || img5) {
+          if (img3) {
             const formData = new FormData();
-            formData.append("imagen1", img3);
-            formData.append("imagen2", img5);
-            formData.append("producto", "galeria");
+            formData.append("imagen", img3);
+            formData.append("producto", "imagen_1");
             console.log(img3);
             let config2 = {
               method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTO/" + ids,
+              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              data: formData,
+            };
+            axios(config2)
+              .then((response) => {
+                console.log(response);
+                let data = response.data;
+                dispatch(
+                  ProductoMensaje({
+                    ok: data.ok,
+                    msg: data.msg,
+                  })
+                );
+              })
+              .catch((e) => {
+                console.log("ERROR", e);
+              });
+          }
+          if (img5) {
+            const formData = new FormData();
+            formData.append("imagen", img5);
+            formData.append("producto", "imagen_2");
+            console.log(img5);
+            let config2 = {
+              method: "put",
+              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -291,8 +292,8 @@ export const getProducto = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "productos/getAll", config)
       .then((response) => {
-        console.log(response.data.productos);
-        let data = response.data.productos;
+        console.log(response.data.prductos);
+        let data = response.data.prductos;
         let productos = data.map((item) => ({
           id: item.id,
           nombre: item.nombre,
@@ -301,6 +302,10 @@ export const getProducto = () => {
           descripcion: item.descripcion,
           sku: item.sku,
           activo: item.activo ? "Activo" : "Inactivo",
+          fecha: item.updated_at === null ? item.created_at : item.updated_at,
+          imagen_principal: item.imagen_principal,
+          imagen_1: item.imagen_1,
+          imagen_2: item.imagen_2,
           acciones: [
             {
               name: "Editar",
@@ -330,7 +335,7 @@ export const DeleteProducto = (idProducto) => {
     };
     axios
       .put(
-        process.env.REACT_APP_URL_API + "productos/delete" + idProducto,
+        process.env.REACT_APP_URL_API + "productos/delete/" + idProducto,
         {
           activo: false,
         },

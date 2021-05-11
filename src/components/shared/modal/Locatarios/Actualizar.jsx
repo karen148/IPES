@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ModalForm from "./../modalForm";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,15 +14,18 @@ import Imagen from "components/shared/forms/FormCreateLocatarios/Imagen";
 import Plaza from "components/shared/forms/FormCreateLocatarios/Plaza";
 import PropTypes from "prop-types";
 import useStyles from "components/shared/forms/style";
+import { UpdateLocatarios } from "actions/locatarios";
+import { UpdateImagen } from "actions/locatarios";
+import { UpdateLogo } from "actions/locatarios";
 
 const Actualizar = ({
   open,
   handleClose,
-  idPlaza,
+  idLocatario,
   loc1,
   ced1,
   nom1,
-  ape1,
+  // ape1,
   email1,
   telefonos1,
   plaza1,
@@ -30,11 +33,14 @@ const Actualizar = ({
   horarios2,
   imagen2,
   logo2,
+  numero_local,
+  productos1,
+  locatarios,
 }) => {
   const { msg } = useSelector((state) => state.locatario);
-  //   const { plazastrues } = useSelector((state) => state.plaza);
-  // const { id } = useSelector((state) => state.auth);
-  // const dispatch = useDispatch();
+  const { plazastrues, categorias } = useSelector((state) => state.plaza);
+  const { id } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -63,106 +69,131 @@ const Actualizar = ({
   const [horario_dm2, setHorariodm2] = useState("");
 
   const [cedula, setCedula] = useState("");
-  const [local, setLocal] = useState("");
+  const [local4, setLocalNombre] = useState("");
+  const [numerolocal, setnumeroLocal] = useState([{ local1: "" }]);
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
+  // const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
-  const [alerta, setAlerta] = useState("Actualizar plaza");
+  const [alerta, setAlerta] = useState("Actualizar Locatario");
 
   const [plaza, setPlaza] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [cat, setCat] = useState([]);
 
-  console.log(idPlaza, setAlerta(""));
+  console.log(productos1);
   useEffect(() => {
-    if (ced1) {
-      let semana = [];
-      if (horarios2) {
-        for (let h = 0; h < horarios2.length; h++) {
-          semana.push(horarios2[h].split("-", 2));
+    const Actual = () => {
+      if (ced1) {
+        let semana = [];
+        if (horarios2) {
+          for (let h = 0; h < horarios2.length; h++) {
+            semana.push(horarios2[h].split("-", 2));
+          }
         }
-      }
-      setCedula(ced1);
-
-      setLocal(loc1);
-
-      setNombre(nom1);
-
-      setApellido(ape1);
-
-      setEmail(email1);
-
-      if (semana.length) {
-        setHorariom1(semana[0][0]);
-        setHorariom2(semana[0][1]);
-        setHorariolm1(semana[1][0]);
-        setHorariolm2(semana[1][1]);
-        if (semana.length > 2) {
-          setHorariomm1(semana[2][0]);
-          setHorariomm2(semana[2][1]);
-          setHorariojm1(semana[3][0]);
-          setHorariojm2(semana[3][1]);
-          setHorariovm1(semana[4][0]);
-          setHorariovm2(semana[4][1]);
-          setHorariosm1(semana[5][0]);
-          setHorariosm2(semana[5][1]);
-          setHorariodm1(semana[6][0]);
-          setHorariodm2(semana[6][1]);
+        if (semana.length) {
+          setHorariom1(semana[0][0]);
+          setHorariom2(semana[0][1]);
+          setHorariolm1(semana[1][0]);
+          setHorariolm2(semana[1][1]);
+          if (semana.length > 2) {
+            setHorariomm1(semana[2][0]);
+            setHorariomm2(semana[2][1]);
+            setHorariojm1(semana[3][0]);
+            setHorariojm2(semana[3][1]);
+            setHorariovm1(semana[4][0]);
+            setHorariovm2(semana[4][1]);
+            setHorariosm1(semana[5][0]);
+            setHorariosm2(semana[5][1]);
+            setHorariodm1(semana[6][0]);
+            setHorariodm2(semana[6][1]);
+          }
+        } else {
+          setHorariom1("");
+          setHorariom2("");
+          setHorariolm1("");
+          setHorariolm2("");
+          setHorariomm1("");
+          setHorariomm2("");
+          setHorariojm1("");
+          setHorariojm2("");
+          setHorariovm1("");
+          setHorariovm2("");
+          setHorariosm1("");
+          setHorariosm2("");
+          setHorariodm1("");
+          setHorariodm2("");
         }
-      } else {
-        setHorariom1("");
-        setHorariom2("");
-        setHorariolm1("");
-        setHorariolm2("");
-        setHorariomm1("");
-        setHorariomm2("");
-        setHorariojm1("");
-        setHorariojm2("");
-        setHorariovm1("");
-        setHorariovm2("");
-        setHorariosm1("");
-        setHorariosm2("");
-        setHorariodm1("");
-        setHorariodm2("");
-      }
 
-      let telefonos = [];
-      if (telefonos1) {
-        for (let h = 0; h < telefonos1.length; h++) {
-          telefonos.push({ telefono: telefonos1[h] });
+        setCedula(ced1);
+        setLocalNombre(loc1.trim());
+        console.log(setLocalNombre);
+        console.log(loc1.trim());
+        setNombre(nom1);
+        // setApellido(ape1);
+        setEmail(email1);
+
+        let telefonos2 = [];
+        if (telefonos1) {
+          if (telefonos1.length > 0) {
+            for (let h = 0; h < telefonos1.length; h++) {
+              telefonos2.push({ telefono: telefonos1[h] });
+              setTelefonos(telefonos2);
+            }
+          } else {
+            telefonos2.push({ telefeno: "" });
+            setTelefonos(telefonos2);
+          }
         }
+
+        let numero = [];
+        if (numero_local) {
+          for (let h = 0; h < numero_local.length; h++) {
+            numero.push({ local1: numero_local[h] });
+          }
+        }
+        setnumeroLocal(numero);
+
+        setPlaza(
+          plazastrues?.length > 0 &&
+            plazastrues?.filter((item) => item?.id === plaza1)[0]?.id
+        );
+
+        let data = [];
+        if (categorias1 !== null && categorias1?.length > 0) {
+          for (let index = 0; index < categorias1?.length; index++) {
+            const element = categorias1[index];
+            categorias?.map((item) => {
+              if (item?.id === element) {
+                data.push(item);
+              }
+            });
+          }
+        }
+        setCat(data);
+
+        setImg1(
+          process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${imagen2}`
+        );
+        setImg3(
+          process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${logo2}`
+        );
       }
-
-      setTelefonos(telefonos);
-
-      setPlaza(
-        ""
-        // plazastrues?.length !== 0
-        //   ? plazastrues?.filter((item) => item?.id === plaza1)[0]
-        //   : ""
-      );
-
-      setCat(categorias1);
-
-      setImg1(
-        process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${imagen2}`
-      );
-      setImg3(
-        process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${logo2}`
-      );
-    }
+    };
+    Actual();
   }, [
     loc1,
     ced1,
-    nom1,
-    ape1,
-    email1,
-    telefonos1,
-    plaza1,
-    categorias1,
-    horarios2,
-    imagen2,
-    logo2,
+    // nom1,
+    // ape1,
+    // email1,
+    // telefonos1,
+    // plaza1,
+    // categorias1,
+    // horarios2,
+    // imagen2,
+    // logo2,
+    // numero_local,
   ]);
 
   const validarEmail = (email) => {
@@ -193,35 +224,40 @@ const Actualizar = ({
       case 0:
         return (
           <Locatario
-            si="no"
+            si="si"
             cedula={cedula}
             setCedula={setCedula}
-            local={local}
-            setLocal={setLocal}
+            local={local4}
+            setLocal={setLocalNombre}
+            numerolocal={numerolocal}
+            setnumeroLocal={setnumeroLocal}
             nombre={nombre}
             setNombre={setNombre}
-            apellido={apellido}
-            setApellido={setApellido}
+            // apellido={apellido}
+            // setApellido={setApellido}
             telefonos={telefonos}
             setTelefonos={setTelefonos}
             email={email}
             setEmail={setEmail}
+            locatarios={locatarios}
           />
         );
       case 1:
         return (
           <Plaza
-            local={local}
+            local={local4}
             cat={cat}
             setCat={setCat}
             plaza={plaza}
             setPlaza={setPlaza}
+            productos={productos}
+            setProductos={setProductos}
           />
         );
       case 2:
         return (
           <Horarios
-            local={local}
+            local={local4}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
             horario_m2={horario_m2}
@@ -255,7 +291,7 @@ const Actualizar = ({
       case 3:
         return (
           <Imagen
-            local={local}
+            local={local4}
             imglogo={imglogo}
             setImgLogo={setImgLogo}
             img={img}
@@ -273,74 +309,59 @@ const Actualizar = ({
     }
   };
 
-  // const setActualizar = async () => {
-  //   let horario = [];
-  //   horario.push(
-  //     horario_m1 + "-" + horario_m2,
-  //     horario_lm1 + "-" + horario_lm2,
-  //     horario_mm1 + "-" + horario_mm2,
-  //     horario_jm1 + "-" + horario_jm2,
-  //     horario_vm1 + "-" + horario_vm2,
-  //     horario_sm1 + "-" + horario_sm2,
-  //     horario_dm1 + "-" + horario_dm2
-  //   );
-  //   let tele = [];
-  //   telefonos.map((item) => {
-  //     Array.prototype.push.apply(tele, [item.telefono]);
-  //   });
+  const ActualizarLocatario = () => {
+    dispatch(
+      UpdateLocatarios(
+        horario_m1,
+        horario_m2,
+        horario_lm1,
+        horario_lm2,
+        horario_mm1,
+        horario_mm2,
+        horario_jm1,
+        horario_jm2,
+        horario_vm1,
+        horario_vm2,
+        horario_sm1,
+        horario_sm2,
+        horario_dm1,
+        horario_dm2,
+        cedula,
+        local4,
+        numerolocal,
+        nombre,
+        // apellido,
+        email,
+        telefonos,
+        plaza,
+        cat,
+        productos,
+        id,
+        idLocatario
+      )
+    );
+    setAlerta(msg);
+    setTimeout(() => {
+      setAlerta("Actualizar Locatario");
+    }, 3000);
+  };
 
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
+  const ActualizarImagen = () => {
+    dispatch(UpdateImagen(img, idLocatario));
+    setAlerta(msg);
+    setTimeout(() => {
+      setAlerta("Actualizar Locatario");
+    }, 3000);
+  };
 
-  //   axios
-  //     .put(
-  //       process.env.REACT_APP_URL_API + "locatarios/update/" + idPlaza,
-  //       {
-  //         admin_id: id,
-  //         plaza_id: plaza.id,
-  //         nombre_local: local2,
-  //         categorias: cat,
-  //         nombre: nombre2,
-  //         apellido: apellido2,
-  //         cedula: cedula3,
-  //         horarios: horario,
-  //         telefonos: tele,
-  //         email: email,
-  //       },
-  //       config
-  //     )
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         setAlerta(true);
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR!!!!!", e);
-  //     });
-  // };
+  const ActualizarLogo = () => {
+    dispatch(UpdateLogo(img2, idLocatario));
+    setAlerta(msg);
+    setTimeout(() => {
+      setAlerta("Actualizar Locatario");
+    }, 3000);
+  };
 
-  // const setImagen = async () => {
-  //   const formData = new FormData();
-  //   formData.append("imagen", img);
-  //   formData.append("locatario", imglogo);
-  //   console.log(img);
-  //   let config1 = {
-  //     method: "put",
-  //     url: process.env.REACT_APP_URL_API + `uploads/LOCATARIO/${idPlaza}`,
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //     data: formData,
-  //   };
-  //   axios(config1)
-  //     .then((response) => {
-  //       if (response.status) {
-  //         setAlerta1(true);
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR", e);
-  //     });
-  // };
   const Limpiar = () => {
     setActiveStep(0);
   };
@@ -387,31 +408,42 @@ const Actualizar = ({
                   )}
                   {activeStep === steps.length - 1 ? (
                     <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ color: "white" }}
-                        // onClick={
-                        //   imglogo === "img" ? ActualizarImagen : ActualizarLogo
-                        // }
-                        className={classes.button}
-                      >
-                        {imglogo === "img"
-                          ? "Actualizar Imagen"
-                          : "Actualizar Logo"}
-                      </Button>
+                      {img && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ color: "white" }}
+                          onClick={ActualizarImagen}
+                          className={classes.button}
+                        >
+                          Actualizar Imagen
+                        </Button>
+                      )}
+                      {img2 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ color: "white" }}
+                          onClick={ActualizarLogo}
+                          className={classes.button}
+                        >
+                          Actualizar Logo
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ color: "white" }}
-                        // onClick={ActualizarPlaza}
-                        className={classes.button}
-                      >
-                        Actualizar información
-                      </Button>
+                      {validarEmail(email) && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{ color: "white" }}
+                          onClick={ActualizarLocatario}
+                          className={classes.button}
+                        >
+                          Actualizar información
+                        </Button>
+                      )}
                       <Button
                         variant="contained"
                         color="primary"
@@ -437,9 +469,9 @@ const Actualizar = ({
 Actualizar.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  idPlaza: PropTypes.string,
+  idLocatario: PropTypes.string,
   nom1: PropTypes.string,
-  ape1: PropTypes.string,
+  // ape1: PropTypes.string,
   loc1: PropTypes.string,
   ced1: PropTypes.string,
   email1: PropTypes.string,
@@ -450,6 +482,9 @@ Actualizar.propTypes = {
   horarios2: PropTypes.array,
   telefonos1: PropTypes.array,
   logo2: PropTypes.string,
+  numero_local: PropTypes.array,
+  productos1: PropTypes.array,
+  locatarios: PropTypes.array,
 };
 
 export default Actualizar;

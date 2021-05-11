@@ -27,15 +27,16 @@ const CategoriesPage = () => {
   const filtrar2 = (e) => {
     setMostrar(true);
     setCate(e.target.value);
-    let data = categorias.filter((item) => {
-      if (cate === "") {
-        return item;
-      } else if (
-        item.nombre.toLowerCase().trim().includes(cate.toLowerCase())
-      ) {
-        return item;
+    let data = [];
+    categorias.filter((item) => {
+      if (item.nombre.toLowerCase().trim().includes(cate.toLowerCase())) {
+        data.push(item);
+      } else if (cate === undefined) {
+        data.push(item);
+        console.log("aquiii");
       }
     });
+
     setCat(
       data.filter((item) => {
         return item !== undefined;
@@ -53,6 +54,7 @@ const CategoriesPage = () => {
     setMostrar(false);
   };
 
+  console.log(cate);
   return (
     <ContainerDashboard title="Categorias">
       <HeaderDashboard

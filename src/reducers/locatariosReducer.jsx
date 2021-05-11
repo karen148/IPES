@@ -11,7 +11,11 @@ export const locatariosReducer = (state = initialState, action) => {
         ...state,
         locatarios: [...action.locatario],
       };
-
+    case types.locatariosMensaje:
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state;
   }

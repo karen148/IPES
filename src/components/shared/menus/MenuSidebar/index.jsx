@@ -1,62 +1,81 @@
 import React from "react";
+import { useSelector } from "react-redux";
 // import Link from "@material-ui/core/Link";
 // import { useRouter } from "next/router";
 
 const MenuSidebar = () => {
   // const router = useRouter();
+  const { rol } = useSelector((state) => state.auth);
+  const roles = ["SUPER_ADMIN", "ADMIN_LOCATARIO"];
+  const admin = ["SUPER_ADMIN"];
   const menuItems = [
     {
       text: "Tablero",
-      url: "/",
+      url: rol === "SUPER_ADMIN" ? "/admin" : "/locatario",
       icon: "lnr lnr-chart-bars",
+      rol: roles,
     },
     {
       text: "Plazas de mercado",
-      url: "/plaza",
+      url: "/admin/plaza",
       icon: "lnr lnr-home",
+      rol: admin,
     },
     {
       text: "Locatarios",
-      url: "/locatario",
+      url: "/admin/locatarios",
       icon: "lnr lnr-store",
+      rol: admin,
     },
     {
       text: "Clientes",
-      url: "/tablero",
+      url: "/admin/clientes",
       icon: "lnr lnr-users",
+      rol: admin,
     },
     {
       text: "Pedidos",
-      url: "/tablero",
+      url: rol === "SUPER_ADMIN" ? "/admin/pedidos" : "/locatario/pedidos",
       icon: "lnr lnr-cart",
+      rol: roles,
     },
     {
       text: "Categorías",
-      url: "/categorias",
+      url: "/admin/categorias",
       icon: "lnr lnr-tag",
+      rol: admin,
     },
     {
       text: "Productos",
-      url: "/productos",
+      url: rol === "SUPER_ADMIN" ? "/admin/productos" : "/locatario/productos",
       icon: "lnr lnr-leaf",
+      rol: roles,
     },
     {
       text: "Perfil",
-      url: "/perfil",
+      url: rol === "SUPER_ADMIN" ? "/admin/perfil" : "/locatario/perfil",
       icon: "lnr lnr-user",
+      rol: roles,
     },
   ];
 
   return (
     <ul className="menu">
-      {menuItems.map((item, index) => (
-        <li key={index}>
-          <a href={item.url}>
-            <i className={item.icon}></i>
-            {item.text}
-          </a>
-        </li>
-      ))}
+      {menuItems.map((item, index) => {
+        for (let i = 0; i < item.rol.length; i++) {
+          const element = item.rol[i];
+          if (element === rol) {
+            return (
+              <li key={index}>
+                <a href={item.url}>
+                  <i className={item.icon}></i>
+                  {item.text}
+                </a>
+              </li>
+            );
+          }
+        }
+      })}
     </ul>
   );
 };

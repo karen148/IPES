@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 const TablaPlazas = ({ datos, getPlaza }) => {
   const dispatch = useDispatch();
-  const { funcionarios, cantidades, categorias } = useSelector(
+  const { funcionarios, cantidades, categorias, localidades } = useSelector(
     (state) => state.plaza
   );
   const [plazas, setPlaza] = React.useState([]);
@@ -125,7 +125,12 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                 <b>{item.nombre}</b>
               </Button>
             </td>
-            <td>{item.localidad}</td>
+            <td>
+              {
+                localidades.filter((local) => local.id === item.localidad)[0]
+                  ?.label
+              }
+            </td>
             <td>
               {cantidades.map((can) => {
                 return item.id === can.id && can.total;
@@ -188,7 +193,6 @@ const TablaPlazas = ({ datos, getPlaza }) => {
       }
     }
   });
-  console.log(plazas);
   return (
     <div className="table-responsive">
       <table className="table ps-table" style={{ textAlign: "center" }}>
@@ -238,8 +242,6 @@ const TablaPlazas = ({ datos, getPlaza }) => {
               horarios.push(item?.horarios[i]);
             }
           }
-          console.log(horarios[2]);
-          console.log(horarios[1] === "-" ? "una hora" : "HORAS");
           if (item !== undefined && item.id === idp) {
             return (
               <Grid
@@ -366,9 +368,9 @@ const TablaPlazas = ({ datos, getPlaza }) => {
         email1={plazas.email}
         imagen={plazas.img}
         logo1={plazas.logo}
-        locali={plazas.localidad_nombre}
+        locali={plazas.localidad_id}
         funcio2={plazas.admin_id}
-        cat1={plazas.categorias_nombres}
+        cat1={plazas.categorias_id}
         horarios1={plazas.horarios}
         telefonos1={plazas.telefonos}
       />

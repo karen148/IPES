@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { starChecking } from "./../actions/auth";
 import { PublicRoute } from "./PublicRoute";
 import { PrivateRoute } from "./PrivateRoute";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import Login from "./../pages/Login";
 import Tablero from "./../pages/Tablero";
 import Perfil from "./../pages/Perfil";
@@ -13,13 +13,20 @@ import Locatarios from "./../pages/Locatarios";
 import ForgotPass from "./../pages/ForgotPass";
 import Categorias from "./../pages/Categorias";
 import Productos from "./../pages/Productos";
-
+import Clientes from "pages/Clientes";
+import Pedidos from "pages/Pedidos";
 import useStyles from "./style";
+import img1 from "./logo.png";
+import "./../components/layaouts/ContainerDashboard/style.css";
 
 export const AppRouter = () => {
   const dispatch = useDispatch();
-  const { checking, id } = useSelector((state) => state.auth);
+  const { checking, id, rol } = useSelector((state) => state.auth);
   const classes = useStyles();
+
+  const roles = ["SUPER_ADMIN", "ADMIN_LOCATARIO"];
+  const admin = ["SUPER_ADMIN"];
+  // const locatario = ["ADMIN_LOCATARIO"];
 
   useEffect(() => {
     dispatch(starChecking());
@@ -28,7 +35,11 @@ export const AppRouter = () => {
   if (checking) {
     return (
       <div className={classes.root}>
-        <CircularProgress color="secondary" />
+        <div>
+          <img src={img1} alt="" />
+        </div>
+        <div className="loader">Loading...</div>
+        {/* <CircularProgress color="secondary" /> */}
       </div>
     );
   }
@@ -51,41 +62,75 @@ export const AppRouter = () => {
           />
           <PrivateRoute
             exact
-            path="/"
+            path={rol === "SUPER_ADMIN" ? "/admin" : "/locatario"}
             component={Tablero}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={roles}
           />
           <PrivateRoute
             exact
-            path="/perfil"
+            path={rol === "SUPER_ADMIN" ? "/admin/perfil" : "/locatario/perfil"}
             component={Perfil}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={roles}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
-            path="/plaza"
+            path="/admin/plaza"
             component={Plazas}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={admin}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
-            path="/locatario"
+            path="/admin/locatarios"
             component={Locatarios}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={admin}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
-            path="/categorias"
+            path="/admin/categorias"
             component={Categorias}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={admin}
           />
-          <PublicRoute
+          <PrivateRoute
             exact
-            path="/productos"
+            path={
+              rol === "SUPER_ADMIN"
+                ? "/admin/productos"
+                : "/locatario/productos"
+            }
             component={Productos}
             isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={roles}
           />
-          <Redirect to="/" />
+          <PrivateRoute
+            exact
+            path="/admin/clientes"
+            component={Clientes}
+            isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={admin}
+          />
+          <PrivateRoute
+            exact
+            path={
+              rol === "SUPER_ADMIN" ? "/admin/pedidos" : "/locatario/pedidos"
+            }
+            component={Pedidos}
+            isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={roles}
+          />
+          <Redirect to={rol === "SUPER_ADMIN" ? "/admin" : "/locatario"} />
         </Switch>
       </div>
     </BrowserRouter>

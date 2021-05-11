@@ -15,11 +15,11 @@ import Horarios from "components/shared/forms/FormCreateLocatarios/horarios";
 import Imagen from "components/shared/forms/FormCreateLocatarios/Imagen";
 import Plaza from "components/shared/forms/FormCreateLocatarios/Plaza";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlazasMercado } from "actions/plaza";
+import { setLocatarios } from "actions/locatarios";
 
-const Crear = ({ open, handleClose }) => {
-  const { msg, locatarios } = useSelector((state) => state.locatario);
-  // const { id } = useSelector((state) => state.auth);
+const Crear = ({ open, handleClose, locatarios }) => {
+  const { msg } = useSelector((state) => state.locatario);
+  const { id } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -49,8 +49,9 @@ const Crear = ({ open, handleClose }) => {
 
   const [cedula, setCedula] = useState("");
   const [local, setLocal] = useState("");
+  const [numerolocal, setnumeroLocal] = useState([{ local1: "" }]);
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
+  // const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
   const [mensaje, setMensaje] = useState("");
@@ -58,10 +59,15 @@ const Crear = ({ open, handleClose }) => {
   const [alerta, setAlerta] = useState(false);
 
   const [plaza, setPlaza] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [cat, setCat] = useState([]);
 
   const validarEmail = (email) => {
-    if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)) {
+    if (email === "") {
+      return true;
+    } else if (
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)
+    ) {
       return true;
     } else {
       return false;
@@ -80,7 +86,7 @@ const Crear = ({ open, handleClose }) => {
 
   const handleNext = () => {
     if (validarEmail(email)) {
-      if (local && cedula && nombre && apellido) {
+      if (local && cedula && nombre) {
         if (verficarDatos(cedula, email)) {
           setActiveStep(activeStep + 1);
         } else {
@@ -120,10 +126,10 @@ const Crear = ({ open, handleClose }) => {
             setCedula={setCedula}
             local={local}
             setLocal={setLocal}
+            numerolocal={numerolocal}
+            setnumeroLocal={setnumeroLocal}
             nombre={nombre}
             setNombre={setNombre}
-            apellido={apellido}
-            setApellido={setApellido}
             telefonos={telefonos}
             setTelefonos={setTelefonos}
             email={email}
@@ -138,6 +144,8 @@ const Crear = ({ open, handleClose }) => {
             setCat={setCat}
             plaza={plaza}
             setPlaza={setPlaza}
+            productos={productos}
+            setProductos={setProductos}
           />
         );
       case 2:
@@ -196,9 +204,8 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Registrar = () => {
-    console.log(telefonos);
     dispatch(
-      setPlazasMercado(
+      setLocatarios(
         horario_m1,
         horario_m2,
         horario_lm1,
@@ -213,12 +220,19 @@ const Crear = ({ open, handleClose }) => {
         horario_sm2,
         horario_dm1,
         horario_dm2,
-        telefonos,
-        cat,
-        plaza,
-        email,
         img,
-        img2
+        img2,
+        cedula,
+        local,
+        numerolocal,
+        nombre,
+        // apellido,
+        email,
+        telefonos,
+        plaza,
+        cat,
+        productos,
+        id
       )
     );
     setAlerta(true);
@@ -226,7 +240,6 @@ const Crear = ({ open, handleClose }) => {
       setAlerta(false);
     }, 3000);
   };
-  console.log(telefonos);
 
   const Limpiar = () => {
     setImg(null);
@@ -251,7 +264,6 @@ const Crear = ({ open, handleClose }) => {
     setTelefonos([{ telefono: "" }]);
     setEmail("");
   };
-  console.log(telefonos);
   return (
     <ModalForm
       open={open}
@@ -345,6 +357,7 @@ const Crear = ({ open, handleClose }) => {
 Crear.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
+  locatarios: PropTypes.array,
 };
 
 export default Crear;

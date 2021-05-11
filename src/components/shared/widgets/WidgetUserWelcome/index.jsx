@@ -8,6 +8,7 @@ const WidgetUserWelcome = () => {
   const { name, img, rol } = useSelector((state) => state.auth);
 
   const [img1, setImg] = useState("");
+
   const exitApp = () => {
     dispatch(startLogout());
   };

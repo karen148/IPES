@@ -15,6 +15,7 @@ const FormCreateCategory = ({ getDatos }) => {
   const [img1, setImg1] = useState(null);
   const [alerta, setAlerta] = useState(false);
   const [alerta1, setAlerta1] = useState(false);
+  // const [mensajes, setMensaje] = useState(false);
   const [categoria, handleCategoria, setValues] = useForm({
     nombre: "",
     slug: "",
@@ -45,6 +46,7 @@ const FormCreateCategory = ({ getDatos }) => {
   };
 
   const crearCategoria = () => {
+    getDatos();
     if (nombre && slug && descripcion) {
       dispatch(setCategorias(nombre, slug, descripcion, img));
       getDatos();
@@ -138,7 +140,11 @@ const FormCreateCategory = ({ getDatos }) => {
             Faltan datos (Nombre, slug o descripción)
           </Alert>
         )}
-        <Button variant="contained" color="secondary" onClick={crearCategoria}>
+        <Button
+          variant="contained"
+          onClick={crearCategoria}
+          style={{ backgroundColor: "#96CC27", color: "white" }}
+        >
           Crear
         </Button>
       </div>

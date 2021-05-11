@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -31,8 +31,8 @@ const Plaza = ({
     (state) => state.plaza
   );
 
-  const [disabled, setHabilitar] = useState(false);
-  console.log(disabled);
+  // const [disabled, setHabilitar] = useState(false);
+  // console.log(disabled);
   const classes = useStyles();
   //agregar un telefono
   const handleAddTel = () => {
@@ -61,11 +61,7 @@ const Plaza = ({
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12}>
-          {disabled ? (
-            <label style={{ color: "red" }}>Nombre de la plaza*</label>
-          ) : (
-            <label>Nombre de la plaza*</label>
-          )}
+          <label>Nombre de la plaza*</label>
           {si === "no"
             ? plazastrues?.map((option) => {
                 return (
@@ -74,12 +70,11 @@ const Plaza = ({
                       <Alert severity="error" className={classes.alerta}>
                         La plaza de mercado ya existe
                       </Alert>
-                      {setHabilitar(true)}
                     </>
                   )
                 );
               })
-            : setHabilitar(false)}
+            : ""}
           {plazas?.map((option) => {
             return (
               option?.nombre === plaza &&
@@ -125,12 +120,13 @@ const Plaza = ({
         <Grid item xs={12} sm={12}>
           <label>Localidad*</label>
           <Autocomplete
-            id="free-solo-demo"
-            freeSolo
-            options={localidades?.map((option) => option?.label)}
-            inputValue={localidad}
-            onInputChange={(event, newInputValue) => {
-              setLocalidad(newInputValue);
+            id="auto-select"
+            autoSelect
+            options={localidades}
+            getOptionLabel={(option) => option?.label}
+            value={localidad}
+            onChange={(event, newValue) => {
+              setLocalidad(newValue);
             }}
             renderInput={(params) => (
               <TextField
@@ -235,7 +231,7 @@ Plaza.propTypes = {
   setPlaza: PropTypes.func,
   direccion: PropTypes.string,
   setDireccion: PropTypes.func,
-  localidad: PropTypes.string,
+  localidad: PropTypes.array,
   setLocalidad: PropTypes.func,
   funcionario: PropTypes.array,
   setFuncionarios: PropTypes.func,

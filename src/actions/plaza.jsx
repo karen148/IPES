@@ -7,7 +7,6 @@ export const UpdateLogo = (img2, ids) => {
     const formData = new FormData();
     formData.append("imagen", img2);
     formData.append("plaza", "logo");
-    console.log(img2);
     let config1 = {
       method: "put",
       url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
@@ -18,7 +17,6 @@ export const UpdateLogo = (img2, ids) => {
     };
     axios(config1)
       .then((response) => {
-        console.log(response);
         let data = response.data;
         dispatch(
           PlazaMensaje({
@@ -38,7 +36,6 @@ export const UpdateBanner = (img, ids) => {
     const formData = new FormData();
     formData.append("imagen", img);
     formData.append("plaza", "img");
-    console.log(img);
     let config1 = {
       method: "put",
       url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
@@ -49,7 +46,6 @@ export const UpdateBanner = (img, ids) => {
     };
     axios(config1)
       .then((response) => {
-        console.log(response);
         let data = response.data;
         dispatch(
           PlazaMensaje({
@@ -99,16 +95,13 @@ export const UpdatePlazasMercado = (
       horario_sm1 + "-" + horario_sm2,
       horario_dm1 + "-" + horario_dm2
     );
-    console.log(plaza);
-    console.log(telefonos);
-    console.log(cat);
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
     });
     let cate = [];
     cat.map((item) => {
-      Array.prototype.push.apply(cate, [item.label]);
+      Array.prototype.push.apply(cate, [item.id]);
     });
     let funcio = [];
     funcionario.map((item) => {
@@ -124,9 +117,10 @@ export const UpdatePlazasMercado = (
         process.env.REACT_APP_URL_API + "plazas/update/" + idPlaza,
         {
           admin_id: funcio,
-          localidad_nombre: localidad,
+          localidad_id: localidad.id,
           nombre: plaza,
-          categorias_nombres: cate,
+          categorias_id: cate,
+          productos_id: [],
           direccion: direccion,
           telefonos: tele,
           email: email,
@@ -135,7 +129,6 @@ export const UpdatePlazasMercado = (
         config
       )
       .then((response) => {
-        console.log(response);
         let data = response.data;
         dispatch(
           PlazaMensaje({
@@ -186,16 +179,13 @@ export const setPlazasMercado = (
       horario_sm1 + "-" + horario_sm2,
       horario_dm1 + "-" + horario_dm2
     );
-    console.log(plaza);
-    console.log(telefonos);
-    console.log(cat);
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
     });
     let cate = [];
     cat.map((item) => {
-      Array.prototype.push.apply(cate, [item.label]);
+      Array.prototype.push.apply(cate, [item.id]);
     });
     let funcio = [];
     funcionario.map((item) => {
@@ -211,9 +201,10 @@ export const setPlazasMercado = (
         process.env.REACT_APP_URL_API + "plazas/crear",
         {
           admin_id: funcio,
-          localidad_nombre: localidad,
+          localidad_id: localidad.id,
           nombre: plaza,
-          categorias_nombres: cate,
+          categorias_id: cate,
+          productos_id: [],
           direccion: direccion,
           telefonos: tele,
           email: email,
@@ -222,7 +213,6 @@ export const setPlazasMercado = (
         config
       )
       .then((response) => {
-        console.log(response);
         let data = response.data;
         dispatch(
           PlazaMensaje({
@@ -231,13 +221,12 @@ export const setPlazasMercado = (
           })
         );
         if (response.status === 200) {
-          console.log(response);
           let ids = data.plaza.id;
           if (img) {
             const formData = new FormData();
             formData.append("imagen", img);
             formData.append("plaza", "img");
-            console.log(img);
+
             let config1 = {
               method: "put",
               url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
@@ -248,7 +237,6 @@ export const setPlazasMercado = (
             };
             axios(config1)
               .then((response) => {
-                console.log(response);
                 let data = response.data;
                 dispatch(
                   PlazaMensaje({
@@ -265,7 +253,7 @@ export const setPlazasMercado = (
             const formData = new FormData();
             formData.append("imagen", img2);
             formData.append("plaza", "logo");
-            console.log(img2);
+
             let config2 = {
               method: "put",
               url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
@@ -276,7 +264,6 @@ export const setPlazasMercado = (
             };
             axios(config2)
               .then((response) => {
-                console.log(response);
                 let data = response.data;
                 dispatch(
                   PlazaMensaje({
@@ -310,7 +297,6 @@ export const getTrue = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "plazas/getAll", config)
       .then((response) => {
-        console.log(response.data.plazas);
         let data = response.data.plazas;
         let plazatrues = [];
         data.map((item) => {
@@ -318,7 +304,6 @@ export const getTrue = () => {
             plazatrues.push(item);
           }
         });
-        console.log(plazatrues);
         dispatch(PlazaTrue(plazatrues));
       })
       .catch((e) => {
@@ -340,7 +325,6 @@ export const getPlaz = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "plazas/getAll", config)
       .then((response) => {
-        console.log(response.data.plazas);
         let data = response.data.plazas;
         let plazas = data.map((item) => ({
           id: item.id,
@@ -439,7 +423,6 @@ export const getLocalidades = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "localidades/getAll", config)
       .then((response) => {
-        console.log(response.data);
         let data = response.data.localidades;
         const localidades = data.map((item) => ({
           label: item.nombre,
@@ -465,11 +448,10 @@ export const getCantidades = () => {
     };
     axios
       .get(
-        process.env.REACT_APP_URL_API + "locatarios/locatarioPorPlaza",
+        process.env.REACT_APP_URL_API + "locatarios/totalLocatarioPorPlaza",
         config
       )
       .then((response) => {
-        console.log(response.data);
         let data = response.data.cantidadLocales;
         const cantidades = data.map((item) => ({
           total: item.total,
