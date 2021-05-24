@@ -28,25 +28,21 @@ const CategoriesPage = () => {
     setMostrar(true);
     setCate(e.target.value);
     let data = [];
-    categorias.filter((item) => {
-      if (item.nombre.toLowerCase().trim().includes(cate.toLowerCase())) {
-        data.push(item);
-      } else if (cate === undefined) {
-        data.push(item);
-        console.log("aquiii");
+    console.log(cate.length);
+    if (cate.length === 1) {
+      setMostrar(false);
+    }
+    data = categorias.filter((item) => {
+      if (item.nombre.trim().indexOf(cate.toUpperCase().trim()) !== -1) {
+        return item;
       }
     });
-
-    setCat(
-      data.filter((item) => {
-        return item !== undefined;
-      })
-    );
+    setCat(data);
   };
 
   const restaurar = () => {
     setCat(categorias);
-    setCate(" ");
+    setCate("");
   };
 
   const getDatos = () => {

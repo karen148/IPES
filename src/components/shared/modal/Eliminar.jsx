@@ -9,6 +9,7 @@ const Eliminar = ({
   handleClose,
   eliminar,
   titulo,
+  titulo1,
   titulo2,
   titulo3,
 }) => {
@@ -27,9 +28,9 @@ const Eliminar = ({
         spacing={3}
       >
         <Grid item xs={12}>
-          <b>
-            Desea eliminar {titulo2} {titulo}?
-          </b>
+          <h4>
+            {titulo1} {titulo2} {titulo}?
+          </h4>
         </Grid>
         <Grid item>
           <Button
@@ -56,6 +57,7 @@ Eliminar.propTypes = {
   handleClose: PropTypes.func,
   eliminar: PropTypes.func,
   titulo: PropTypes.string,
+  titulo1: PropTypes.string,
   titulo2: PropTypes.string,
   titulo3: PropTypes.string,
 };

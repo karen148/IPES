@@ -1,5 +1,6 @@
 import axios from "axios";
 import { types } from "./../types";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export const DeleteCliente = (idLocatario) => {
   return async (dispatch) => {
@@ -54,6 +55,60 @@ export const UpdateImagen = (img, id) => {
       })
       .catch((e) => {
         console.log("ERROR", e);
+      });
+  };
+};
+
+export const getClientes = (setCliente) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(process.env.REACT_APP_URL_API + "clientes/getAll", config)
+      .then((response) => {
+        let data = response.data.clientes;
+        let clientes = data.map((item, index) => ({
+          conteo: index + 1,
+          id: item.id,
+          cedula: item.cedula,
+          nombre: item.nombre.toUpperCase(),
+          telefono: item.telefono,
+          direccion: item.direccion,
+          img: item.img,
+          activo: item.activo,
+          email: item.email,
+          acciones: [
+            {
+              name: "Eliminar",
+              icon: <DeleteIcon />,
+              id: item.id,
+            },
+          ],
+        }));
+        setCliente(clientes);
+        dispatch(ClienteMensaje({ ok: response.data.ok }));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
+export const getCliente = (setCliente, id) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(process.env.REACT_APP_URL_API + "clientes/find/" + id, config)
+      .then((response) => {
+        let data = response.data.clientes;
+        setCliente(data);
+        dispatch(ClienteMensaje({ ok: response.data.ok }));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
       });
   };
 };

@@ -11,6 +11,9 @@ const theme = createMuiTheme({
     info: {
       main: "#96CC27",
     },
+    total: {
+      main: "#46416B",
+    },
   },
 });
 

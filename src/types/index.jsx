@@ -21,6 +21,7 @@ export const types = {
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
   locatariosMensaje: "[locatario] Mensaje que se envió la información",
+  locatariosDato: "[locatario] Obtener datos del locatario",
 
   categoriaCrear: "[categoria] Crear categoria",
   categoriaDatos: "[categoria] Obtener datos de la categoria",
@@ -30,4 +31,7 @@ export const types = {
   productoDatos: "[producto] Obtener datos productos",
 
   clienteMensaje: "[cliente] Mensaje que se envió la información",
+
+  pedidoMensaje: "[pedido] Mensaje que se envió la información",
+  pedidoDatos: "[pedido] Obtener datos del pedido",
 };

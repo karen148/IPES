@@ -6,7 +6,6 @@ import TablasLocatarios from "./../../components/shared/tables/TablasLocatarios"
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
 import { getPlaz, getTrue, getLocalidades } from "./../../actions/plaza";
-import { getLocatario } from "../../actions/locatarios";
 
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
@@ -52,10 +51,6 @@ const Locatarios = () => {
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [nomplaza1, setNomplaza1] = useState("");
-
-  useEffect(() => {
-    dispatch(getLocatario());
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getPlaz());

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   margin: {
-    marginTop: "-7px",
+    marginTop: "9px",
   },
   button: {
     "&:hover": {

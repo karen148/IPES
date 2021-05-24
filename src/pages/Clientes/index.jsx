@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getClientes } from "actions/cliente";
+import { useDispatch } from "react-redux";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
@@ -8,39 +10,51 @@ import TablesClientes from "components/shared/tables/TablesClientes";
 
 import AddIcon from "@material-ui/icons/Add";
 // import SearchIcon from "@material-ui/icons/Search";
-import DeleteIcon from "@material-ui/icons/Delete";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 
 import TooltipE from "./../../components/shared/tooltip";
+
 // import useStyles from "./styles";
 
 const Clientes = () => {
   // const classes = useStyles();
-
+  const dispatch = useDispatch();
   const [nomcliente, setNomCLiente] = useState("");
   const [cliente, setCliente] = useState([]);
   const [cliente1, setCliente1] = useState([]);
   const [mostrar, setMostrar] = useState(false);
 
+  useEffect(() => {
+    dispatch(getClientes(setCliente));
+  }, [dispatch]);
+
   const getDatos = () => {
-    getCliente();
+    dispatch(getClientes(setCliente));
     setMostrar(false);
   };
 
   const Buscar = (e) => {
     setMostrar(true);
     setNomCLiente(e.target.value);
-    setCliente1(cliente);
+    if (nomcliente.length === 1) {
+      setMostrar(false);
+    }
     if (/^([a-zñáéíóú]+[\s]*)+$/.test(nomcliente.toLowerCase())) {
       setCliente1(
-        cliente1.filter((item) => {
+        cliente.filter((item) => {
           return item.nombre
             .toLowerCase()
             .trim()
             .includes(nomcliente.toLowerCase());
+        })
+      );
+    } else if (/[0-9]/.test(parseInt(nomcliente))) {
+      setCliente1(
+        cliente.filter((item) => {
+          return item.cedula.trim().includes(parseInt(nomcliente.trim()));
         })
       );
     }
@@ -56,7 +70,7 @@ const Clientes = () => {
   console.log(nomcliente.toLowerCase());
   console.log(/^([a-zñáéíóú]+[\s]*)+$/.test(nomcliente.toLowerCase()));
   const Restaurar = () => {
-    getCliente();
+    dispatch(getClientes(setCliente));
     setNomCLiente("");
     setMostrar(false);
   };
@@ -78,41 +92,6 @@ const Clientes = () => {
         console.log("ERROR!!!!!", e);
       });
   };
-
-  const getCliente = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + "clientes/getAll", config)
-      .then((response) => {
-        let data = response.data.clientes;
-        let clientes = data.map((item, index) => ({
-          conteo: index + 1,
-          id: item.id,
-          nombre: item.nombre,
-          telefono: item.telefono,
-          direccion: item.direccion,
-          img: item.img,
-          activo: item.activo,
-          email: item.email,
-          acciones: [
-            {
-              name: "Eliminar",
-              icon: <DeleteIcon />,
-              id: item.id,
-            },
-          ],
-        }));
-        setCliente(clientes);
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
-  useEffect(() => {
-    getCliente();
-  }, []);
 
   console.log(cliente);
   return (

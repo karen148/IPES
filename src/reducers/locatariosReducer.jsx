@@ -2,6 +2,7 @@ import { types } from "./../types";
 
 const initialState = {
   locatarios: [],
+  ok: false,
 };
 
 export const locatariosReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ export const locatariosReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+    case types.locatariosDato:
+      return {
+        ...state,
+        ok: action.payload,
       };
     default:
       return state;

@@ -103,7 +103,7 @@ const TablesClientes = ({ datos, getDatos }) => {
       getDatos();
     }, 4000);
   };
-
+  console.log(datos.filter((item) => item.id === idp2)[0]?.nombre);
   return (
     <Grid container direction="row" justify="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -317,8 +317,10 @@ const TablesClientes = ({ datos, getDatos }) => {
                         >
                           <h4>Nombre</h4>
                           {item.nombre}
+                          <br></br>
+                          <p>CC: {item.cedula}</p>
                           <h4>Correo electrónico</h4>
-                          <p>{item.email}</p>
+                          <p style={{ fontSize: "16px" }}>{item.email}</p>
                         </Grid>
                         <Grid
                           item
@@ -327,9 +329,9 @@ const TablesClientes = ({ datos, getDatos }) => {
                           style={{ textAlign: "center" }}
                         >
                           <h4>Telefono</h4>
-                          {item.telefono}
+                          <p style={{ fontSize: "16px" }}>{item.telefono}</p>
                           <h4>Diección</h4>
-                          <p>{item.direccion}</p>
+                          <p style={{ fontSize: "16px" }}>{item.direccion}</p>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -343,12 +345,9 @@ const TablesClientes = ({ datos, getDatos }) => {
           handleClose={handleClose1}
           eliminar={Eliminar}
           titulo3="Cambiar de estado"
-          titulo2="el cliente"
-          titulo={
-            datos.filter((item) => {
-              item?.id === idp2;
-            })[0]?.nombre
-          }
+          titulo2="del cliente"
+          titulo1="Desea cambiar el estado a inactivo"
+          titulo={datos.filter((item) => item.id === idp2)[0]?.nombre}
         />
       </Grid>
     </Grid>

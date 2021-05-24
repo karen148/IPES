@@ -62,7 +62,8 @@ export const starChecking = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "admins/renewToken", config)
       .then((response) => {
-        localStorage.setItem("token", response.data.token);
+        console.log(response);
+        // localStorage.setItem("token", response.data.token);
         localStorage.setItem("token-date", new Date().getTime());
         let config1 = {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

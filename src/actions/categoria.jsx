@@ -75,7 +75,7 @@ export const getCategorias = () => {
         let data = response.data.categorias;
         const categorias = data.map((item) => ({
           id: item.id,
-          nombre: item.nombre,
+          nombre: item.nombre.toUpperCase(),
           descripcion: item.descripcion,
           slug: item.slug,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,

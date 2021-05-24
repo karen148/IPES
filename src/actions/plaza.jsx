@@ -398,7 +398,7 @@ export const getCategorias = () => {
       .then((response) => {
         let data = response.data.categorias;
         const categorias = data.map((item) => ({
-          label: item.nombre,
+          label: item.nombre.toUpperCase(),
           id: item.id,
           icono: item.icono,
         }));

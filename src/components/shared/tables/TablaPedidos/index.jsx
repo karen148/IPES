@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-// import IconButton from "@material-ui/core/IconButton";
-// import TooltipE from "./../../tooltip";
-// import Modal from "./../../modal";
-// import _Eliminar from "./../../modal/Eliminar.jsx";
-// import Button from "@material-ui/core/Button";
+
+import IconButton from "@material-ui/core/IconButton";
+import TooltipE from "./../../tooltip";
+import Modal from "./../../modal";
+import _Eliminar from "./../../modal/Eliminar.jsx";
+import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,22 +15,33 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 import useStyles from "./styles.jsx";
-// import Divider from "@material-ui/core/Divider";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import * as locales from "@material-ui/core/locale";
+import { DeletePedido } from "actions/pedidos.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { getLocatarioPlaza } from "actions/locatarios";
 
-const TablesPedidos = ({ datos, getDatos }) => {
+const TablesPedidos = ({ datos, getDatos, clientes }) => {
   const classes = useStyles();
+
+  const { productos } = useSelector((state) => state.producto);
+  const { plazastrues } = useSelector((state) => state.plaza);
+
+  const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  // const [local3, setLocal3] = useState([]);
-  // const [open, setOpen] = React.useState(false);
-  // const [open1, setOpen1] = React.useState(false);
+  const [mostrar, setMostrar] = useState(false);
+  const [locatario, setLocatario] = useState([]);
+  // const [local3, setLocal3] = useState([]) ;
+  const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
   // const [open2, setOpen2] = React.useState(false);
-  // const [idp, setIdp] = useState(0);
+  const [idp, setIdp] = useState(0);
   // const [idp1, setIdp1] = useState(0);
-  // const [idp2, setIdp2] = useState(0);
+  const [idp2, setIdp2] = useState(0);
 
   const columns = [
     { id: "id", label: "ID Pasarela de pagos" },
@@ -51,22 +63,22 @@ const TablesPedidos = ({ datos, getDatos }) => {
     setPage(0);
   };
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  // const handleClickOpen1 = () => {
-  //   setOpen1(true);
-  // };
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
 
-  // const handleClose1 = () => {
-  //   setOpen1(false);
-  //   getLocali();
-  // };
+  const handleClose1 = () => {
+    setOpen1(false);
+    getDatos();
+  };
 
   // const handleClickOpen2 = () => {
   //   setOpen2(true);
@@ -81,10 +93,11 @@ const TablesPedidos = ({ datos, getDatos }) => {
   //   setLocal3(datos?.filter((item) => item?.id === idL));
   // };
 
-  // const Eliminar = () => {
-  //   dispatch(DeleteLocatario(idp2));
-  // };
-  console.log(getDatos);
+  const Eliminar = () => {
+    dispatch(DeletePedido(idp2));
+    getDatos();
+  };
+  console.log(datos);
   return (
     <Grid container direction="row" justify="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -110,68 +123,56 @@ const TablesPedidos = ({ datos, getDatos }) => {
                   .map((item) => {
                     // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                     if (item) {
-                      let data = [];
-                      if (item?.categorias) {
-                        if (item?.categorias.length > 0) {
-                          for (let i = 0; i <= item?.categorias.length; i++) {
-                            const element = item?.categorias[i];
-                            categorias.map((item) => {
-                              if (item.id === element) {
-                                data.push(item);
-                              }
-                            });
-                          }
-                        }
+                      let estado = "";
+
+                      if (item.estado === "0") {
+                        estado = "Enviado";
+                      } else if (item.estado === "1") {
+                        estado = "En progreso";
+                      } else if (item.estado === "2") {
+                        estado = "Entregado";
+                      } else {
+                        estado = "Cancelado";
                       }
-                      console.log(
-                        plazastrues.length
-                          ? plazastrues.filter(
-                              (pla) => pla?.id === item.plaza
-                            )[0]?.localidad_id
-                          : "-"
-                      );
+
                       return (
                         <TableRow key={`${item.id}`}>
+                          <TableCell align="center">{item.pasarela}</TableCell>
                           <TableCell align="center">{item.conteo}</TableCell>
                           <TableCell align="center">
                             <Button
                               color="secondary"
-                              key={`${item.local}`}
-                              // onClick={() => {
-                              //   handleClickOpen();
-                              //   setIdp(item.id);
-                              // }}
+                              key={`${item.cliente}`}
+                              onClick={() => {
+                                handleClickOpen();
+                                setIdp(item.id);
+                                dispatch(
+                                  getLocatarioPlaza(setLocatario, item.plaza)
+                                );
+                              }}
                             >
-                              <b>{item.local}</b>
+                              <b>
+                                {
+                                  clientes.filter(
+                                    (clien) => clien.id === item.cliente
+                                  )[0]?.nombre
+                                }
+                              </b>
                             </Button>
                           </TableCell>
-                          <TableCell align="center">{item.nombre}</TableCell>
-                          <TableCell key={`${item.activo}`} align="center">
-                            {item.activo}
+                          <TableCell align="center">
+                            {item.fecha === null ? (
+                              <p>No hay fecha</p>
+                            ) : (
+                              item.fecha
+                            )}
                           </TableCell>
-                          <TableCell
-                            key={`${item.activo}${item.local}`}
-                            style={{ width: "180px" }}
-                            align="center"
-                          >
-                            {data.map((item) => {
-                              return (
-                                <TooltipE title={item.label} key={item.id}>
-                                  <img
-                                    src={
-                                      process.env.REACT_APP_URL_API +
-                                      `uploads/retorna/CATEGORIA/${item.icono}`
-                                    }
-                                    alt=""
-                                    width="30px"
-                                    height="30px"
-                                    style={{ marginRight: "5px" }}
-                                  />
-                                </TooltipE>
-                              );
-                            })}
+                          <TableCell align="center">
+                            {item.pagado === "0" ? "Pago" : "No pago"}
                           </TableCell>
-                          {/* <TableCell align="center">
+                          <TableCell align="center">{estado}</TableCell>
+                          <TableCell align="center">{item.total}</TableCell>
+                          <TableCell align="center">
                             {item?.acciones.map((cat) => {
                               return (
                                 <TooltipE title={cat.name} key={cat.name}>
@@ -179,25 +180,17 @@ const TablesPedidos = ({ datos, getDatos }) => {
                                     color="default"
                                     component="span"
                                     key={cat.name}
-                                    onClick={
-                                      cat.name === "Editar"
-                                        ? () => {
-                                            handleClickOpen2();
-                                            setIdp1(cat.id);
-                                            datoActualizar(cat.id);
-                                          }
-                                        : () => {
-                                            handleClickOpen1();
-                                            setIdp2(cat.id);
-                                          }
-                                    }
+                                    onClick={() => {
+                                      handleClickOpen1();
+                                      setIdp2(cat.id);
+                                    }}
                                   >
                                     {cat.icon}
                                   </IconButton>
                                 </TooltipE>
                               );
                             })}
-                          </TableCell> */}
+                          </TableCell>
                         </TableRow>
                       );
                     }
@@ -218,30 +211,40 @@ const TablesPedidos = ({ datos, getDatos }) => {
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </ThemeProvider>
-        {/* <Modal
+        <Modal
           open={open}
           handleClose={handleClose}
-          title="No hay datos"
+          title="Información del pedido"
           tamaño="sm"
-        > */}
-        {/* {datos.length > 0 &&
+        >
+          {datos.length > 0 &&
             datos.map((item) => {
-              let telefonoss = [];
-              if (item?.telefonos) {
-                if (item?.telefonos.length > 0) {
-                  console.log("aquiiii");
-                  for (let i = 0; i <= item?.telefonos.length; i++) {
-                    const element = item?.telefonos[i];
-                    console.log(item?.telefonos[i]);
-                    telefonoss.push({ telefono: element });
-                  }
-                }
-              } else {
-                telefonoss.push({
-                  telefono: "El locatario no tiene telefonos",
-                });
-              }
               if (item !== undefined && item.id === idp) {
+                let producto = [];
+                let locatarios = [];
+                let cliente = clientes.filter(
+                  (clien) => clien.id === item.cliente
+                )[0];
+                let plaza = plazastrues?.filter(
+                  (plaza) => plaza.id === item.plaza
+                )[0];
+                for (let index = 0; index < item.productos.length; index++) {
+                  const element = item.productos[index];
+                  productos.map((item) => {
+                    if (item.id === element) {
+                      producto.push(item);
+                    }
+                  });
+                }
+                console.log(producto);
+                for (let index = 0; index < item.locatario.length; index++) {
+                  const element = item.locatario[index];
+                  locatario.map((item) => {
+                    if (item.id === element) {
+                      locatarios.push(item);
+                    }
+                  });
+                }
                 return (
                   <Grid
                     container
@@ -249,22 +252,97 @@ const TablesPedidos = ({ datos, getDatos }) => {
                     justify="center"
                     alignItems="center"
                   >
-                    <Grid item xs={12} sm={12}>
-                      <img
-                        src={
-                          process.env.REACT_APP_URL_API +
-                          `uploads/retorna/LOCATARIO/${item.img}`
-                        }
-                        alt=""
-                        width="100%"
-                        height="150px"
+                    <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={() => setMostrar(true)}
+                        style={{ color: "white" }}
+                      >
+                        Ver productos
+                      </Button>
+                      <Divider
+                        variant="middle"
+                        style={{ marginTop: "15px", marginBottom: "15px" }}
                       />
-                      <p style={{ textAlign: "center" }}>
-                        <i>Banner</i>
-                      </p>
-                      <Divider variant="middle" />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    {mostrar && (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        style={{ textAlign: "center" }}
+                      >
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          spacing={2}
+                        >
+                          {producto.map((pro) => {
+                            return (
+                              <Grid
+                                item
+                                key={pro.id}
+                                xs={12}
+                                sm={4}
+                                style={{ textAlign: "center" }}
+                              >
+                                <Box
+                                  borderColor="primary.main"
+                                  m={2}
+                                  border={2}
+                                  style={{
+                                    marginBottom: "15px",
+                                  }}
+                                  borderRadius={10}
+                                >
+                                  <p
+                                    style={{
+                                      marginBottom: "5px",
+                                      marginTop: "10px",
+                                    }}
+                                  >
+                                    {pro.nombre}
+                                  </p>
+                                  {pro.sku}
+                                  <p>precio: $</p>
+                                </Box>
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => setMostrar(false)}
+                          style={{ color: "white" }}
+                        >
+                          Cerrar
+                        </Button>
+                        <Divider
+                          variant="middle"
+                          style={{ marginTop: "15px", marginBottom: "15px" }}
+                        />
+                      </Grid>
+                    )}
+                    <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
+                      <Box
+                        bgcolor="total.main"
+                        color="primary.contrastText"
+                        p={1}
+                        style={{ color: "white", fontSize: "16px" }}
+                        borderRadius={16}
+                      >
+                        Total a pagar: $ {item.total}
+                      </Box>
+                      <Divider
+                        variant="middle"
+                        style={{ marginTop: "15px", marginBottom: "15px" }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
                       <Grid
                         container
                         direction="row"
@@ -274,87 +352,68 @@ const TablesPedidos = ({ datos, getDatos }) => {
                         <Grid
                           item
                           xs={12}
-                          sm={4}
+                          sm={6}
                           style={{ textAlign: "center" }}
                         >
-                          <img
-                            src={
-                              process.env.REACT_APP_URL_API +
-                              `uploads/retorna/LOCATARIO/${item.logo}`
-                            }
-                            alt=""
-                            width="150px"
-                            height="150px"
-                          />
-                          <p style={{ textAlign: "center" }}>
-                            <i>Logo</i>
-                          </p>
+                          <Box borderColor="total.main" p={2} borderRight={2}>
+                            <br></br>
+                            <h4>Datos del cliente</h4>
+                            <p style={{ fontSize: "16px" }}>
+                              <b>Cliente:</b> {cliente?.nombre}
+                            </p>
+                            <p style={{ fontSize: "16px" }}>
+                              <b>Teléfono:</b> {cliente?.telefono}
+                            </p>
+                            <p style={{ fontSize: "16px" }}>
+                              <b>Dirección:</b> {cliente?.direccion}
+                            </p>
+                            <p style={{ fontSize: "16px" }}>
+                              <b>Plaza:</b> {plaza?.nombre}
+                            </p>
+                          </Box>
                         </Grid>
                         <Grid
                           item
                           xs={12}
-                          sm={8}
+                          sm={6}
                           style={{ textAlign: "center" }}
                         >
-                          <h4>Locatario</h4>
-                          {item.nombre}
-                          <br></br>
-                          <h4>Cédula</h4>
-                          <p>{item.cedula}</p>
-                        </Grid>
-                      </Grid>
-                      <Divider variant="middle" />
-                      <br></br>
-                      <Grid item xs={12} sm={12}>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
-                          <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            style={{ textAlign: "center" }}
-                          >
-                            <h4>Teléfonos</h4>
-                            {telefonoss.map((item) => {
+                          <Box style={{ paddingLeft: "10px" }}>
+                            <h4>Datos de los locatarios</h4>
+                            {locatarios.map((loc) => {
                               return (
-                                <p key={item?.telefono}> {item?.telefono}</p>
+                                <p key={loc.id} style={{ fontSize: "14px" }}>
+                                  {loc.nombre} - Local: {loc.local}
+                                </p>
                               );
                             })}
-                            <h4>Correo electrónico</h4>
-                            <p>{item.email}</p>
-                          </Grid>
+                          </Box>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 );
               }
-            })} */}
-        {/* </Modal> */}
-        {/* <_Eliminar
+            })}
+        </Modal>
+        <_Eliminar
           open={open1}
           handleClose={handleClose1}
           eliminar={Eliminar}
-          titulo3="Cambiar de estado"
-          titulo2="el locatario"
-          titulo={
-            datos.filter((item) => {
-              item?.id === idp2;
-            })[0]?.nombre
-          }
-        /> */}
+          titulo3="Cancelar pedido"
+          titulo1="Desea cancelar"
+          titulo2="el pedido"
+          titulo={datos.filter((item) => item.id === idp2)[0]?.id}
+        />
       </Grid>
     </Grid>
   );
 };
 
-TablesClientes.propTypes = {
+TablesPedidos.propTypes = {
   datos: PropTypes.array,
   getDatos: PropTypes.func,
+  clientes: PropTypes.array,
 };
 
 export default TablesPedidos;

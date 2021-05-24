@@ -61,7 +61,9 @@ export default function Login() {
             noValidate
             style={{ fontSize: "20px" }}
           >
-            <label style={{ fontSize: "15px" }}>Correo electrónico *</label>
+            <label style={{ fontSize: "15px" }}>
+              Correo electrónico o Cédula*
+            </label>
             <TextField
               variant="outlined"
               margin="normal"

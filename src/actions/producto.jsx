@@ -292,8 +292,8 @@ export const getProducto = () => {
     axios
       .get(process.env.REACT_APP_URL_API + "productos/getAll", config)
       .then((response) => {
-        console.log(response.data.prductos);
-        let data = response.data.prductos;
+        console.log(response.data.productos);
+        let data = response.data.productos;
         let productos = data.map((item) => ({
           id: item.id,
           nombre: item.nombre,
