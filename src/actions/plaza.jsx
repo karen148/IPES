@@ -1,8 +1,46 @@
 import axios from "axios";
 import { types } from "./../types";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import { updateImg } from "./imagen";
+
+export const setPlazasExcel = (nombre) => {
+  let config = {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  };
+  return async (dispatch) => {
+    axios
+      .post(
+        process.env.REACT_APP_URL_API + "plazas/crear",
+        {
+          admin_id: [],
+          localidad_id: "",
+          nombre: nombre,
+          categorias_id: [],
+          productos_id: [],
+          direccion: "",
+          telefonos: [],
+          email: "",
+          horarios: [],
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data;
+        dispatch(
+          PlazaMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
 
 export const UpdateLogo = (img2, ids) => {
+  updateImg(img2, `PLAZA/logo/${ids}`);
   return async (dispatch) => {
     const formData = new FormData();
     formData.append("imagen", img2);
@@ -33,6 +71,7 @@ export const UpdateLogo = (img2, ids) => {
 
 export const UpdateBanner = (img, ids) => {
   return async (dispatch) => {
+    updateImg(img, `PLAZA/img/${ids}`);
     const formData = new FormData();
     formData.append("imagen", img);
     formData.append("plaza", "img");
@@ -223,6 +262,7 @@ export const setPlazasMercado = (
         if (response.status === 200) {
           let ids = data.plaza.id;
           if (img) {
+            updateImg(img, `PLAZA/img/${ids}`);
             const formData = new FormData();
             formData.append("imagen", img);
             formData.append("plaza", "img");
@@ -251,6 +291,7 @@ export const setPlazasMercado = (
           }
           if (img2) {
             const formData = new FormData();
+            updateImg(img2, `PLAZA/logo/${ids}`);
             formData.append("imagen", img2);
             formData.append("plaza", "logo");
 

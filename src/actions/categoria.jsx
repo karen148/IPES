@@ -3,6 +3,7 @@ import { types } from "./../types";
 import Swal from "sweetalert2";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import { updateImg } from "./imagen";
 
 export const setCategorias = (nombre, slug, descripcion, img) => {
   return async (dispatch) => {
@@ -30,6 +31,7 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
         );
         if (response.status === 200) {
           let id = response.data.categoria.id;
+          updateImg(img, `CATEGORIAS/${id}`);
           const formData = new FormData();
           formData.append("imagen", img);
           console.log(img);
@@ -168,6 +170,7 @@ export const UpdateCategoria = (nombre, slug, descripcion, idp2) => {
 
 export const setImagen = (img, idp2) => {
   return async (dispatch) => {
+    updateImg(img, `CATEGORIAS/${idp2}`);
     const formData = new FormData();
     formData.append("imagen", img);
     console.log(img);

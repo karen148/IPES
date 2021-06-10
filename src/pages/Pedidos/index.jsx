@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
@@ -22,6 +22,7 @@ import { getClientes } from "actions/cliente";
 import TablesPedidos from "components/shared/tables/TablaPedidos";
 import { getProducto } from "actions/producto";
 import { getTrue } from "actions/plaza";
+import Excel from "components/shared/Excel";
 
 const Pedidos = () => {
   const dispatch = useDispatch();
@@ -54,7 +55,6 @@ const Pedidos = () => {
     },
   ];
   const classes = useStyles();
-
   // const [nomproducto, setNomProducto] = useState("");
   const [pedidos1, setPedidos1] = useState([]);
   const [cliente, setCliente] = useState([]);
@@ -63,6 +63,62 @@ const Pedidos = () => {
   const [mostrar, setMostrar] = useState(false);
   const [estado, setEstado] = useState("");
   const [pago, setPago] = useState("");
+  const columns = [
+    { label: "Pasarela de pagos", value: "pasarela" },
+    { label: "Pedido", value: "conteo" },
+    {
+      label: "Cliente",
+      value: function x(row) {
+        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
+          ?.nombre;
+        return nombre;
+      },
+    },
+    {
+      label: "Dirección",
+      value: function x(row) {
+        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
+          ?.direccion;
+        return nombre;
+      },
+    },
+    {
+      label: "Teléfono",
+      value: function x(row) {
+        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
+          ?.telefono;
+        return nombre;
+      },
+    },
+    { label: "Fecha", value: "fecha" },
+    {
+      label: "Pago",
+      value: function x(row) {
+        return row.pagado === "0" ? "Pago" : "No pago";
+      },
+    },
+    {
+      label: "Estados",
+      value: function x(row) {
+        let estado = "";
+        if (row.estado === "0") {
+          estado = "Enviado";
+        } else if (row.estado === "1") {
+          estado = "En progreso";
+        } else if (row.estado === "2") {
+          estado = "Entregado";
+        } else {
+          estado = "Cancelado";
+        }
+        return estado;
+      },
+    },
+    { label: "Total", value: "total" },
+  ];
+  const settings = {
+    sheetName: "Pedidos IPES",
+    fileName: "Pedidos-IPES",
+  };
 
   useEffect(() => {
     dispatch(getPedidos(setPedidos1));
@@ -167,10 +223,6 @@ const Pedidos = () => {
     }
   }, [pago]);
 
-  console.log(pago);
-  console.log(cliente);
-  console.log(pedidosnom);
-
   const Restaurar = () => {
     dispatch(getPedidos(setPedidos1));
     setPedidosNom("");
@@ -179,23 +231,23 @@ const Pedidos = () => {
     setMostrar(false);
   };
 
-  const ExportarPedido = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + "pedidos/downladXLSX", config)
-      .then((response) => {
-        console.log(response);
-        window.open(
-          process.env.REACT_APP_URL_API + "pedidos/downladXLSX",
-          "_self"
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
+  // const ExportarPedido = async () => {
+  //   let config = {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   };
+  //   axios
+  //     .get(process.env.REACT_APP_URL_API + "pedidos/downladXLSX", config)
+  //     .then((response) => {
+  //       console.log(response);
+  //       window.open(
+  //         process.env.REACT_APP_URL_API + "pedidos/downladXLSX",
+  //         "_self"
+  //       );
+  //     })
+  //     .catch((e) => {
+  //       console.log("ERROR!!!!!", e);
+  //     });
+  // };
 
   return (
     <ContainerDashboard title="Settings">
@@ -205,7 +257,12 @@ const Pedidos = () => {
       />
       <section className="ps-items-listing">
         <div className="ps-section__actions">
-          <a className="ps-btn success" onClick={ExportarPedido}>
+          <a
+            className="ps-btn success"
+            onClick={() =>
+              Excel(columns, mostrar ? pedidos2 : pedidos1, settings)
+            }
+          >
             <AddIcon />
             Exportar datos
           </a>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { types } from "./../types";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { updateImg } from "./imagen";
 
 export const DeleteCliente = (idLocatario) => {
   return async (dispatch) => {
@@ -32,6 +33,7 @@ export const DeleteCliente = (idLocatario) => {
 
 export const UpdateImagen = (img, id) => {
   return async (dispatch) => {
+    updateImg(img, `CLIENTES/img/${id}`);
     const formData = new FormData();
     formData.append("imagen", img);
     formData.append("cliente", "img");

@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { updateImg } from "actions/imagen";
 
 const FormAccountSettings = () => {
   const { id, rol } = useSelector((state) => state.auth);
@@ -115,46 +116,13 @@ const FormAccountSettings = () => {
       });
   };
 
-  const updateImg = async () => {
-    const formData = new FormData();
-    formData.append("imagen", img1);
-    // formData.append('tipoImg', img)
-    console.log(img1);
-    let config = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + `uploads/${rol}/${id}`,
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      data: formData,
-    };
-    axios(config)
-      .then((response) => {
-        if (response.status === 200) {
-          alert("Imagen actualizada");
-        }
-      })
-      .catch((error) => {
-        if (error.response) {
-          //do something
-          console.log(error.response);
-        } else if (error.request) {
-          //do something else
-          console.log(error.request);
-        } else if (error.message) {
-          //do something other than the other two
-          console.log(error.message);
-        }
-      });
-  };
-
   console.log(img1);
   console.log(state.cedula);
   console.log(state.telefono);
 
   const ValiContraseña = (confirmar_contraseña) => {
     if (
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
-        confirmar_contraseña
-      )
+      /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,16}$/.test(confirmar_contraseña)
     ) {
       return true;
     } else {
@@ -224,7 +192,9 @@ const FormAccountSettings = () => {
   };
 
   console.log(img1);
-  console.log(email1);
+  console.log(
+    /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,16}$/.test(state.contraseña)
+  );
   return (
     <Fragment>
       <div className="row" key={localStorage.getItem("id")}>
@@ -370,7 +340,7 @@ const FormAccountSettings = () => {
           </div>
         </div>
         <div className="col-sm-12">
-          {/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/.test(
+          {/^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,16}$/.test(
             state.contraseña
           ) ? (
             <>
@@ -431,7 +401,7 @@ const FormAccountSettings = () => {
         <div className="col-sm-12 text-center">
           <button
             className="ps-btn success"
-            onClick={updateImg}
+            onClick={() => updateImg(img1, `ADMINS/${rol}/${id}`)}
             style={{ marginBottom: "30px" }}
           >
             Actualizar foto

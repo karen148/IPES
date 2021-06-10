@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "./../../hooks/useForm";
 import { useDispatch } from "react-redux";
 import { startLogin } from "./../../actions/auth";
 
 import Avatar from "@material-ui/core/Avatar";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -33,6 +36,8 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
+  const [eres, setEres] = useState("");
+
   const [formLogin, handleInputChange] = useForm({
     email: "",
     contraseña: "",
@@ -61,22 +66,56 @@ export default function Login() {
             noValidate
             style={{ fontSize: "20px" }}
           >
-            <label style={{ fontSize: "15px" }}>
-              Correo electrónico o Cédula*
-            </label>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              name="email"
-              values={email}
-              onChange={handleInputChange}
-              autoComplete="email"
-              autoFocus
-              style={{ fontSize: "20px" }}
-            />
+            <FormControl variant="outlined" fullWidth>
+              <label style={{ fontSize: "15px" }}>Quién eres ?</label>
+              <Select
+                fullWidth
+                labelId="demo-simple-select-outlined-label"
+                id="demo-simple-select-outlined"
+                value={eres}
+                onChange={(e) => setEres(e.target.value)}
+              >
+                <MenuItem value={1}>Administrador</MenuItem>
+                <MenuItem value={2}>Locatario</MenuItem>
+              </Select>
+            </FormControl>
+            {eres === 1 ? (
+              <>
+                <label style={{ fontSize: "15px" }}>Correo electrónico*</label>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  name="email"
+                  values={email}
+                  onChange={handleInputChange}
+                  autoComplete="email"
+                  autoFocus
+                  type="email"
+                  style={{ fontSize: "20px" }}
+                />
+              </>
+            ) : (
+              <>
+                <label style={{ fontSize: "15px" }}>Cédula*</label>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  name="email"
+                  values={email}
+                  onChange={handleInputChange}
+                  autoComplete="email"
+                  autoFocus
+                  type="number"
+                  style={{ fontSize: "20px" }}
+                />
+              </>
+            )}
             <label style={{ fontSize: "15px" }}>Contraseña *</label>
             <TextField
               variant="outlined"

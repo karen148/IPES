@@ -11,6 +11,7 @@ import Perfil from "./../pages/Perfil";
 import Plazas from "./../pages/Plazas";
 import Locatarios from "./../pages/Locatarios";
 import ForgotPass from "./../pages/ForgotPass";
+import ChangePass from "./../pages/ChangePass";
 import Categorias from "./../pages/Categorias";
 import Productos from "./../pages/Productos";
 import Clientes from "pages/Clientes";
@@ -58,6 +59,12 @@ export const AppRouter = () => {
             exact
             path="/contraseña"
             component={ForgotPass}
+            isAuthenticated={!!id}
+          />
+          <PublicRoute
+            exact
+            path="/cambiocontraseña"
+            component={ChangePass}
             isAuthenticated={!!id}
           />
           <PrivateRoute

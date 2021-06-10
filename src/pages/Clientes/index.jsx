@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { getClientes } from "actions/cliente";
 import { useDispatch } from "react-redux";
 
@@ -16,7 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 
 import TooltipE from "./../../components/shared/tooltip";
-
+import Excel from "components/shared/Excel";
 // import useStyles from "./styles";
 
 const Clientes = () => {
@@ -26,6 +26,23 @@ const Clientes = () => {
   const [cliente, setCliente] = useState([]);
   const [cliente1, setCliente1] = useState([]);
   const [mostrar, setMostrar] = useState(false);
+  const columns = [
+    { label: "Cedula", value: "cedula" },
+    { label: "Nombre", value: "nombre" },
+    { label: "Teléfono", value: "telefono" },
+    { label: "Dirección", value: "direccion" },
+    { label: "Email", value: "email" },
+    {
+      label: "Estado",
+      value: function x(row) {
+        return row.activo ? "Activo" : "Inactivo";
+      },
+    },
+  ];
+  const settings = {
+    sheetName: "Clientes IPES",
+    fileName: "Clientes-IPES",
+  };
 
   useEffect(() => {
     dispatch(getClientes(setCliente));
@@ -67,31 +84,29 @@ const Clientes = () => {
     // }
   };
 
-  console.log(nomcliente.toLowerCase());
-  console.log(/^([a-zñáéíóú]+[\s]*)+$/.test(nomcliente.toLowerCase()));
   const Restaurar = () => {
     dispatch(getClientes(setCliente));
     setNomCLiente("");
     setMostrar(false);
   };
 
-  const ExportarCliente = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + "clientes/downladXLSX", config)
-      .then((response) => {
-        console.log(response);
-        window.open(
-          process.env.REACT_APP_URL_API + "clientes/downladXLSX",
-          "_self"
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
+  // const ExportarCliente = async () => {
+  //   let config = {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   };
+  //   axios
+  //     .get(process.env.REACT_APP_URL_API + "clientes/downladXLSX", config)
+  //     .then((response) => {
+  //       console.log(response);
+  //       window.open(
+  //         process.env.REACT_APP_URL_API + "clientes/downladXLSX",
+  //         "_self"
+  //       );
+  //     })
+  //     .catch((e) => {
+  //       console.log("ERROR!!!!!", e);
+  //     });
+  // };
 
   console.log(cliente);
   return (
@@ -102,7 +117,13 @@ const Clientes = () => {
       />
       <section className="ps-items-listing">
         <div className="ps-section__actions">
-          <a className="ps-btn success" onClick={ExportarCliente} download>
+          <a
+            className="ps-btn success"
+            onClick={() =>
+              Excel(columns, mostrar ? cliente1 : cliente, settings)
+            }
+            download
+          >
             <AddIcon />
             Exportar datos
           </a>

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { types } from "./../types";
+import { updateImg } from "./imagen";
+import firebase from "firebase";
 
 export const getLocatarioId = (setLocatario, id) => {
   return async (dispatch) => {
@@ -41,6 +43,8 @@ export const getLocatarioPlaza = (setLocatario, plaza) => {
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           email: item.email,
           telefonos: item.telefonos,
+          numero: item.numero_local,
+          cedula: item.cedula,
           local:
             item.nombre_local === null
               ? "El local no tiene nombre"
@@ -63,29 +67,68 @@ const LocatarioDato = (mensajes) => ({
 
 export const ArchivoLocatario = (archivo) => {
   return async (dispatch) => {
-    const formData = new FormData();
-    formData.append("archivo", archivo);
-    console.log(archivo);
-    let config = {
-      method: "post",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      url: process.env.REACT_APP_URL_API + "locatarios/subirCSV",
-      data: formData,
-    };
-    axios(config)
-      .then((response) => {
-        console.log(response);
-        let data = response.data;
-        dispatch(
-          LocatarioMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
+    if (archivo) {
+      console.log(archivo);
+      dispatch(
+        LocatarioMensaje({
+          ok: "prueba",
+          msg: "prueba",
+        })
+      );
+      // let reader = new FileReader();
+      // let hojas = [];
+      // reader.readAsArrayBuffer(archivo);
+      // reader.onloadend = () => {
+      //   var data = new Uint8Array(archivo);
+      //   var work = xlsx.read(data, { type: "array" });
+      //   work.SheetNames.forEach(function (sheetName) {
+      //     var row = xlsx.utils.sheet_to_row_object_array(
+      //       work.Sheets[sheetName]
+      //     );
+      //     hojas.push({
+      //       data: row,
+      //       plaza: sheetName,
+      //     });
+      //   });
+      //   console.log(hojas);
+      // };
+      // const storageRef = firebase
+      //   .storage()
+      //   .ref(`LOCATARIOS/PLAZA/${archivo.name}`);
+      // const task = storageRef.put(archivo);
+      // task.on(
+      //   "state_changed",
+      //   () => {
+      //     console.log("Exito");
+      //   },
+      //   (error) => {
+      //     console.log(error.message);
+      //   }
+      // );
+    }
+    // const formData = new FormData();
+    // formData.append("archivo", archivo);
+    // console.log(archivo);
+    // let config = {
+    //   method: "post",
+    //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    //   url: process.env.REACT_APP_URL_API + "locatarios/subirCSV",
+    //   data: formData,
+    // };
+    // axios(config)
+    //   .then((response) => {
+    //     console.log(response);
+    //     let data = response.data;
+    //     dispatch(
+    //       LocatarioMensaje({
+    //         ok: data.ok,
+    //         msg: data.msg,
+    //       })
+    //     );
+    //   })
+    //   .catch((e) => {
+    //     console.log("ERROR!!!!!", e);
+    //   });
   };
 };
 
@@ -119,6 +162,7 @@ export const DeleteLocatario = (idLocatario) => {
 
 export const UpdateLogo = (img2, idLocatario) => {
   return async (dispatch) => {
+    updateImg(img2, `LOCATARIOS/logo/${idLocatario}`);
     const formData = new FormData();
     formData.append("imagen", img2);
     formData.append("locatario", "logo");
@@ -147,31 +191,23 @@ export const UpdateLogo = (img2, idLocatario) => {
 };
 
 export const UpdateImagen = (img, idLocatario) => {
-  return async (dispatch) => {
-    const formData = new FormData();
-    formData.append("imagen", img);
-    formData.append("locatario", "img");
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/LOCATARIO/" + idLocatario,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        let data = response.data;
-        dispatch(
-          LocatarioMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+  return async () => {
+    var desertRef = firebase
+      .storage()
+      .ref(`LOCATARIOS/img/${idLocatario}`)
+      .child(`${idLocatario}`);
+    desertRef.delete().then(() => {
+      console.log("elimino");
+    });
+    updateImg(
+      img,
+      `LOCATARIOS/img/${idLocatario}`,
+      `locatarios/update/${idLocatario}`,
+      "img"
+    );
+    // const formData = new FormData(); gs://ipes-76061.appspot.com/LOCATARIOS/img/1432/0cb6bd05-59b1-43bb-9483-fef6df32d987.jpg
+    // formData.append("imagen", img);
+    // formData.append("locatario", "img");
   };
 };
 
@@ -360,6 +396,8 @@ export const setLocatarios = (
           horarios: horario,
           email: email,
           telefonos: tele,
+          img: img,
+          logo: img2,
         },
         config
       )
@@ -375,58 +413,10 @@ export const setLocatarios = (
           console.log(response);
           let ids = data.locatario.id;
           if (img) {
-            const formData = new FormData();
-            formData.append("imagen", img);
-            formData.append("locatario", "img");
-            console.log(img);
-            let config1 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/LOCATARIO/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config1)
-              .then((response) => {
-                console.log(response);
-                let data = response.data;
-                dispatch(
-                  LocatarioMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
+            updateImg(img, `LOCATARIOS/img/${ids}`);
           }
           if (img2) {
-            const formData = new FormData();
-            formData.append("imagen", img2);
-            formData.append("locatario", "logo");
-            let config1 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/LOCATARIO/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config1)
-              .then((response) => {
-                let data = response.data;
-                dispatch(
-                  LocatarioMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
+            updateImg(img2, `LOCATARIOS/logo/${ids}`);
           }
         }
       })

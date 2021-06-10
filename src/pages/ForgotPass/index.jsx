@@ -27,7 +27,7 @@ import useStyles from "./style";
 //   );
 // }
 
-export default function ChangePass({ history }) {
+export default function ForgotPass({ history }) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -121,6 +121,6 @@ export default function ChangePass({ history }) {
   );
 }
 
-ChangePass.propTypes = {
+ForgotPass.propTypes = {
   history: PropTypes.array,
 };

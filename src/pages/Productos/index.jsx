@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import TablaProductos from "./../../components/shared/tables/TablaProductos";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
 import { getTrue, getCategorias } from "./../../actions/plaza";
-import { getProducto } from "actions/producto";
+import { getProducto, getProductoLocatario } from "actions/producto";
+import { getLocatarioId } from "actions/locatarios";
 
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
@@ -19,7 +21,6 @@ import NotesIcon from "@material-ui/icons/Notes";
 
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
-import { useDispatch, useSelector } from "react-redux";
 import Crear from "../../components/shared/modal/Productos/Crear";
 
 const estados = [
@@ -33,34 +34,62 @@ const estados = [
   },
 ];
 
+const promocion = [
+  {
+    value: "Sí",
+    label: "Productos sin promoción",
+  },
+  {
+    value: "No",
+    label: "Productos con promoción",
+  },
+];
+
+const existe = [
+  {
+    value: "Sí hay",
+    label: "Sí hay en el inventario",
+  },
+  {
+    value: "No hay",
+    label: "No hay en el inventario",
+  },
+];
+
 const Productos = () => {
   const classes = useStyles();
+  let data = [];
 
   const dispatch = useDispatch();
   const { plazastrues, categorias } = useSelector((state) => state.plaza);
-  const { productos } = useSelector((state) => state.producto);
+  const { productos, prolocatarios } = useSelector((state) => state.producto);
+  const { rol, id } = useSelector((state) => state.auth);
 
   const [currency1, setCurrency1] = React.useState("");
   const [currency3, setCurrency3] = React.useState("");
   const [currency4, setCurrency4] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
+  const [locatario, setLocatario] = useState([]);
   const [nomproducto, setNomProducto] = useState("");
   const [mostrar, setMostrar] = useState(false);
   const [pro, setPro] = useState([]);
+  // const [pro1, setPro1] = useState([]);
+  // const [pro2, setPro2] = useState([]);
 
   useEffect(() => {
+    dispatch(getLocatarioId(setLocatario, id));
     dispatch(getProducto());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getTrue());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getCategorias());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(getProductoLocatario(id));
+  }, [dispatch]);
+
+  console.log(locatario.productos_locatarios_id);
+  console.log(prolocatarios);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -82,81 +111,135 @@ const Productos = () => {
     setCurrency4(event.target.value);
   };
 
+  const handleInventario = () => {
+    console.log(currency1);
+    setMostrar(true);
+    setPro(
+      prolocatarios.filter((item) => {
+        return item.stock.includes(currency1);
+      })
+    );
+  };
+  useEffect(() => {
+    if (currency1.length > 0) {
+      handleInventario();
+    }
+  }, [currency1]);
+
+  const handlePromo = () => {
+    setMostrar(true);
+    setPro(
+      prolocatarios.filter((item) => {
+        return item.en_promocion.includes(currency3);
+      })
+    );
+  };
+  useEffect(() => {
+    if (currency3.length > 0) {
+      handlePromo();
+    }
+  }, [currency3]);
+
+  const handleEstados = () => {
+    setMostrar(true);
+    setPro(
+      prolocatarios.filter((item) => {
+        return item.activo.includes(currency4);
+      })
+    );
+  };
+  useEffect(() => {
+    if (currency4.length > 0) {
+      handleEstados();
+    }
+  }, [currency4]);
+
   const getDatos = () => {
-    dispatch(getProducto());
     setMostrar(false);
+    if (rol === "SUPER_ADMIN") {
+      dispatch(getProducto());
+    } else {
+      dispatch(getProductoLocatario(id));
+    }
   };
 
   const Filtros = () => {
     setMostrar(true);
-    let data2 = [];
-    let data3 = [];
-    if (currency1 !== "" && currency3 === "" && currency4 === "") {
-      data2 = productos.map((item) => {
-        if (item?.plaza !== null && item?.plaza) {
-          for (let index = 0; index < item?.plaza.length; index++) {
-            const element = item?.plaza[index];
-            if (element === currency1) {
-              return item;
+    if (rol === "SUPER_ADMIN") {
+      let data2 = [];
+      let data3 = [];
+      if (currency1 !== "" && currency3 === "" && currency4 === "") {
+        data2 = productos.map((item) => {
+          if (item?.plaza !== null && item?.plaza) {
+            for (let index = 0; index < item?.plaza.length; index++) {
+              const element = item?.plaza[index];
+              if (element === currency1) {
+                return item;
+              }
             }
           }
-        }
-      });
-      console.log(data2);
-      setPro(
-        data2.filter((item) => {
-          return item !== undefined;
-        })
-      );
-    } else if (currency1 === "" && currency3 !== "" && currency4 === "") {
-      data2 = productos.map((item) => {
-        console.log(item.categorias);
-        if (item?.categorias !== null && item?.categorias.length > 0) {
-          for (let index = 0; index < item?.categorias.length; index++) {
-            const element = item?.categorias[index];
-            if (element === currency3) {
-              return item;
+        });
+        console.log(data2);
+        setPro(
+          data2.filter((item) => {
+            return item !== undefined;
+          })
+        );
+      } else if (currency1 === "" && currency3 !== "" && currency4 === "") {
+        data2 = productos.map((item) => {
+          console.log(item.categorias);
+          if (item?.categorias !== null && item?.categorias.length > 0) {
+            for (let index = 0; index < item?.categorias.length; index++) {
+              const element = item?.categorias[index];
+              if (element === currency3) {
+                return item;
+              }
             }
           }
-        }
-      });
-      console.log(data2);
-      setPro(
-        data2.filter((item) => {
-          return item !== undefined;
-        })
-      );
-    } else if (currency1 === "" && currency3 === "" && currency4 !== "") {
-      data2 = productos.filter((item) => item.activo === currency4);
-      setPro(data2);
-    } else {
-      console.log("hola");
-      data2 = productos.map((item) => {
-        if (item?.plaza !== null && item?.plaza.length > 0) {
-          for (let index = 0; index < item?.plaza.length; index++) {
-            const element = item?.plaza[index];
-            if (element === currency1) {
-              if (item?.categorias !== null && item?.categorias.length > 0) {
-                for (let index = 0; index < item?.categorias.length; index++) {
-                  const element = item?.categorias[index];
-                  if (element === currency3) {
-                    return item;
+        });
+        console.log(data2);
+        setPro(
+          data2.filter((item) => {
+            return item !== undefined;
+          })
+        );
+      } else if (currency1 === "" && currency3 === "" && currency4 !== "") {
+        data2 = productos.filter((item) => item.activo === currency4);
+        setPro(data2);
+      } else {
+        console.log("hola");
+        data2 = productos.map((item) => {
+          if (item?.plaza !== null && item?.plaza.length > 0) {
+            for (let index = 0; index < item?.plaza.length; index++) {
+              const element = item?.plaza[index];
+              if (element === currency1) {
+                if (item?.categorias !== null && item?.categorias.length > 0) {
+                  for (
+                    let index = 0;
+                    index < item?.categorias.length;
+                    index++
+                  ) {
+                    const element = item?.categorias[index];
+                    if (element === currency3) {
+                      return item;
+                    }
                   }
                 }
               }
             }
           }
-        }
-      });
-      data3 = data2?.filter((item) => item?.activo === currency4);
-      setPro(
-        data3.filter((item) => {
-          return item !== undefined;
-        })
-      );
+        });
+        data3 = data2?.filter((item) => item?.activo === currency4);
+        setPro(
+          data3.filter((item) => {
+            return item !== undefined;
+          })
+        );
+      }
     }
   };
 
+  console.log(currency4);
   const RestaurarLista = () => {
     getDatos();
     setCurrency1("");
@@ -166,12 +249,30 @@ const Productos = () => {
 
   const Buscar = () => {
     setMostrar(true);
-    let data = [];
-    data = productos.filter((item) => item.nombre === nomproducto);
-    setPro(data);
-    console.log(data);
+    if (rol === "SUPER_ADMIN") {
+      let data = [];
+      data = productos.filter((item) => item.nombre === nomproducto);
+      setPro(data);
+      console.log(data);
+    } else {
+      let data = [];
+      data = prolocatarios.filter(
+        (item) => item.producto_id === nomproducto.id
+      );
+      setPro(data);
+    }
   };
 
+  if (rol === "ADMIN_LOCATARIO") {
+    prolocatarios?.map((item) => {
+      productos?.map((pro) => {
+        if (pro?.id === item?.producto_id) {
+          data.push(pro);
+        }
+      });
+    });
+  }
+  console.log(nomproducto);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -180,85 +281,158 @@ const Productos = () => {
       />
       <section className="ps-items-listing">
         <div className="ps-section__actions">
-          <a className="ps-btn success" onClick={handleClickOpen}>
-            <AddIcon />
-            Nuevo Producto
-          </a>
+          {rol === "SUPER_ADMIN" ? (
+            <a className="ps-btn success" onClick={handleClickOpen}>
+              <AddIcon />
+              Nuevo Producto
+            </a>
+          ) : (
+            <a className="ps-btn success" onClick={handleClickOpen}>
+              <AddIcon />
+              Agregar Producto
+            </a>
+          )}
         </div>
         <div className="ps-section__header">
           <div className="ps-section__filter ps-form--filter">
             <div className="ps-form__left ">
-              <div className={"form-group" + " " + classes.root}>
-                <TextField
-                  id="filled-select-currency"
-                  select
-                  label="Plazas"
-                  value={currency1}
-                  onChange={handleChange1}
-                  fullWidth
-                  className={classes.margin}
-                  style={{ marginRight: "20px" }}
-                >
-                  {plazastrues.map(
-                    (option) =>
-                      option && (
-                        <MenuItem key={option?.id} value={option?.id}>
-                          {option?.nombre}
+              {rol === "SUPER_ADMIN" ? (
+                <>
+                  <div className={"form-group" + " " + classes.root}>
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Plazas"
+                      value={currency1}
+                      onChange={handleChange1}
+                      fullWidth
+                      className={classes.margin}
+                      style={{ marginRight: "20px" }}
+                    >
+                      {plazastrues.map(
+                        (option) =>
+                          option && (
+                            <MenuItem key={option?.id} value={option?.id}>
+                              {option?.nombre}
+                            </MenuItem>
+                          )
+                      )}
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Categorias"
+                      value={currency3}
+                      onChange={handleChange3}
+                      fullWidth
+                      style={{ marginRight: "20px" }}
+                      className={classes.margin}
+                    >
+                      {categorias.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.label}
                         </MenuItem>
-                      )
-                  )}
-                </TextField>
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="filled-select-currency"
-                  select
-                  label="Categorias"
-                  value={currency3}
-                  onChange={handleChange3}
-                  fullWidth
-                  style={{ marginRight: "20px" }}
-                  className={classes.margin}
-                >
-                  {categorias.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
-              <div className="form-group">
-                <TextField
-                  id="filled-select-currency"
-                  select
-                  label="Estados"
-                  value={currency4}
-                  onChange={handleChange4}
-                  fullWidth
-                  style={{ marginRight: "20px" }}
-                  className={classes.margin}
-                >
-                  {estados.map((option) => (
-                    <MenuItem key={option.value} value={option.label}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </div>
+                      ))}
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Estados"
+                      value={currency4}
+                      onChange={handleChange4}
+                      fullWidth
+                      style={{ marginRight: "20px" }}
+                      className={classes.margin}
+                    >
+                      {estados.map((option) => (
+                        <MenuItem key={option.value} value={option.label}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                  <div className="ps-form__right">
+                    <TooltipE title="Filtrar">
+                      <IconButton
+                        color="primary"
+                        component="span"
+                        onClick={Filtros}
+                      >
+                        <NotesIcon
+                          style={{
+                            fontSize: "35px",
+                            marginTop: "-5px",
+                            marginLeft: "-10px",
+                          }}
+                        />
+                      </IconButton>
+                    </TooltipE>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="form-group">
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Inventario"
+                      value={currency1}
+                      onChange={(e) => setCurrency1(e.target.value)}
+                      fullWidth
+                      style={{ marginRight: "20px" }}
+                      className={classes.margin}
+                    >
+                      {existe.map((option) => (
+                        <MenuItem key={option.label} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Promociones"
+                      value={currency3}
+                      onChange={(e) => setCurrency3(e.target.value)}
+                      fullWidth
+                      style={{ marginRight: "20px" }}
+                      className={classes.margin}
+                    >
+                      {promocion.map((option) => (
+                        <MenuItem key={option.label} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                  <div className="form-group">
+                    <TextField
+                      id="filled-select-currency"
+                      select
+                      label="Estados"
+                      value={currency4}
+                      onChange={handleChange4}
+                      fullWidth
+                      style={{ marginRight: "20px" }}
+                      className={classes.margin}
+                    >
+                      {estados.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                </>
+              )}
             </div>
-            <div className="ps-form__right">
-              <TooltipE title="Filtrar">
-                <IconButton color="primary" component="span" onClick={Filtros}>
-                  <NotesIcon
-                    style={{
-                      fontSize: "35px",
-                      marginTop: "-5px",
-                      marginLeft: "-10px",
-                    }}
-                  />
-                </IconButton>
-              </TooltipE>
-            </div>
+
             <div className="ps-form__right">
               <TooltipE title="Restaurar información">
                 <IconButton
@@ -274,27 +448,53 @@ const Productos = () => {
             </div>
           </div>
           <div className="ps-section__search">
-            <div className={"form-group" + " " + classes.root}>
-              <Autocomplete
-                id="free-solo-demo"
-                freeSolo
-                options={productos.map((option) => option?.nombre)}
-                inputValue={nomproducto}
-                onInputChange={(event, newInputValue) => {
-                  setNomProducto(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    margin="normal"
-                    type="text"
-                    id="standard-basic"
-                    style={{ width: "300px", marginTop: "5px" }}
-                    placeholder="Producto"
-                  />
-                )}
-              />
-            </div>
+            {rol === "SUPER_ADMIN" ? (
+              <div className={"form-group" + " " + classes.root}>
+                <Autocomplete
+                  id="free-solo-demo"
+                  freeSolo
+                  options={productos.map((option) => option?.nombre)}
+                  inputValue={nomproducto}
+                  onInputChange={(event, newInputValue) => {
+                    setNomProducto(newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      margin="normal"
+                      type="text"
+                      id="standard-basic"
+                      style={{ width: "300px", marginTop: "5px" }}
+                      placeholder="Producto"
+                    />
+                  )}
+                />
+              </div>
+            ) : (
+              <div className={"form-group" + " " + classes.root}>
+                <Autocomplete
+                  id="free-solo-demo"
+                  freeSolo
+                  options={data}
+                  getOptionLabel={(option) => option.nombre}
+                  value={nomproducto}
+                  onChange={(event, newValue) => {
+                    setNomProducto(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      margin="normal"
+                      type="text"
+                      id="standard-basic"
+                      style={{ width: "300px", marginTop: "5px" }}
+                      placeholder="Producto"
+                    />
+                  )}
+                />
+              </div>
+            )}
+
             <TooltipE title="Buscar">
               <IconButton color="primary" component="span" onClick={Buscar}>
                 <SearchIcon style={{ fontSize: "35px", marginTop: "-15px" }} />
@@ -305,12 +505,28 @@ const Productos = () => {
         <div className="ps-section__content">
           <TablaProductos
             getDatos={getDatos}
-            datos={mostrar ? pro : productos}
+            rol={rol}
+            locatario={locatario}
+            datos={
+              rol === "SUPER_ADMIN"
+                ? mostrar
+                  ? pro
+                  : productos
+                : mostrar
+                ? pro
+                : prolocatarios
+            }
           />
         </div>
         <div className="ps-section__footer"></div>
       </section>
-      <Crear key="2015" open={open} handleClose={handleClose} />
+      <Crear
+        key="2015"
+        open={open}
+        handleClose={handleClose}
+        locatario={locatario}
+        rol={rol}
+      />
     </ContainerDashboard>
   );
 };

@@ -10,38 +10,20 @@ export const startLogin = (email, password) => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
         if (response.status === 200) {
-          localStorage.setItem("token", response.data.token);
+          let responses = response.data;
+          localStorage.setItem("id", responses.admin.id);
+          localStorage.setItem("token", responses.token);
           localStorage.setItem("token-date", new Date().getTime());
-          localStorage.setItem("id", response.data.id);
-          let config = {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          };
-          axios
-            .get(
-              process.env.REACT_APP_URL_API +
-                "admins/getAdmin/" +
-                response.data.id,
-              config
-            )
-            .then((response) => {
-              console.log(response);
-              let datos = response.data.admin;
-              dispatch(
-                login({
-                  rol: datos.rol,
-                  id: datos.id,
-                  name: datos.nombre,
-                  img: datos.img,
-                })
-              );
+          dispatch(
+            login({
+              rol: responses.admin.rol,
+              id: responses.admin.id,
+              name: responses.admin.nombre,
+              img: responses.admin.img,
             })
-            .catch((e) => {
-              console.log("ERROR!!!!!", e);
-            });
+          );
         }
       })
       .catch((e) => {
@@ -63,7 +45,7 @@ export const starChecking = () => {
       .get(process.env.REACT_APP_URL_API + "admins/renewToken", config)
       .then((response) => {
         console.log(response);
-        // localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.token);
         localStorage.setItem("token-date", new Date().getTime());
         let config1 = {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -88,6 +70,7 @@ export const starChecking = () => {
             );
           })
           .catch((e) => {
+            dispatch(checkingFinish());
             console.log("ERROR!!!!!", e);
           });
       })

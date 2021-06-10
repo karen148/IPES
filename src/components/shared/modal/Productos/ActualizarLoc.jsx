@@ -15,36 +15,46 @@ import Producto from "components/shared/forms/FormProducto/Producto";
 import Imagenes from "components/shared/forms/FormProducto/Imagenes";
 import Categorias from "components/shared/forms/FormProducto/Categorias";
 import { useDispatch, useSelector } from "react-redux";
-import { UpdateProductos } from "actions/producto";
 import { UpdateImagen } from "actions/producto";
 import { UpdateImagen2 } from "actions/producto";
 import { UpdateImagen1 } from "actions/producto";
+import { UpdateProductosLocatario } from "actions/producto";
 // import { useForm } from "./../../../../hooks/useForm";
 
-const Actualizar = ({
+const ActualizarLoc = ({
   open,
   handleClose,
+  rol,
+  locatario,
+  idPro,
   idProducto,
-  nombrepro,
-  plazapro,
-  categorias1,
+  stock,
+  en_promocion,
+  unidad1,
   sku1,
   descripcion1,
-  imagen_principal,
-  imagen1,
-  imagen2,
+  cantidad_unidad,
+  precio_rebajado,
+  precio1,
 }) => {
   const { msg } = useSelector((state) => state.producto);
-  const { plazastrues, categorias } = useSelector((state) => state.plaza);
+  const { id } = useSelector((state) => state.auth);
+  const { productos } = useSelector((state) => state.producto);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ["Producto", "Categorías", "Imagenes"];
+  const steps = ["Producto"];
   const [alerta, setAlerta] = useState("Actualizar producto");
 
   const [plaza, setPlaza] = useState([]);
   const [nombre, setNombre] = useState("");
+  const [unidad, setUnidad] = useState("");
+  const [cantidad, setCantidad] = useState("");
+  const [existe, setExiste] = useState(false);
+  const [promocion, setPromocion] = useState(false);
+  const [precio, setPrecio] = useState(0);
+  const [rebaja, setRebaja] = useState(0);
   const [descripcion, setDescripion] = useState("");
   const [sku, setSku] = useState("");
 
@@ -59,59 +69,26 @@ const Actualizar = ({
   const [cat, setCat] = useState([]);
 
   useEffect(() => {
-    setNombre(nombrepro);
     setSku(sku1);
     setDescripion(descripcion1);
-    setImg2(
-      process.env.REACT_APP_URL_API +
-        `uploads/retorna/PRODUCTOS/${imagen_principal}`
-    );
-    setImg4(
-      process.env.REACT_APP_URL_API + `uploads/retorna/PRODUCTOS/${imagen1}`
-    );
-    setImg6(
-      process.env.REACT_APP_URL_API + `uploads/retorna/PRODUCTOS/${imagen2}`
-    );
-
-    let plaza1 = [];
-    if (plazapro !== null && plazapro?.length > 0) {
-      for (let i = 0; i <= plazapro?.length; i++) {
-        const element = plazapro[i];
-        plazastrues.map((item) => {
-          if (item.id === element) {
-            plaza1.push(item);
-          }
-        });
-      }
-    }
-    setPlaza(plaza1);
-
-    let cate1 = [];
-    if (categorias1 !== null && categorias1?.length > 0) {
-      for (let i = 0; i <= categorias1?.length; i++) {
-        const element = categorias1[i];
-        categorias.map((item) => {
-          if (item.id === element) {
-            cate1.push(item);
-          }
-        });
-      }
-    }
-    setCat(cate1);
+    setPlaza(productos.filter((item) => item.id === idProducto)[0]);
+    setPromocion(en_promocion);
+    setExiste(stock);
+    setUnidad(unidad1);
+    setCantidad(cantidad_unidad);
+    setRebaja(precio_rebajado);
+    setPrecio(precio1);
   }, [
-    nombrepro,
-    plazapro,
-    categorias1,
+    idProducto,
+    stock,
+    en_promocion,
+    unidad1,
     sku1,
     descripcion1,
-    imagen_principal,
-    imagen1,
-    imagen2,
+    cantidad_unidad,
+    precio_rebajado,
+    precio1,
   ]);
-
-  const handleNext = () => {
-    setActiveStep(activeStep + 1);
-  };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -122,6 +99,8 @@ const Actualizar = ({
       case 0:
         return (
           <Producto
+            rol={rol}
+            locatario={locatario}
             plaza={plaza}
             setPlaza={setPlaza}
             nombre={nombre}
@@ -130,6 +109,18 @@ const Actualizar = ({
             setDescripion={setDescripion}
             sku={sku}
             setSku={setSku}
+            unidad={unidad}
+            setUnidad={setUnidad}
+            cantidad={cantidad}
+            setCantidad={setCantidad}
+            existe={existe}
+            setExiste={setExiste}
+            promocion={promocion}
+            setPromocion={setPromocion}
+            precio={precio}
+            setPrecio={setPrecio}
+            rebaja={rebaja}
+            setRebaja={setRebaja}
           />
         );
       case 1:
@@ -163,11 +154,25 @@ const Actualizar = ({
   }
 
   const ActualizarProducto = () => {
-    dispatch(UpdateProductos(plaza, nombre, descripcion, sku, cat, idProducto));
-    setAlerta(msg);
+    dispatch(
+      UpdateProductosLocatario(
+        plaza,
+        descripcion,
+        sku,
+        unidad,
+        cantidad,
+        existe,
+        promocion,
+        precio,
+        rebaja,
+        id,
+        idPro
+      )
+    );
+    setAlerta("El producto se actualizo");
     setTimeout(() => {
       setAlerta("Actualizar producto");
-    }, 3000);
+    }, 4000);
   };
 
   const ActualizarImagenP = () => {
@@ -237,7 +242,7 @@ const Actualizar = ({
                       Regresar
                     </Button>
                   )}
-                  {activeStep === steps.length - 1 ? (
+                  {activeStep === steps.length - 2 ? (
                     <>
                       {img1 && (
                         <Button
@@ -284,15 +289,6 @@ const Actualizar = ({
                       >
                         Actualizar información
                       </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ color: "white" }}
-                        onClick={handleNext}
-                        className={classes.button}
-                      >
-                        Siguiente
-                      </Button>
                     </>
                   )}
                 </div>
@@ -306,18 +302,21 @@ const Actualizar = ({
   );
 };
 
-Actualizar.propTypes = {
+ActualizarLoc.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  idProducto: PropTypes.string,
-  nombrepro: PropTypes.string,
-  plazapro: PropTypes.array,
-  categorias1: PropTypes.array,
   sku1: PropTypes.string,
   descripcion1: PropTypes.string,
-  imagen_principal: PropTypes.string,
-  imagen1: PropTypes.string,
-  imagen2: PropTypes.string,
+  idPro: PropTypes.string,
+  idProducto: PropTypes.string,
+  stock: PropTypes.bool,
+  en_promocion: PropTypes.bool,
+  unidad1: PropTypes.string,
+  cantidad_unidad: PropTypes.number,
+  precio_rebajado: PropTypes.number,
+  rol: PropTypes.string,
+  locatario: PropTypes.object,
+  precio1: PropTypes.number,
 };
 
-export default Actualizar;
+export default ActualizarLoc;

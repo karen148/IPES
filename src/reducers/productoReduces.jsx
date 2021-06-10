@@ -2,6 +2,7 @@ import { types } from "./../types";
 
 const initialState = {
   productos: [],
+  prolocatarios: [],
   // uid: null,
   // name: null
 };
@@ -18,6 +19,12 @@ export const productoReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case types.productoLocatarios:
+      return {
+        ...state,
+        prolocatarios: [...action.producto],
       };
 
     default:

@@ -90,12 +90,14 @@ const Actualizar = ({
           setHorariomm2(semana[2][1]);
           setHorariojm1(semana[3][0]);
           setHorariojm2(semana[3][1]);
-          setHorariovm1(semana[4][0]);
-          setHorariovm2(semana[4][1]);
-          setHorariosm1(semana[5][0]);
-          setHorariosm2(semana[5][1]);
-          setHorariodm1(semana[6][0]);
-          setHorariodm2(semana[6][1]);
+          if (semana.length > 3) {
+            setHorariovm1(semana[4][0]);
+            setHorariovm2(semana[4][1]);
+            setHorariosm1(semana[5][0]);
+            setHorariosm2(semana[5][1]);
+            setHorariodm1(semana[6][0]);
+            setHorariodm2(semana[6][1]);
+          }
         }
       } else {
         setHorariom1("");

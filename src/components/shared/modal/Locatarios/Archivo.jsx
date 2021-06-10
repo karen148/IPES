@@ -14,15 +14,19 @@ import useStyles from "components/shared/forms/style";
 import { useDispatch, useSelector } from "react-redux";
 import ArchivoCSV from "components/shared/forms/FormProducto/ArchivoCSV";
 import { ArchivoLocatario } from "actions/locatarios";
+import { setPlazasExcel } from "actions/plaza";
+import { getLocatarioPlaza } from "actions/locatarios";
 
 const Archivo = ({ open, handleClose }) => {
   const { msg } = useSelector((state) => state.locatario);
+  const { plazastrues } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = ["Archivo"];
 
-  const [archivo, setArchivo] = useState(null);
+  const [hojas, setHojas] = useState([]);
+  const [locatarios, setLocatario] = useState([]);
   const [alerta, setAlerta] = useState(false);
 
   const handleNext = () => {
@@ -36,22 +40,56 @@ const Archivo = ({ open, handleClose }) => {
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return <ArchivoCSV archivo={archivo} setArchivo={setArchivo} />;
+        return <ArchivoCSV hojas={hojas} setHojas={setHojas} />;
       default:
         throw new Error("Error");
     }
   };
 
   const Registrar = () => {
-    dispatch(ArchivoLocatario(archivo));
+    hojas.map((item) => {
+      if (
+        plazastrues.filter(
+          (pla) =>
+            pla.nombre.trim().toLowerCase() === item.plaza.trim().toLowerCase()
+        )[0]
+      ) {
+        dispatch(
+          getLocatarioPlaza(
+            setLocatario,
+            plazastrues.filter(
+              (pla) =>
+                pla.nombre.trim().toLowerCase() ===
+                item.plaza.trim().toLowerCase()
+            )[0]?.id
+          )
+        );
+        item.data.map((dat) => {
+          // console.log(dat["Numero de cédula"]);
+          if (
+            locatarios.filter(
+              (loc) => loc.cedula === dat["Numero de cédula"].toString()
+            )[0]
+          ) {
+            console.log(dat["Numero de cédula"] + "-" + item.plaza);
+          }
+        });
+      } else {
+        console.log(item.plaza);
+        dispatch(setPlazasExcel(item.plaza));
+      }
+    });
+    dispatch(ArchivoLocatario(hojas));
     setAlerta(true);
     setTimeout(() => {
       setAlerta(false);
     }, 4000);
   };
 
+  console.log(locatarios);
+
   const Limpiar = () => {
-    setArchivo(null);
+    setHojas([]);
   };
 
   const ExportarPlantilla = async () => {

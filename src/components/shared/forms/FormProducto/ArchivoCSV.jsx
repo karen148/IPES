@@ -2,23 +2,31 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-// import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import Checkbox from "@material-ui/core/Checkbox";
+import xlsx from "xlsx";
 
-const ArchivoCSV = ({ archivo, setArchivo }) => {
+const ArchivoCSV = ({ hojas, setHojas }) => {
   const handleImg1 = (event) => {
     var reader = new FileReader();
-    reader.readAsDataURL(event[0]);
-    reader.onload = function () {
-      setArchivo(event[0]);
+    let hojas = [];
+    reader.readAsArrayBuffer(event.target.files[0]);
+    reader.onloadend = (e) => {
+      var data = new Uint8Array(e.target.result);
+      var work = xlsx.read(data, { type: "array" });
+      work.SheetNames.forEach(function (sheetName) {
+        var row = xlsx.utils.sheet_to_row_object_array(work.Sheets[sheetName]);
+        hojas.push({
+          data: row,
+          plaza: sheetName,
+        });
+      });
     };
-
+    setHojas(hojas);
     reader.onerror = function () {
       console.log(reader.error);
     };
   };
 
-  console.log(archivo);
+  console.log(hojas);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -32,8 +40,7 @@ const ArchivoCSV = ({ archivo, setArchivo }) => {
             type="file"
             placeholder=""
             style={{ paddingTop: "10px" }}
-            // accept=".png,.jpg,.JPG,.jpeg,.gif"
-            onChange={(e) => handleImg1(e.target.files)}
+            onChange={handleImg1}
           />
         </Grid>
       </Grid>
@@ -42,8 +49,8 @@ const ArchivoCSV = ({ archivo, setArchivo }) => {
 };
 
 ArchivoCSV.propTypes = {
-  archivo: PropTypes.array,
-  setArchivo: PropTypes.func,
+  hojas: PropTypes.array,
+  setHojas: PropTypes.func,
 };
 
 export default ArchivoCSV;

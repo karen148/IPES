@@ -29,6 +29,7 @@ export const types = {
 
   productoMensaje: "[producto] Mensaje que se envió la información",
   productoDatos: "[producto] Obtener datos productos",
+  productoLocatarios: "[producto] Obtener datos productos de los locatarios",
 
   clienteMensaje: "[cliente] Mensaje que se envió la información",
 
