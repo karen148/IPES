@@ -506,8 +506,8 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
         locatario={locatario}
         idPro={idp1}
         idProducto={proloc?.producto_id}
-        stock={proloc?.stock}
-        en_promocion={proloc?.en_promocion}
+        stock={proloc?.stock === "Sí hay" ? true : false}
+        en_promocion={proloc?.en_promocion === "Sí" ? true : false}
         unidad1={proloc?.unidad}
         sku1={proloc?.sku}
         descripcion1={proloc?.descripcion}

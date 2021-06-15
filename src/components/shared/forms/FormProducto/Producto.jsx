@@ -71,7 +71,8 @@ const Producto = ({
       }
     });
   }
-  console.log(producto);
+  console.log(promocion);
+  console.log(existe);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>

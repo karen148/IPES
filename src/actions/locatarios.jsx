@@ -3,6 +3,27 @@ import { types } from "./../types";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
 
+export const getLocatarioCedula = (setLocatario, cedula) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API + "locatarios/findByCedula/" + cedula,
+        config
+      )
+      .then((response) => {
+        let data = response.data.locatario;
+        setLocatario(data);
+        dispatch(LocatarioDato(response.data.ok));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 export const getLocatarioId = (setLocatario, id) => {
   return async (dispatch) => {
     let config = {
@@ -190,15 +211,20 @@ export const UpdateLogo = (img2, idLocatario) => {
   };
 };
 
-export const UpdateImagen = (img, idLocatario) => {
+export const UpdateImagen = (img, img1, idLocatario) => {
   return async () => {
     var desertRef = firebase
       .storage()
-      .ref(`LOCATARIOS/img/${idLocatario}`)
-      .child(`${idLocatario}`);
-    desertRef.delete().then(() => {
-      console.log("elimino");
-    });
+      .ref()
+      .child(`LOCATARIOS/img/${idLocatario}/${img1}`);
+    desertRef
+      .delete()
+      .then(() => {
+        console.log("elimino");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     updateImg(
       img,
       `LOCATARIOS/img/${idLocatario}`,

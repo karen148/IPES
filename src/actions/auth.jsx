@@ -22,6 +22,7 @@ export const startLogin = (email, password) => {
               id: responses.admin.id,
               name: responses.admin.nombre,
               img: responses.admin.img,
+              codigo: responses.admin.cedula,
             })
           );
         }
@@ -66,6 +67,7 @@ export const starChecking = () => {
                 id: datos.id,
                 name: datos.nombre,
                 img: datos.img,
+                codigo: datos.cedula,
               })
             );
           })

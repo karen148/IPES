@@ -1,4 +1,5 @@
 import React, { useState, Fragment, useEffect } from "react";
+// import firebase from "firebase";
 import IconButton from "@material-ui/core/IconButton";
 import TooltipE from "./../../tooltip";
 import Modal from "./../../modal";
@@ -271,6 +272,19 @@ const TablaLocatarios = ({ datos, getLocali }) => {
           {datos.map((item) => {
             let telefonoss = [];
             let horarios = [];
+            let urll = "";
+            // var desertRef = firebase
+            //   .storage()
+            //   .ref()
+            //   .child(`LOCATARIOS/img/${item.id}/${item.img}`);
+
+            // desertRef.getDownloadURL().then(function (url) {
+            //   console.log(url);
+            //   var img = document.getElementById("myimg");
+            //   img.src = url;
+            // });
+
+            console.log(urll);
             if (item?.telefonos) {
               if (item?.telefonos.length > 0) {
                 console.log("aquiiii");
@@ -303,11 +317,9 @@ const TablaLocatarios = ({ datos, getLocali }) => {
                 >
                   <Grid item xs={12} sm={12}>
                     <img
-                      src={
-                        process.env.REACT_APP_URL_API +
-                        `uploads/retorna/LOCATARIO/${item.img}`
-                      }
+                      src={""}
                       alt=""
+                      id="myimg"
                       width="100%"
                       height="150px"
                     />

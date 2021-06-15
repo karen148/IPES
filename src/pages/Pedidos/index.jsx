@@ -12,7 +12,6 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
-// import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 
 import TooltipE from "./../../components/shared/tooltip";
@@ -60,6 +59,7 @@ const Pedidos = () => {
   const [cliente, setCliente] = useState([]);
   const [pedidos2, setPedidos2] = useState([]);
   const [pedidosnom, setPedidosNom] = useState("");
+  const [pedidosnom1, setPedidosNom1] = useState("");
   const [mostrar, setMostrar] = useState(false);
   const [estado, setEstado] = useState("");
   const [pago, setPago] = useState("");
@@ -147,7 +147,7 @@ const Pedidos = () => {
     let prueba1 = /^([A-ZÁÉÍÓÚ]+[\s]*)+$/.test(pedidosnom.trim());
     let prueba2 = /^([a-zñáéíóú]+[\s]*)+$/.test(pedidosnom.trim());
     let fecha = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(
-      pedidosnom
+      pedidosnom1
     );
     console.log(pedidos2);
     console.log(fecha);
@@ -183,7 +183,7 @@ const Pedidos = () => {
       );
       setPedidos2(
         pedidos1.filter((item) => {
-          return item.fecha === pedidosnom;
+          return item.fecha === pedidosnom1;
         })
       );
     }
@@ -204,6 +204,20 @@ const Pedidos = () => {
       handleEstado();
     }
   }, [estado]);
+
+  const handleFecha = () => {
+    setMostrar(true);
+    setPedidos2(
+      pedidos1.filter((item) => {
+        return item.fecha.includes(pedidosnom1);
+      })
+    );
+  };
+  useEffect(() => {
+    if (pedidosnom1.length > 0) {
+      handleFecha();
+    }
+  }, [pedidosnom1]);
 
   const handlePago = () => {
     setMostrar(true);
@@ -230,25 +244,6 @@ const Pedidos = () => {
     setPago("");
     setMostrar(false);
   };
-
-  // const ExportarPedido = async () => {
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
-  //   axios
-  //     .get(process.env.REACT_APP_URL_API + "pedidos/downladXLSX", config)
-  //     .then((response) => {
-  //       console.log(response);
-  //       window.open(
-  //         process.env.REACT_APP_URL_API + "pedidos/downladXLSX",
-  //         "_self"
-  //       );
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR!!!!!", e);
-  //     });
-  // };
-
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -275,7 +270,7 @@ const Pedidos = () => {
             alignItems="center"
             spacing={2}
           >
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 margin="normal"
                 type="text"
@@ -314,6 +309,21 @@ const Pedidos = () => {
                   </IconButton>
                 </TooltipE>
               </span>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                style={{ marginTop: "5px" }}
+                id="date"
+                variant="outlined"
+                type="date"
+                fullWidth
+                value={pedidosnom1}
+                onChange={(e) => setPedidosNom1(e.target.value)}
+                defaultValue="2021-06-10"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
             </Grid>
             <Grid item xs={12} sm={3}>
               <TextField

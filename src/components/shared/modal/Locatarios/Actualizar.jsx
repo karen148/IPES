@@ -173,7 +173,7 @@ const Actualizar = ({
         setCat(data);
 
         setImg1(
-          process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${imagen2}`
+          `https://firebasestorage.googleapis.com/v0/b/ipes-adeda.appspot.com/o/LOCATARIO/img/${idLocatario}/${imagen2}`
         );
         setImg3(
           process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${logo2}`
@@ -347,7 +347,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen = () => {
-    dispatch(UpdateImagen(img, idLocatario));
+    dispatch(UpdateImagen(img, img1, idLocatario));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar Locatario");

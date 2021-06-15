@@ -401,7 +401,14 @@ const FormAccountSettings = () => {
         <div className="col-sm-12 text-center">
           <button
             className="ps-btn success"
-            onClick={() => updateImg(img1, `ADMINS/${rol}/${id}`)}
+            onClick={() =>
+              updateImg(
+                img1,
+                `ADMINS/${rol}/${id}`,
+                `admins/updateAdmin/${id}`,
+                "img"
+              )
+            }
             style={{ marginBottom: "30px" }}
           >
             Actualizar foto

@@ -1,9 +1,9 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyDztwb0TuSScs3lsTfoRYzPa7XibhXv1Ks",
-  authDomain: "ipes-76061.firebaseapp.com",
-  projectId: "ipes-76061",
-  storageBucket: "ipes-76061.appspot.com",
-  messagingSenderId: "115717563428",
-  appId: "1:115717563428:web:3d6898c1fbe3edd79de4b1",
-  measurementId: "G-RV6RF8CNMF",
+  apiKey: "AIzaSyD5-YGUxY4Fm4DtSYT0pJdEtjL4iH5_Yvs",
+  authDomain: "ipes-adeda.firebaseapp.com",
+  projectId: "ipes-adeda",
+  storageBucket: "ipes-adeda.appspot.com",
+  messagingSenderId: "380879170687",
+  appId: "1:380879170687:web:1754942713c8e7b515234a",
+  measurementId: "G-QMDRJ853H5",
 };

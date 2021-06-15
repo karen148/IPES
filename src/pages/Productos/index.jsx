@@ -36,11 +36,11 @@ const estados = [
 
 const promocion = [
   {
-    value: "Sí",
+    value: "No",
     label: "Productos sin promoción",
   },
   {
-    value: "No",
+    value: "Sí",
     label: "Productos con promoción",
   },
 ];
