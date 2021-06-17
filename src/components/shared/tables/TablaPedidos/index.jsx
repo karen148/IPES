@@ -21,7 +21,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import * as locales from "@material-ui/core/locale";
 import { DeletePedido } from "actions/pedidos.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocatarioPlaza } from "actions/locatarios";
+import { getLocatarioId } from "actions/locatarios";
 
 const TablesPedidos = ({ datos, getDatos, clientes }) => {
   const classes = useStyles();
@@ -147,7 +147,10 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                                 handleClickOpen();
                                 setIdp(item.id);
                                 dispatch(
-                                  getLocatarioPlaza(setLocatario, item.plaza)
+                                  getLocatarioId(
+                                    setLocatario,
+                                    item.locatorios_id
+                                  )
                                 );
                               }}
                             >
@@ -221,7 +224,6 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
             datos.map((item) => {
               if (item !== undefined && item.id === idp) {
                 let producto = [];
-                let locatarios = [];
                 let cliente = clientes.filter(
                   (clien) => clien.id === item.cliente
                 )[0];
@@ -237,14 +239,6 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                   });
                 }
                 console.log(producto);
-                for (let index = 0; index < item.locatario.length; index++) {
-                  const element = item.locatario[index];
-                  locatario.map((item) => {
-                    if (item.id === element) {
-                      locatarios.push(item);
-                    }
-                  });
-                }
                 return (
                   <Grid
                     container
@@ -380,13 +374,9 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                         >
                           <Box style={{ paddingLeft: "10px" }}>
                             <h4>Datos de los locatarios</h4>
-                            {locatarios.map((loc) => {
-                              return (
-                                <p key={loc.id} style={{ fontSize: "14px" }}>
-                                  {loc.nombre} - Local: {loc.local}
-                                </p>
-                              );
-                            })}
+                            <p key={locatario.id} style={{ fontSize: "14px" }}>
+                              {locatario.nombre} - Local: {locatario.local}
+                            </p>
                           </Box>
                         </Grid>
                       </Grid>

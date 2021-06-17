@@ -18,7 +18,6 @@ import { setProductosLocatario } from "actions/producto";
 
 const Crear = ({ open, handleClose, locatario, rol }) => {
   const { msg } = useSelector((state) => state.producto);
-  const { id } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -62,27 +61,29 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
         setProductos(plaza, nombre, descripcion, sku, img1, img3, img5, cat)
       );
     } else {
-      let pro = [...locatario.productos_locatarios_id];
-      console.log(pro);
-      dispatch(
-        setProductosLocatario(
-          plaza,
-          descripcion,
-          sku,
-          unidad,
-          cantidad,
-          existe,
-          promocion,
-          precio,
-          rebaja,
-          id
-        )
-      );
+      if (precio > rebaja) {
+        let pro = [...locatario.productos_locatarios_id];
+        console.log(pro);
+        dispatch(
+          setProductosLocatario(
+            plaza,
+            descripcion,
+            sku,
+            unidad,
+            cantidad,
+            existe,
+            promocion,
+            precio,
+            rebaja,
+            locatario.id
+          )
+        );
+        setAlerta(true);
+        setTimeout(() => {
+          setAlerta(false);
+        }, 3000);
+      }
     }
-    setAlerta(true);
-    setTimeout(() => {
-      setAlerta(false);
-    }, 3000);
   };
 
   console.log(sku);

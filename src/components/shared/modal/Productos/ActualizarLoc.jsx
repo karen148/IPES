@@ -38,7 +38,6 @@ const ActualizarLoc = ({
   precio1,
 }) => {
   const { msg } = useSelector((state) => state.producto);
-  const { id } = useSelector((state) => state.auth);
   const { productos } = useSelector((state) => state.producto);
   const dispatch = useDispatch();
 
@@ -165,7 +164,7 @@ const ActualizarLoc = ({
         promocion,
         precio,
         rebaja,
-        id,
+        locatario.id,
         idPro
       )
     );

@@ -13,6 +13,7 @@ import { DeleteProducto } from "actions/producto";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteProductoLoc } from "actions/producto";
 import Actualizar from "components/shared/modal/Productos/Actualizar";
+import Formatear from "components/shared/formatoNumero/Formatear_numeros";
 
 const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
   const { plazastrues, categorias } = useSelector((state) => state.plaza);
@@ -202,11 +203,13 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
               </b>
             </Button>
           </td>
-          <td>{item.sku}</td>
+          <td>
+            {productos.filter((pro) => pro.id === item.producto_id)[0]?.sku}
+          </td>
           <td>{item.activo}</td>
           <td>
             <b>$ </b>
-            {item.precio}
+            {Formatear(item.precio)}
           </td>
           <td>{item.en_promocion}</td>
           <td>{item.stock}</td>
@@ -426,9 +429,10 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
                             (pro) => pro.id === item.producto_id
                           )[0]?.nombre
                         }
-                        : $ {item.precio}
+                        : $ {Formatear(item.precio)}
                       </h3>
                       <Divider variant="middle" />
+                      <br></br>
                     </Grid>
                     <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
                       <h5>SKU</h5>
@@ -439,18 +443,21 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
                       <h5>UNIDAD</h5>
                       <p>{item.unidad}</p>
                       <Divider variant="middle" />
+                      <br></br>
                     </Grid>
                     <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
                       <h5>CANTIDAD POR UNIDAD: </h5>
                       {item.cantidad_unidad}
                       <Divider variant="middle" />
+                      <br></br>
                     </Grid>
                     <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
                       <h5>PRECIO DE LA PROMOCIÓN: </h5>
                       <p style={{ color: "#E9B029", fontSize: "16px" }}>
-                        $ {item.precio_rebajado}
+                        $ {Formatear(item.precio_rebajado)}
                       </p>
                       <Divider variant="middle" />
+                      <br></br>
                     </Grid>
                     <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
                       <h5>DESCRIPCIÓN</h5>

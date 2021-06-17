@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import axios from "axios";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
+import Alert from "@material-ui/lab/Alert";
 
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
@@ -22,6 +23,8 @@ import TablesPedidos from "components/shared/tables/TablaPedidos";
 import { getProducto } from "actions/producto";
 import { getTrue } from "actions/plaza";
 import Excel from "components/shared/Excel";
+import { getPedidosLocatarios } from "actions/pedidos";
+import { getLocatarioCedula } from "actions/locatarios";
 
 const Pedidos = () => {
   const dispatch = useDispatch();
@@ -55,14 +58,18 @@ const Pedidos = () => {
   ];
   const classes = useStyles();
   // const [nomproducto, setNomProducto] = useState("");
+  const { rol, codigo } = useSelector((state) => state.auth);
+  const [locatario, setLocatario] = useState([]);
   const [pedidos1, setPedidos1] = useState([]);
   const [cliente, setCliente] = useState([]);
   const [pedidos2, setPedidos2] = useState([]);
   const [pedidosnom, setPedidosNom] = useState("");
-  const [pedidosnom1, setPedidosNom1] = useState("");
   const [mostrar, setMostrar] = useState(false);
   const [estado, setEstado] = useState("");
   const [pago, setPago] = useState("");
+  const [pedidosnom1, setPedidosNom1] = useState("");
+  const [pedidosnom2, setPedidosNom2] = useState("");
+
   const columns = [
     { label: "Pasarela de pagos", value: "pasarela" },
     { label: "Pedido", value: "conteo" },
@@ -121,24 +128,27 @@ const Pedidos = () => {
   };
 
   useEffect(() => {
-    dispatch(getPedidos(setPedidos1));
-    setMostrar(false);
-  }, [dispatch]);
-
-  useEffect(() => {
+    dispatch(getLocatarioCedula(setLocatario, codigo));
+    if (rol === "SUPER_ADMIN") {
+      dispatch(getPedidos(setPedidos1));
+    }
     dispatch(getClientes(setCliente));
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getProducto());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getTrue());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (locatario.id) {
+      dispatch(getPedidosLocatarios(setPedidos1, locatario.id));
+    }
+  }, [dispatch, locatario.id]);
+
   const getDatos = () => {
-    dispatch(getPedidos(setPedidos1));
+    if (rol === "SUPER_ADMIN") {
+      dispatch(getPedidos(setPedidos1));
+    } else {
+      dispatch(getPedidosLocatarios(setPedidos1, locatario.id));
+    }
     setMostrar(false);
   };
 
@@ -209,7 +219,11 @@ const Pedidos = () => {
     setMostrar(true);
     setPedidos2(
       pedidos1.filter((item) => {
-        return item.fecha.includes(pedidosnom1);
+        if (item.fecha >= pedidosnom1) {
+          if (item.fecha <= pedidosnom2) {
+            return item;
+          }
+        }
       })
     );
   };
@@ -217,7 +231,7 @@ const Pedidos = () => {
     if (pedidosnom1.length > 0) {
       handleFecha();
     }
-  }, [pedidosnom1]);
+  }, [pedidosnom1, pedidosnom2]);
 
   const handlePago = () => {
     setMostrar(true);
@@ -238,12 +252,17 @@ const Pedidos = () => {
   }, [pago]);
 
   const Restaurar = () => {
-    dispatch(getPedidos(setPedidos1));
+    if (rol === "SUPER_ADMIN") {
+      dispatch(getPedidos(setPedidos1));
+    } else {
+      dispatch(getPedidosLocatarios(setPedidos1, locatario.id));
+    }
     setPedidosNom("");
     setEstado("");
     setPago("");
     setMostrar(false);
   };
+  console.log(pedidosnom1);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -255,7 +274,17 @@ const Pedidos = () => {
           <a
             className="ps-btn success"
             onClick={() =>
-              Excel(columns, mostrar ? pedidos2 : pedidos1, settings)
+              Excel(
+                columns,
+                rol === "SUPER_ADMIN"
+                  ? mostrar
+                    ? pedidos2
+                    : pedidos1
+                  : mostrar
+                  ? pedidos2
+                  : pedidos1,
+                settings
+              )
             }
           >
             <AddIcon />
@@ -312,10 +341,11 @@ const Pedidos = () => {
             </Grid>
             <Grid item xs={12} sm={2}>
               <TextField
-                style={{ marginTop: "5px" }}
+                style={{ marginTop: "10px" }}
                 id="date"
                 variant="outlined"
                 type="date"
+                size="small"
                 fullWidth
                 value={pedidosnom1}
                 onChange={(e) => setPedidosNom1(e.target.value)}
@@ -323,9 +353,27 @@ const Pedidos = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                helperText="Fecha 1"
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                style={{ marginTop: "10px" }}
+                id="date"
+                variant="outlined"
+                type="date"
+                size="small"
+                fullWidth
+                value={pedidosnom2}
+                onChange={(e) => setPedidosNom2(e.target.value)}
+                defaultValue="2021-06-10"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                helperText="Fecha 2"
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
               <TextField
                 id="outlined-select-currency-native"
                 select
@@ -344,7 +392,7 @@ const Pedidos = () => {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 id="outlined-select-currency-native"
                 select
@@ -363,14 +411,47 @@ const Pedidos = () => {
                 ))}
               </TextField>
             </Grid>
+            {pedidosnom1 > pedidosnom2 && (
+              <Grid item xs={12} sm={12}>
+                <Alert severity="warning">
+                  Fecha 2 tiene que ser mayor que Fecha 1
+                </Alert>
+              </Grid>
+            )}
           </Grid>
         </div>
         <div className="ps-section__content">
-          <TablesPedidos
-            getDatos={getDatos}
-            datos={mostrar ? pedidos2 : pedidos1}
-            clientes={cliente}
-          />
+          {pedidosnom1 === "" && pedidosnom2 === "" ? (
+            <TablesPedidos
+              getDatos={getDatos}
+              datos={
+                rol === "SUPER_ADMIN"
+                  ? mostrar
+                    ? pedidos2
+                    : pedidos1
+                  : mostrar
+                  ? pedidos2
+                  : pedidos1
+              }
+              clientes={cliente}
+            />
+          ) : (
+            pedidosnom1 < pedidosnom2 && (
+              <TablesPedidos
+                getDatos={getDatos}
+                datos={
+                  rol === "SUPER_ADMIN"
+                    ? mostrar
+                      ? pedidos2
+                      : pedidos1
+                    : mostrar
+                    ? pedidos2
+                    : pedidos1
+                }
+                clientes={cliente}
+              />
+            )
+          )}
         </div>
         <div className="ps-section__footer"></div>
       </section>

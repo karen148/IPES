@@ -7,7 +7,7 @@ import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
 import { getTrue, getCategorias } from "./../../actions/plaza";
 import { getProducto, getProductoLocatario } from "actions/producto";
-import { getLocatarioId } from "actions/locatarios";
+import { getLocatarioCedula } from "actions/locatarios";
 
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
@@ -63,7 +63,7 @@ const Productos = () => {
   const dispatch = useDispatch();
   const { plazastrues, categorias } = useSelector((state) => state.plaza);
   const { productos, prolocatarios } = useSelector((state) => state.producto);
-  const { rol, id } = useSelector((state) => state.auth);
+  const { rol, codigo } = useSelector((state) => state.auth);
 
   const [currency1, setCurrency1] = React.useState("");
   const [currency3, setCurrency3] = React.useState("");
@@ -78,17 +78,19 @@ const Productos = () => {
   // const [pro2, setPro2] = useState([]);
 
   useEffect(() => {
-    dispatch(getLocatarioId(setLocatario, id));
+    dispatch(getLocatarioCedula(setLocatario, codigo));
     dispatch(getProducto());
     dispatch(getTrue());
     dispatch(getCategorias());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getProductoLocatario(id));
-  }, [dispatch]);
+    if (locatario.id) {
+      dispatch(getProductoLocatario(locatario.id));
+    }
+  }, [dispatch, locatario.id]);
 
-  console.log(locatario.productos_locatarios_id);
+  console.log(locatario.id);
   console.log(prolocatarios);
   const handleClickOpen = () => {
     setOpen(true);
@@ -159,7 +161,7 @@ const Productos = () => {
     if (rol === "SUPER_ADMIN") {
       dispatch(getProducto());
     } else {
-      dispatch(getProductoLocatario(id));
+      dispatch(getProductoLocatario(locatario.id));
     }
   };
 

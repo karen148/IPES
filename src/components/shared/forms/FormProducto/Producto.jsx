@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import PropTypes from "prop-types";
+import Alert from "@material-ui/lab/Alert";
 
 const Producto = ({
   locatario,
@@ -258,6 +259,13 @@ const Producto = ({
                     fullWidth
                   />
                 </Grid>
+                {precio < rebaja && (
+                  <Grid item xs={12} sm={12}>
+                    <Alert severity="warning">
+                      El precio del producto debe ser mayor al precio con rebaja
+                    </Alert>
+                  </Grid>
+                )}
               </>
             ) : (
               <>
@@ -275,20 +283,34 @@ const Producto = ({
                 </Grid>
               </>
             )}
+            <Grid item xs={12}>
+              <label>SKU</label>
+              <TextField
+                margin="normal"
+                variant="outlined"
+                type="text"
+                value={plaza.sku}
+                name="sku"
+                fullWidth
+                disabled
+              />
+            </Grid>
           </>
         )}
-        <Grid item xs={12}>
-          <label>SKU</label>
-          <TextField
-            margin="normal"
-            variant="outlined"
-            type="text"
-            value={sku}
-            name="sku"
-            onChange={(e) => setSku(e.target.value)}
-            fullWidth
-          />
-        </Grid>
+        {rol === "SUPER_ADMIN" && (
+          <Grid item xs={12}>
+            <label>SKU</label>
+            <TextField
+              margin="normal"
+              variant="outlined"
+              type="text"
+              value={sku}
+              name="sku"
+              onChange={(e) => setSku(e.target.value)}
+              fullWidth
+            />
+          </Grid>
+        )}
         <Grid item xs={12} sm={12}>
           <label>Descripción del producto</label>
           <TextareaAutosize
