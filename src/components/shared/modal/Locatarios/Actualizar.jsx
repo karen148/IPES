@@ -17,6 +17,7 @@ import useStyles from "components/shared/forms/style";
 import { UpdateLocatarios } from "actions/locatarios";
 import { UpdateImagen } from "actions/locatarios";
 import { UpdateLogo } from "actions/locatarios";
+import { Img } from "actions/imagen";
 
 const Actualizar = ({
   open,
@@ -172,12 +173,8 @@ const Actualizar = ({
         }
         setCat(data);
 
-        setImg1(
-          `https://firebasestorage.googleapis.com/v0/b/ipes-adeda.appspot.com/o/LOCATARIO/img/${idLocatario}/${imagen2}`
-        );
-        setImg3(
-          process.env.REACT_APP_URL_API + `uploads/retorna/LOCATARIO/${logo2}`
-        );
+        Img(`LOCATARIO/img/${idLocatario}/${imagen2}`, setImg1, imagen2);
+        Img(`LOCATARIO/logo/${idLocatario}/${logo2}`, setImg3, logo2);
       }
     };
     Actual();
@@ -308,7 +305,7 @@ const Actualizar = ({
         throw new Error("Error");
     }
   };
-
+  console.log(img1);
   const ActualizarLocatario = () => {
     dispatch(
       UpdateLocatarios(
@@ -345,9 +342,10 @@ const Actualizar = ({
       setAlerta("Actualizar Locatario");
     }, 3000);
   };
-
+  console.log(imagen2);
   const ActualizarImagen = () => {
-    dispatch(UpdateImagen(img, img1, idLocatario));
+    dispatch(UpdateImagen(img, imagen2, idLocatario));
+    console.log(imagen2);
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar Locatario");
@@ -355,7 +353,7 @@ const Actualizar = ({
   };
 
   const ActualizarLogo = () => {
-    dispatch(UpdateLogo(img2, idLocatario));
+    dispatch(UpdateLogo(img2, logo2, idLocatario));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar Locatario");

@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 
 const Producto = ({
+  rol,
   locatario,
   plaza,
   setPlaza,
@@ -34,7 +35,6 @@ const Producto = ({
 }) => {
   const { plazastrues } = useSelector((state) => state.plaza);
   const { productos } = useSelector((state) => state.producto);
-  const { rol } = useSelector((state) => state.auth);
   const uni = [
     {
       value: "Libras",
@@ -71,9 +71,15 @@ const Producto = ({
         }
       }
     });
+    setSku(plaza.sku);
+    if (!existe) {
+      setPromocion(false);
+      setRebaja(0);
+    }
   }
   console.log(promocion);
   console.log(existe);
+  console.log(uni);
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -148,7 +154,9 @@ const Producto = ({
               id="auto-select"
               autoSelect
               options={producto}
-              getOptionLabel={(option) => option?.nombre}
+              getOptionLabel={(option) =>
+                option?.nombre ? option?.nombre : ""
+              }
               value={plaza}
               onChange={(event, newValue) => {
                 setPlaza(newValue);
@@ -328,6 +336,7 @@ const Producto = ({
 };
 
 Producto.propTypes = {
+  rol: PropTypes.string,
   locatario: PropTypes.array,
   plaza: PropTypes.array,
   setPlaza: PropTypes.func,

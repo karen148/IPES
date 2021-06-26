@@ -50,27 +50,12 @@ const Plazas = () => {
 
   useEffect(() => {
     dispatch(getFuncionarios());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getCategorias());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getLocalidades());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getTrue());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getCantidades());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(toggleDrawerMenu(false));
-  }, []);
+  }, [dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);

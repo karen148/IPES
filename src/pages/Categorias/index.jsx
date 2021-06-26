@@ -46,8 +46,8 @@ const CategoriesPage = () => {
   };
 
   const getDatos = () => {
-    dispatch(getCategorias());
     setMostrar(false);
+    dispatch(getCategorias());
   };
 
   console.log(cate);

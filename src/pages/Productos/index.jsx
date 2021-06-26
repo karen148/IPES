@@ -90,7 +90,7 @@ const Productos = () => {
     }
   }, [dispatch, locatario.id]);
 
-  console.log(locatario.id);
+  console.log(locatario);
   console.log(prolocatarios);
   const handleClickOpen = () => {
     setOpen(true);

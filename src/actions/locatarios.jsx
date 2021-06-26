@@ -3,6 +3,66 @@ import { types } from "./../types";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
 
+export const UpdateLocatariosEmail = (email, idLocatario, setMsg) => {
+  let config = {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  };
+  return async (dispatch) => {
+    axios
+      .put(
+        process.env.REACT_APP_URL_API + "locatarios/update/" + idLocatario,
+        {
+          email: email,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data;
+        setMsg("El correo se actualizo");
+        dispatch(
+          LocatarioMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        setMsg("No se actualizo la información");
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
+export const UpdateAdminEmail = (email, idLocatario, setMsg) => {
+  let config = {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  };
+  return async (dispatch) => {
+    axios
+      .put(
+        process.env.REACT_APP_URL_API + "admins/updateAdmin" + idLocatario,
+        {
+          email: email,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data;
+        setMsg("El correo se actualizo");
+        dispatch(
+          LocatarioMensaje({
+            ok: data.ok,
+            msg: data.msg,
+          })
+        );
+      })
+      .catch((e) => {
+        setMsg("No se actualizo la información");
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 export const getLocatarioCedula = (setLocatario, cedula) => {
   return async (dispatch) => {
     let config = {
@@ -14,7 +74,8 @@ export const getLocatarioCedula = (setLocatario, cedula) => {
         config
       )
       .then((response) => {
-        let data = response.data.locatario;
+        let data = response.data.locatarios[0];
+        console.log(data);
         setLocatario(data);
         dispatch(LocatarioDato(response.data.ok));
       })
@@ -181,59 +242,43 @@ export const DeleteLocatario = (idLocatario) => {
   };
 };
 
-export const UpdateLogo = (img2, idLocatario) => {
-  return async (dispatch) => {
-    updateImg(img2, `LOCATARIOS/logo/${idLocatario}`);
-    const formData = new FormData();
-    formData.append("imagen", img2);
-    formData.append("locatario", "logo");
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/LOCATARIO/" + idLocatario,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        let data = response.data;
-        dispatch(
-          LocatarioMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateLogo = (img, img2, idLocatario) => {
+  return async () => {
+    updateImg(
+      img,
+      `LOCATARIOS/logo/${idLocatario}`,
+      `locatarios/update/${idLocatario}`,
+      "logo"
+    );
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/LOCATARIOS/logo/${idLocatario}/`)
+      .child(`${img2}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
 export const UpdateImagen = (img, img1, idLocatario) => {
   return async () => {
-    var desertRef = firebase
-      .storage()
-      .ref()
-      .child(`LOCATARIOS/img/${idLocatario}/${img1}`);
-    desertRef
-      .delete()
-      .then(() => {
-        console.log("elimino");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
     updateImg(
       img,
       `LOCATARIOS/img/${idLocatario}`,
       `locatarios/update/${idLocatario}`,
       "img"
     );
-    // const formData = new FormData(); gs://ipes-76061.appspot.com/LOCATARIOS/img/1432/0cb6bd05-59b1-43bb-9483-fef6df32d987.jpg
-    // formData.append("imagen", img);
-    // formData.append("locatario", "img");
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/LOCATARIOS/img/${idLocatario}/`)
+      .child(`${img1}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
@@ -451,11 +496,6 @@ export const setLocatarios = (
       });
   };
 };
-
-// const LocatariosDatos = (locatarios) => ({
-//   type: types.locatariosDatos,
-//   locatario: locatarios,
-// });
 
 const LocatarioMensaje = (mensajes) => ({
   type: types.locatariosMensaje,

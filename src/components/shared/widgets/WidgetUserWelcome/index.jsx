@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TooltipE from "./../../tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../../../actions/auth";
-import firebase from "firebase";
+import { Img } from "actions/imagen";
 
 const WidgetUserWelcome = () => {
   const dispatch = useDispatch();
@@ -15,31 +15,26 @@ const WidgetUserWelcome = () => {
   };
 
   useEffect(() => {
-    setImg(process.env.REACT_APP_URL_API + `uploads/retorna/${rol}/` + img);
-  }, []);
+    dispatch(Img(`ADMINS/${rol}/${id}/${img}`, setImg, img));
+  }, [dispatch]);
 
-  var desertRef = firebase.storage().ref().child(`ADMINS/${rol}/${id}/${img}`);
-
-  desertRef.getDownloadURL().then(function (url) {
-    console.log(url);
-    var img = document.getElementById("myimg");
-    img.src = url;
-  });
-  console.log(img1);
   return (
     <div className="ps-block--user-wellcome">
       <div className="ps-block__left">
-        <img src={""} id="myimg" alt="" width="80px" height="80px" />
+        <img src={img1} id="myimg" alt="" width="80px" height="80px" />
       </div>
       <div className="ps-block__right">
-        <p>
-          Hola,<a href="perfil">{name}</a>
+        <p style={{ color: "white" }}>
+          Hola,
+          <a href="perfil" style={{ color: "white" }}>
+            {name}
+          </a>
         </p>
       </div>
       <div className="ps-block__action">
         <TooltipE title="Cerrar sesión">
           <a href="/home" onClick={exitApp}>
-            <i className="lnr lnr-exit"></i>
+            <i className="lnr lnr-exit" style={{ color: "#450016" }}></i>
           </a>
         </TooltipE>
       </div>

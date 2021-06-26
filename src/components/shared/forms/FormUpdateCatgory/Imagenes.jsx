@@ -41,7 +41,7 @@ const Imagen = ({ idCategoria, img }) => {
   };
 
   const ActualizarImagen = () => {
-    dispatch(setImagen(img1, idCategoria));
+    dispatch(setImagen(img1, img2, idCategoria));
     setAlerta(true);
     setTimeout(() => {
       setAlerta(false);

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { types } from "./../types";
-import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 
-export const DeletePedido = (id) => {
+export const DeletePedido = (id, estado) => {
   return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -11,7 +11,7 @@ export const DeletePedido = (id) => {
       .put(
         process.env.REACT_APP_URL_API + "pedidos/update/" + id,
         {
-          estado: "3",
+          estado: estado,
         },
         config
       )
@@ -47,6 +47,7 @@ export const getPedidos = (setPedidos) => {
           plaza: item.plaza_id,
           locatario: item.locatorios_id,
           cliente: item.cliente_id,
+          cliente_dato: item.cliente,
           productos: item.productos_locatarios_id,
           estado: item.estado,
           total: item.total,
@@ -57,8 +58,8 @@ export const getPedidos = (setPedidos) => {
               : item.updated_at.slice(0, 10),
           acciones: [
             {
-              name: "Eliminar",
-              icon: <DeleteIcon />,
+              name: "Editar el estado del pedido",
+              icon: <EditIcon />,
               id: item.id,
             },
           ],
@@ -92,6 +93,7 @@ export const getPedidosLocatarios = (setPedidos, id) => {
           plaza: item.plaza_id,
           locatario: item.locatorios_id,
           cliente: item.cliente_id,
+          cliente_dato: item.cliente,
           productos: item.productos_locatarios_id,
           estado: item.estado,
           total: item.total,
@@ -102,8 +104,8 @@ export const getPedidosLocatarios = (setPedidos, id) => {
               : item.updated_at.slice(0, 10),
           acciones: [
             {
-              name: "Eliminar",
-              icon: <DeleteIcon />,
+              name: "Editar el estado del pedido",
+              icon: <EditIcon />,
               id: item.id,
             },
           ],

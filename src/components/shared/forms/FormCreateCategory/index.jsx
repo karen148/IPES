@@ -56,6 +56,7 @@ const FormCreateCategory = ({ getDatos }) => {
         setAlerta(false);
       }, 3000);
     } else {
+      getDatos();
       setAlerta1(true);
       setTimeout(() => {
         setAlerta1(false);

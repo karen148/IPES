@@ -53,6 +53,45 @@ export const updateImg = async (img1, url, url2, verificar) => {
         .catch((e) => {
           console.log("ERROR", e);
         });
+    } else if (verificar === "icono") {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + `${url2}`,
+          { icono: imagen },
+          config1
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
     }
   }
+};
+
+export const NoImg = (setImg) => {
+  return async () => {
+    var desertRef1 = firebase.storage().ref().child(`no-photo.svg`);
+    desertRef1.getDownloadURL().then(function (url) {
+      setImg(url);
+    });
+  };
+};
+
+export const Img = (url, setImg, img) => {
+  return async () => {
+    if (img) {
+      var desertRef1 = firebase.storage().ref().child(`${url}`);
+      desertRef1.getDownloadURL().then(function (url) {
+        setImg(url);
+      });
+    } else {
+      var desertRef2 = firebase.storage().ref().child(`no-photo.svg`);
+      desertRef2.getDownloadURL().then(function (url) {
+        setImg(url);
+      });
+    }
+  };
 };

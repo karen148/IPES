@@ -14,6 +14,7 @@ const Modal = ({ open, handleClose, title, children, tamaño }) => {
       aria-describedby="alert-dialog-description"
       maxWidth={tamaño}
       fullWidth
+      style={{ borderRadius: "10px" }}
     >
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent id="alert-dialog-description">{children}</DialogContent>

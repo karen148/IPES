@@ -10,6 +10,7 @@ import { getPlaz, getTrue, getLocalidades } from "./../../actions/plaza";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import ListAltIcon from "@material-ui/icons/ListAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
@@ -26,6 +27,7 @@ import Crear from "../../components/shared/modal/Locatarios/Crear";
 import { getCategorias } from "actions/plaza";
 import { getProducto } from "actions/producto";
 import Archivo from "components/shared/modal/Locatarios/Archivo";
+import { NoImg } from "actions/imagen";
 
 const estados = [
   {
@@ -48,28 +50,18 @@ const Locatarios = () => {
   const [currency3, setCurrency3] = React.useState("");
 
   const [locatario2, setLocatarios2] = useState([]);
+  const [noimg, setNoImg] = useState("");
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [nomplaza1, setNomplaza1] = useState("");
 
   useEffect(() => {
     dispatch(getPlaz());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getTrue());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getLocalidades());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getCategorias());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(getProducto());
+    dispatch(getCategorias());
+    dispatch(getLocalidades());
+    dispatch(getTrue());
+    dispatch(NoImg(setNoImg));
   }, [dispatch]);
 
   const handleClickOpen = () => {
@@ -92,10 +84,6 @@ const Locatarios = () => {
 
   const handleChange1 = (event) => {
     setCurrency1(event.target.value);
-  };
-
-  const handleChange3 = (event) => {
-    setCurrency3(event.target.value);
   };
 
   const getLocatarioss = async () => {
@@ -129,7 +117,7 @@ const Locatarios = () => {
           cedula: item.cedula,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           email: item.email === null ? "" : item.email,
-          telefonos: item.telefonos,
+          telefonos: item.telefonos ? item.telefonos : [],
           activo: item.activo ? "Activo" : "Inactivo",
           numero_local: item.numero_local,
           productos: item.productos_locatarios_id,
@@ -144,15 +132,14 @@ const Locatarios = () => {
               icon: <DeleteIcon />,
               id: item.id,
             },
+            {
+              name: "Listado de productos",
+              icon: <ListAltIcon />,
+              id: item.id,
+            },
           ],
         }));
-        if (currency3 !== "") {
-          let data2 = [];
-          data2 = locatario2.filter((item) => item.activo === currency3);
-          setLocatarios2(data2);
-        } else if (currency3 === "") {
-          setLocatarios2(locatarios);
-        }
+        setLocatarios2(locatarios);
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -172,10 +159,24 @@ const Locatarios = () => {
   };
 
   const Buscar = () => {
-    let data = [...locatario2];
-    setLocatarios2(data.filter((item) => item.nombre === nomplaza1.trim()));
+    let data = locatario2.filter((item) => item.nombre === nomplaza1);
+    setLocatarios2(data);
   };
 
+  const handleEstado = () => {
+    setLocatarios2(
+      locatario2.filter((item) => {
+        return item.activo.includes(currency3);
+      })
+    );
+  };
+  useEffect(() => {
+    if (currency3.length > 0) {
+      handleEstado();
+    }
+  }, [currency3]);
+
+  console.log(locatario2);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -232,13 +233,13 @@ const Locatarios = () => {
                   select
                   label="Estados"
                   value={currency3}
-                  onChange={handleChange3}
+                  onChange={(e) => setCurrency3(e.target.value)}
                   fullWidth
                   style={{ marginRight: "20px" }}
                   className={classes.margin}
                 >
                   {estados.map((option) => (
-                    <MenuItem key={option.value} value={option.label}>
+                    <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
@@ -302,7 +303,11 @@ const Locatarios = () => {
           </div>
         </div>
         <div className="ps-section__content">
-          <TablasLocatarios datos={locatario2} getLocali={getLocatarioss} />
+          <TablasLocatarios
+            datos={locatario2}
+            getLocali={getLocatarioss}
+            noimg={noimg}
+          />
         </div>
       </section>
       <Crear

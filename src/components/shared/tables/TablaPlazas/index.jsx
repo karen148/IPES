@@ -9,8 +9,9 @@ import _Eliminar from "./../../modal/Eliminar.jsx";
 import _Actualizar from "../../modal/Plaza/Actualizar.jsx";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { getCantidades, getPlaz } from "../../../../actions/plaza";
+import { getPlaz } from "../../../../actions/plaza";
 import PropTypes from "prop-types";
+import firebase from "firebase";
 
 const TablaPlazas = ({ datos, getPlaza }) => {
   const dispatch = useDispatch();
@@ -27,10 +28,6 @@ const TablaPlazas = ({ datos, getPlaza }) => {
 
   useEffect(() => {
     dispatch(getPlaz());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getCantidades());
   }, [dispatch]);
 
   const handleClickOpen = () => {
@@ -106,7 +103,12 @@ const TablaPlazas = ({ datos, getPlaza }) => {
             const element = item?.categorias[i];
             categorias.map((item) => {
               if (item.id === element) {
-                data.push(item);
+                console.log(item);
+                data.push({
+                  icono: item.icono,
+                  id: item.id,
+                  name: item.label,
+                });
               }
             });
           }
@@ -137,15 +139,36 @@ const TablaPlazas = ({ datos, getPlaza }) => {
               })}
             </td>
             <td style={{ width: "180px" }}>
-              {data.map((item) => {
+              {data.map((cat) => {
+                if (cat.icono) {
+                  var desertRef1 = firebase
+                    .storage()
+                    .ref()
+                    .child(`CATEGORIAS/${cat.id}/${cat.icono}`);
+                  desertRef1.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `img${cat.id}${item.nombre}`
+                    );
+                    img.src = url;
+                  });
+                } else {
+                  var desertRef2 = firebase
+                    .storage()
+                    .ref()
+                    .child(`no-photo.svg`);
+                  desertRef2.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `img${cat.id}${item.nombre}`
+                    );
+                    img.src = url;
+                  });
+                }
                 return (
-                  <TooltipE title={item.label} key={item.id}>
+                  <TooltipE title={cat.name} key={cat.id}>
                     <img
-                      src={
-                        process.env.REACT_APP_URL_API +
-                        `uploads/retorna/CATEGORIA/${item.icono}`
-                      }
+                      src={""}
                       alt=""
+                      id={`img${cat.id}${item.nombre}`}
                       width="30px"
                       height="30px"
                       style={{ marginRight: "5px" }}

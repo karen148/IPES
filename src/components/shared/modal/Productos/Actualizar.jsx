@@ -24,6 +24,7 @@ import { UpdateImagen1 } from "actions/producto";
 const Actualizar = ({
   open,
   handleClose,
+  rol,
   idProducto,
   nombrepro,
   plazapro,
@@ -123,6 +124,7 @@ const Actualizar = ({
         return (
           <Producto
             plaza={plaza}
+            rol={rol}
             setPlaza={setPlaza}
             nombre={nombre}
             setNombre={setNombre}
@@ -309,6 +311,7 @@ const Actualizar = ({
 Actualizar.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
+  rol: PropTypes.string,
   idProducto: PropTypes.string,
   nombrepro: PropTypes.string,
   plazapro: PropTypes.array,

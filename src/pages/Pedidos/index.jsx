@@ -6,7 +6,6 @@ import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 
 import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
 import TextField from "@material-ui/core/TextField";
@@ -25,6 +24,7 @@ import { getTrue } from "actions/plaza";
 import Excel from "components/shared/Excel";
 import { getPedidosLocatarios } from "actions/pedidos";
 import { getLocatarioCedula } from "actions/locatarios";
+import { getProductoLocatario } from "actions/producto";
 
 const Pedidos = () => {
   const dispatch = useDispatch();
@@ -140,6 +140,7 @@ const Pedidos = () => {
   useEffect(() => {
     if (locatario.id) {
       dispatch(getPedidosLocatarios(setPedidos1, locatario.id));
+      dispatch(getProductoLocatario(locatario.id));
     }
   }, [dispatch, locatario.id]);
 
@@ -154,50 +155,29 @@ const Pedidos = () => {
 
   const Buscar = () => {
     setMostrar(true);
+    if (pedidosnom.length === 1) {
+      setMostrar(false);
+    }
     let prueba1 = /^([A-ZÁÉÍÓÚ]+[\s]*)+$/.test(pedidosnom.trim());
     let prueba2 = /^([a-zñáéíóú]+[\s]*)+$/.test(pedidosnom.trim());
-    let fecha = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(
-      pedidosnom1
-    );
-    console.log(pedidos2);
-    console.log(fecha);
-    console.log(prueba1 + " - " + prueba2);
+    let prueba3 = /^([0-9])*$/.test(pedidosnom.trim());
+    console.log(prueba3);
     if (prueba1 || prueba2) {
       setPedidos2(
         pedidos1.filter((item) => {
-          return (
-            item.cliente ===
-            cliente.filter((clien) => {
-              return clien.nombre
-                .toLowerCase()
-                .trim()
-                .includes(pedidosnom.toLowerCase());
-            })[0]?.id
-          );
-          // .toLowerCase()
-          // .trim()
-          // .includes(pedidosnom.toLowerCase());
-        })
-      );
-      console.log(
-        cliente.filter((clien) => {
-          return clien.nombre.trim() === pedidosnom.trim();
-        })
-      );
-    } else if (fecha) {
-      console.log(pedidos2);
-      console.log(
-        pedidos1.map((item) => {
-          console.log(item.fecha + " - " + pedidosnom);
-        })
-      );
-      setPedidos2(
-        pedidos1.filter((item) => {
-          return item.fecha === pedidosnom1;
+          return item.cliente_dato.nombre
+            .toLowerCase()
+            .trim()
+            .includes(pedidosnom.toLowerCase());
         })
       );
     }
   };
+  useEffect(() => {
+    if (pedidosnom.length > 0) {
+      Buscar();
+    }
+  }, [pedidosnom]);
 
   const handleEstado = () => {
     setMostrar(true);
@@ -262,7 +242,7 @@ const Pedidos = () => {
     setPago("");
     setMostrar(false);
   };
-  console.log(pedidosnom1);
+
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -306,10 +286,12 @@ const Pedidos = () => {
                 name="cate"
                 variant="outlined"
                 fullWidth
+                size="small"
                 value={pedidosnom}
                 onChange={(e) => setPedidosNom(e.target.value)}
                 placeholder="Buscar"
                 style={{ width: "100%" }}
+                helperText="Buscar el nombre del cliente"
               />
               <span
                 style={{
@@ -319,13 +301,6 @@ const Pedidos = () => {
                   margin: "-75px 10px 0 0",
                 }}
               >
-                <TooltipE title="Buscar información">
-                  <IconButton color="primary" component="span" onClick={Buscar}>
-                    <SearchIcon
-                      style={{ fontSize: "35px", marginTop: "10px" }}
-                    />
-                  </IconButton>
-                </TooltipE>
                 <TooltipE title="Restaurar información">
                   <IconButton
                     color="primary"
@@ -333,7 +308,7 @@ const Pedidos = () => {
                     onClick={Restaurar}
                   >
                     <RefreshIcon
-                      style={{ fontSize: "35px", marginTop: "10px" }}
+                      style={{ fontSize: "35px", marginTop: "-7px" }}
                     />
                   </IconButton>
                 </TooltipE>

@@ -31,7 +31,6 @@ const ActualizarLoc = ({
   stock,
   en_promocion,
   unidad1,
-  sku1,
   descripcion1,
   cantidad_unidad,
   precio_rebajado,
@@ -68,7 +67,6 @@ const ActualizarLoc = ({
   const [cat, setCat] = useState([]);
 
   useEffect(() => {
-    setSku(sku1);
     setDescripion(descripcion1);
     setPlaza(productos.filter((item) => item.id === idProducto)[0]);
     setPromocion(en_promocion);
@@ -82,7 +80,6 @@ const ActualizarLoc = ({
     stock,
     en_promocion,
     unidad1,
-    sku1,
     descripcion1,
     cantidad_unidad,
     precio_rebajado,
@@ -153,27 +150,29 @@ const ActualizarLoc = ({
   }
 
   const ActualizarProducto = () => {
-    dispatch(
-      UpdateProductosLocatario(
-        plaza,
-        descripcion,
-        sku,
-        unidad,
-        cantidad,
-        existe,
-        promocion,
-        precio,
-        rebaja,
-        locatario.id,
-        idPro
-      )
-    );
-    setAlerta("El producto se actualizo");
-    setTimeout(() => {
-      setAlerta("Actualizar producto");
-    }, 4000);
+    if (precio > rebaja) {
+      dispatch(
+        UpdateProductosLocatario(
+          plaza,
+          descripcion,
+          sku,
+          unidad,
+          cantidad,
+          existe,
+          promocion,
+          precio,
+          rebaja,
+          locatario.id,
+          idPro
+        )
+      );
+      setAlerta("El producto se actualizo");
+      setTimeout(() => {
+        setAlerta("Actualizar producto");
+      }, 4000);
+    }
   };
-
+  console.log(sku);
   const ActualizarImagenP = () => {
     dispatch(UpdateImagen(img1, idProducto));
     setAlerta(msg);
@@ -304,7 +303,6 @@ const ActualizarLoc = ({
 ActualizarLoc.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  sku1: PropTypes.string,
   descripcion1: PropTypes.string,
   idPro: PropTypes.string,
   idProducto: PropTypes.string,

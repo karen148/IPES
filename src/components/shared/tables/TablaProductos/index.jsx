@@ -14,11 +14,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { DeleteProductoLoc } from "actions/producto";
 import Actualizar from "components/shared/modal/Productos/Actualizar";
 import Formatear from "components/shared/formatoNumero/Formatear_numeros";
+import useStyles from "../style";
 
 const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
+  const dispatch = useDispatch();
   const { plazastrues, categorias } = useSelector((state) => state.plaza);
   const { productos, prolocatarios } = useSelector((state) => state.producto);
-  const dispatch = useDispatch();
+
+  const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
@@ -82,7 +85,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
   const _ActualizarLoc = (id) => {
     setProLoc(prolocatarios.filter((item) => item.id === id)[0]);
   };
-
+  console.log(proloc);
   const tableItems = datos?.map((item, index) => {
     if (rol === "SUPER_ADMIN") {
       let plazaAc = [];
@@ -159,9 +162,9 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
               return (
                 <TooltipE title={cat.name} key={cat.name}>
                   <IconButton
-                    color="default"
                     component="span"
                     key={cat.name}
+                    className={classes.iconos}
                     onClick={
                       cat.name === "Editar"
                         ? () => {
@@ -225,9 +228,9 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
               return (
                 <TooltipE title={cat.name} key={cat.name}>
                   <IconButton
-                    color="default"
                     component="span"
                     key={cat.name}
+                    className={classes.iconos}
                     onClick={
                       cat.name === "Editar"
                         ? () => {
@@ -496,6 +499,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
       <Actualizar
         open={open3}
         handleClose={handleClose3}
+        rol={rol}
         idProducto={idp1}
         nombrepro={producto?.nombre}
         plazapro={producto?.plaza}
@@ -509,14 +513,13 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
       <ActualizarLoc
         open={open2}
         handleClose={handleClose2}
-        rol={rol}
+        rol="ADMIN_LOCATARIO"
         locatario={locatario}
         idPro={idp1}
         idProducto={proloc?.producto_id}
         stock={proloc?.stock === "Sí hay" ? true : false}
         en_promocion={proloc?.en_promocion === "Sí" ? true : false}
         unidad1={proloc?.unidad}
-        sku1={proloc?.sku}
         descripcion1={proloc?.descripcion}
         cantidad_unidad={proloc?.cantidad_unidad}
         precio_rebajado={proloc?.precio_rebajado}

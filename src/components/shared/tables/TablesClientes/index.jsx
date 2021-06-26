@@ -14,7 +14,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 import Alert from "@material-ui/lab/Alert";
-import useStyles from "./styles.jsx";
+import useStyles from "../style";
 import Divider from "@material-ui/core/Divider";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import * as locales from "@material-ui/core/locale";

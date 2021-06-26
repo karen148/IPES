@@ -3,18 +3,27 @@ import { useForm } from "./../../hooks/useForm";
 import { useDispatch } from "react-redux";
 import { startLogin } from "./../../actions/auth";
 
-import Avatar from "@material-ui/core/Avatar";
+import EmailIcon from "@material-ui/icons/Email";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import LockIcon from "@material-ui/icons/Lock";
+import PersonIcon from "@material-ui/icons/Person";
+
+import Alert from "@material-ui/lab/Alert";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+// import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import PersonIcon from "@material-ui/icons/Person";
-import Typography from "@material-ui/core/Typography";
+
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+
+import img from "./login.png";
 
 import useStyles from "./style";
 
@@ -36,7 +45,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
-  const [eres, setEres] = useState("");
+  const [eres, setEres] = useState(1);
 
   const [formLogin, handleInputChange] = useForm({
     email: "",
@@ -45,6 +54,40 @@ export default function Login() {
 
   const { email, contraseña } = formLogin;
 
+  const validarEmail = (email) => {
+    if (eres === "") {
+      return true;
+    } else if (eres === 1) {
+      if (email === "") {
+        return true;
+      } else if (
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
+  const validarCC = (email) => {
+    if (eres === "") {
+      return true;
+    } else if (eres === 2) {
+      if (email === "") {
+        return true;
+      } else if (/^([0-9])*$/.test(email)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
   const handleChange = () => {
     dispatch(startLogin(email, contraseña));
   };
@@ -52,119 +95,177 @@ export default function Login() {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <PersonIcon style={{ fontSize: "20px" }} />
-          </Avatar>
-          <Typography component="h1" variant="h5" style={{ fontSize: "20px" }}>
-            Iniciar sesión
-          </Typography>
-          <form
-            className={classes.form}
-            noValidate
-            style={{ fontSize: "20px" }}
-          >
-            <FormControl variant="outlined" fullWidth>
-              <label style={{ fontSize: "15px" }}>Quién eres ?</label>
-              <Select
-                fullWidth
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={eres}
-                onChange={(e) => setEres(e.target.value)}
+      <Grid item xs={false} sm={12} md={12} className={classes.image}></Grid>
+      <Grid item xs={12} sm={12} md={12} className={classes.div2}>
+        <Box borderBottom={2} mx="auto" p={1} className={classes.boxi}>
+          <p className={classes.text}>Bienvenido</p>
+        </Box>
+        <Card className={classes.cardd}>
+          <CardMedia
+            alt="Contemplative Reptile"
+            className={classes.img}
+            title="Contemplative Reptile"
+            image={img}
+            xs={false}
+          />
+          <CardContent>
+            <div className={classes.paper}>
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#450016",
+                  fontWeight: "bold",
+                  fontSize: "30px",
+                }}
               >
-                <MenuItem value={1}>Administrador</MenuItem>
-                <MenuItem value={2}>Locatario</MenuItem>
-              </Select>
-            </FormControl>
-            {eres === 1 ? (
-              <>
-                <label style={{ fontSize: "15px" }}>Correo electrónico*</label>
+                Inicio de sesión
+              </p>
+              <br></br>
+              <form
+                className={classes.form}
+                noValidate
+                style={{ fontSize: "20px" }}
+              >
                 <TextField
-                  variant="outlined"
+                  id="standard-select-currency"
+                  select
+                  label="Selecciona tu rol"
+                  fullWidth
+                  value={eres}
+                  onChange={(e) => setEres(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon color="primary" />
+                      </InputAdornment>
+                    ),
+                  }}
+                >
+                  <MenuItem value={1}>Administrador</MenuItem>
+                  <MenuItem value={2}>Locatario</MenuItem>
+                </TextField>
+                {eres === 1 ? (
+                  <>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Correo electrónico"
+                      id="standard-basic"
+                      name="email"
+                      values={email}
+                      onChange={handleInputChange}
+                      type="email"
+                      style={{ fontSize: "30px" }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <EmailIcon color="primary" />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Cédula"
+                      id="email"
+                      name="email"
+                      values={email}
+                      onChange={handleInputChange}
+                      type="number"
+                      style={{ fontSize: "20px" }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AssignmentIndIcon color="primary" />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </>
+                )}
+                <TextField
                   margin="normal"
                   required
                   fullWidth
-                  id="email"
-                  name="email"
-                  values={email}
+                  name="contraseña"
+                  label="Contraseña"
+                  values={contraseña}
                   onChange={handleInputChange}
-                  autoComplete="email"
-                  autoFocus
-                  type="email"
-                  style={{ fontSize: "20px" }}
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon color="primary" />
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </>
-            ) : (
-              <>
-                <label style={{ fontSize: "15px" }}>Cédula*</label>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  name="email"
-                  values={email}
-                  onChange={handleInputChange}
-                  autoComplete="email"
-                  autoFocus
-                  type="number"
-                  style={{ fontSize: "20px" }}
-                />
-              </>
-            )}
-            <label style={{ fontSize: "15px" }}>Contraseña *</label>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="contraseña"
-              values={contraseña}
-              onChange={handleInputChange}
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
+                {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
-              onClick={handleChange}
-              style={{ fontSize: "16px", color: "white" }}
-            >
-              Enviar
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  href="/contraseña"
-                  variant="body2"
-                  style={{ fontSize: "14px" }}
-                  color="secondary"
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={handleChange}
+                  style={{ fontSize: "16px", color: "white" }}
                 >
-                  Olvidó contraseña?
-                </Link>
-              </Grid>
-              {/* <Grid item>
+                  Enviar
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link
+                      href="/contraseña"
+                      variant="body2"
+                      style={{ fontSize: "14px" }}
+                      color="secondary"
+                    >
+                      Olvidó contraseña?
+                    </Link>
+                  </Grid>
+                  {!validarEmail(email) && (
+                    <Grid item xs={12}>
+                      <Alert
+                        severity="warning"
+                        style={{ marginBottom: "10px" }}
+                      >
+                        Correo invalido
+                      </Alert>
+                    </Grid>
+                  )}
+                  {!validarCC(email) && (
+                    <Grid item xs={12}>
+                      <Alert
+                        severity="warning"
+                        style={{ marginBottom: "10px" }}
+                      >
+                        El número del documento esta mal escrito
+                      </Alert>
+                    </Grid>
+                  )}
+                  {/* <Grid item>
                 <Link href="/sign-up" variant="body2">
                   {"¿No tienes una cuenta? Inscribirse"}
                 </Link>
               </Grid> */}
-            </Grid>
-            {/* <Box mt={5}>
+                </Grid>
+                {/* <Box mt={5}>
               <Copyright />
             </Box> */}
-          </form>
-        </div>
+              </form>
+            </div>
+          </CardContent>
+        </Card>
       </Grid>
     </Grid>
   );

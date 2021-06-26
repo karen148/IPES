@@ -242,7 +242,7 @@ figure {
         width: 100%;
         height: 100%;
         padding: 30px 0 30px 16px;
-        background-color: var(--color1);
+        background-color: #DE9E12;
    }
     .ps-main .ps-main__wrapper {
         padding: 30px;
@@ -473,7 +473,7 @@ figure {
     display: none;
     flex-flow: row nowrap;
     justify-content: space-between;
-    margin-bottom: 70px;
+    margin-bottom: 20px;
 }
 .header--dashboard > * {
     flex-basis: 100%;
@@ -545,7 +545,7 @@ figure {
 }
 
 .menu > li.active a {
-    color: #E9B029;
+    color: #000;
 }
 
 .menu > li > a {
@@ -555,7 +555,7 @@ figure {
     font-size: 16px;
     font-weight: 400;
     line-height: 20px;
-    color: #222;
+    color: #450016;
     font-weight: 500;
     text-transform: capitalize;
     transform-style: preserve-3d;
@@ -567,7 +567,7 @@ figure {
     right: 0;
     width: 2px;
     height: 100%;
-    background-color: #E9B029;
+    background-color: #F40A33;
     transition: all 0.4s ease;
     visibility: hidden;
     opacity: 0;
@@ -576,7 +576,7 @@ figure {
     margin-right: 30px;
 }
 .menu > li > a:hover, .menu > li > a.active {
-    color: #E9B029;
+    color: #000;
 }
 .menu > li > a:hover:after, .menu > li > a.active:after {
     visibility: visible;
@@ -1343,11 +1343,23 @@ th {
     color: #fff;
 }
 .ps-btn.success, button.ps-btn.success {
-    background-color: #3DBE97;
+    background-color: #88C206;
+    border-radius: 10px;
 }
+
+.ps-btn.success2, button.ps-btn.success2 {
+    background-color: #450016;
+    border-radius: 10px;
+
+}
+.ps-btn.success2:hover, button.ps-btn.success2:hover, .ps-btn.success2:active, button.ps-btn.success2:active {
+    color: #fff;
+    background-color: #DE9E12;
+}
+
 .ps-btn:hover, button.ps-btn:hover, .ps-btn:active, button.ps-btn:active {
     color: #fff;
-    background-color: #E9B029;
+    background-color: #450016;
 }
 .ps-btn:hover.ps-btn--black, button.ps-btn:hover.ps-btn--black, .ps-btn:active.ps-btn--black, button.ps-btn:active.ps-btn--black {
     background-color: #E9B029;

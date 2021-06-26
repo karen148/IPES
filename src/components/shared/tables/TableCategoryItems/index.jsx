@@ -11,12 +11,14 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { DeleteCategoria } from "actions/categoria";
 import _Actualizar from "components/shared/modal/Categoria/Actualizar";
-import useStyles from "./style";
+import useStyles from "../style";
+import { Img } from "actions/imagen";
 
 const TableCategoryItems = ({ datos, getDatos }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [img, setImg] = useState("");
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [idp, setIdp] = useState(0);
@@ -60,7 +62,7 @@ const TableCategoryItems = ({ datos, getDatos }) => {
   const datoActualizar = (idL) => {
     setCategoria(datos.filter((item) => item.id === idL));
   };
-
+  console.log(img);
   const tableItems = datos.map((item, index) => {
     if (item.activo === true) {
       return (
@@ -72,6 +74,9 @@ const TableCategoryItems = ({ datos, getDatos }) => {
               onClick={() => {
                 handleClickOpen();
                 setIdp(item.id);
+                dispatch(
+                  Img(`CATEGORIAS/${item.id}/${item.icono}`, setImg, item.icono)
+                );
               }}
             >
               <b>{item.nombre}</b>
@@ -141,10 +146,7 @@ const TableCategoryItems = ({ datos, getDatos }) => {
               >
                 <Grid item sm={12} xs={12} style={{ textAlign: "center" }}>
                   <img
-                    src={
-                      process.env.REACT_APP_URL_API +
-                      `uploads/retorna/CATEGORIA/${item.icono}`
-                    }
+                    src={img}
                     alt=""
                     width="100px"
                     height="100px"

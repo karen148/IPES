@@ -447,51 +447,46 @@ export const getProductoLocatario = (producto) => {
       )
       .then((response) => {
         console.log(response.data.productos);
+        console.log(response);
         let data = response.data.productos;
         let productos = [];
-        data.map((item) => {
-          // if (producto.length > 0) {
-          //   for (
-          //     let index = 0;
-          //     index < producto.productos_locatarios_id.length;
-          //     index++
-          //   ) {
-          //     const element = producto.productos_locatarios_id[index];
-          //     if (item.id === element) {
-          productos.push({
-            id: item.id,
-            producto_id: item.producto_id,
-            stock: item.stock ? "Sí hay" : "No hay",
-            en_promocion: item.en_promocion ? "Sí" : "No",
-            unidad: item.unidad,
-            cantidad_unidad: item.cantidad_unidad,
-            activo: item.activo ? "Activo" : "Inactivo",
-            precio: item.precio,
-            precio_rebajado: item.precio_rebajado,
-            descripcion: item.descripcion,
-            fecha: item.updated_at === null ? item.created_at : item.updated_at,
-            sku: item.sku,
-            acciones: [
-              {
-                name: "Editar",
-                icon: <EditIcon />,
-                id: item.id,
-              },
-              {
-                name: "Eliminar",
-                icon: <DeleteIcon />,
-                id: item.id,
-              },
-            ],
+        if (response.data.productos.length > 0) {
+          data.map((item) => {
+            productos.push({
+              id: item.id,
+              producto_id: item.producto_id,
+              stock: item.stock ? "Sí hay" : "No hay",
+              en_promocion: item.en_promocion ? "Sí" : "No",
+              unidad: item.unidad,
+              cantidad_unidad: item.cantidad_unidad,
+              activo: item.activo ? "Activo" : "Inactivo",
+              precio: item.precio,
+              precio_rebajado: item.precio_rebajado,
+              descripcion: item.descripcion,
+              fecha:
+                item.updated_at === null ? item.created_at : item.updated_at,
+              sku: item.sku,
+              acciones: [
+                {
+                  name: "Editar",
+                  icon: <EditIcon />,
+                  id: item.id,
+                },
+                {
+                  name: "Eliminar",
+                  icon: <DeleteIcon />,
+                  id: item.id,
+                },
+              ],
+            });
           });
-          //     }
-          //   }
-          // }
-        });
+        }
         console.log(productos);
         dispatch(ProductosLocatarios(productos));
+        dispatch(ProductoMensaje({ msg: "enviar" }));
       })
       .catch((e) => {
+        dispatch(ProductoMensaje({ msg: "error" }));
         console.log("ERROR!!!!!", e);
       });
   };

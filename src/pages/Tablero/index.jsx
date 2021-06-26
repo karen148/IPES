@@ -1,20 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ContainerDashboard from "./../../components/layaouts/ContainerDashboard";
 import CardRecentOrders from "./../../components/shared/cards/CardRecentOrders";
 import CardSaleReport from "./../../components/shared/cards/CardSaleReport";
 import CardEarning from "./../../components/shared/cards/CardEarning";
 import CardStatics from "./../../components/shared/cards/CardStatics";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
-// import { Provider } from 'react-redux';
-// import { toggleDrawerMenu } from './../../store/app/action';
 import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
+import Alert from "@material-ui/lab/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import { getLocatarioCedula } from "actions/locatarios";
+import Modal from "components/shared/modal";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { UpdateLocatariosEmail } from "actions/locatarios";
 
 const Tablero = () => {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //     dispatch(toggleDrawerMenu(false));
-  // }, []);
+  const dispatch = useDispatch();
+  const { rol, codigo } = useSelector((state) => state.auth);
+  const [locatario, setLocatario] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
 
+  useEffect(() => {
+    dispatch(getLocatarioCedula(setLocatario, codigo));
+  }, []);
+
+  useEffect(() => {
+    if (rol === "ADMIN_LOCATARIO") {
+      setOpen(true);
+    }
+  }, [locatario.email === null]);
+
+  const Actualizar = () => {
+    dispatch(UpdateLocatariosEmail(email, locatario.id, setMsg));
+  };
   return (
     <ContainerDashboard>
       {/* <Provider store={toggleDrawerMenu} > */}
@@ -35,7 +56,55 @@ const Tablero = () => {
           <CardStatics />
           <CardTopCountries />
         </div>
+        {rol === "ADMIN_LOCATARIO" && (
+          <Modal
+            open={open}
+            handleClose={() => setOpen(false)}
+            title="Importante"
+            tamaño="sm"
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={12}>
+                <p>
+                  Por favor ingrese el correo electrónico, para que le
+                  notifiquen los estados de los pedidos
+                </p>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <label>Correo electrónico</label>
+                <TextField
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  value={email}
+                  name="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                {msg && <Alert severity="success">{msg}</Alert>}
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ color: "white" }}
+                  onClick={Actualizar}
+                >
+                  Actualizar información
+                </Button>
+              </Grid>
+            </Grid>
+          </Modal>
+        )}
       </section>
+
       {/* </Provider> */}
     </ContainerDashboard>
   );

@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { updateImg } from "./imagen";
+import firebase from "firebase";
 
 export const setCategorias = (nombre, slug, descripcion, img) => {
   return async (dispatch) => {
@@ -31,32 +32,12 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
         );
         if (response.status === 200) {
           let id = response.data.categoria.id;
-          updateImg(img, `CATEGORIAS/${id}`);
-          const formData = new FormData();
-          formData.append("imagen", img);
-          console.log(img);
-          let config1 = {
-            method: "put",
-            url: process.env.REACT_APP_URL_API + "uploads/CATEGORIA/" + id,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            data: formData,
-          };
-          axios(config1)
-            .then((response) => {
-              let data = response.data;
-              getCategorias();
-              dispatch(
-                categoriasMensaje({
-                  ok: data.ok,
-                  msg: data.msg,
-                })
-              );
-            })
-            .catch((e) => {
-              console.log("ERROR", e);
-            });
+          updateImg(
+            img,
+            `CATEGORIAS/${id}`,
+            `categorias/update/${id}`,
+            "icono"
+          );
         }
       })
       .catch((e) => {
@@ -168,32 +149,18 @@ export const UpdateCategoria = (nombre, slug, descripcion, idp2) => {
   };
 };
 
-export const setImagen = (img, idp2) => {
-  return async (dispatch) => {
-    updateImg(img, `CATEGORIAS/${idp2}`);
-    const formData = new FormData();
-    formData.append("imagen", img);
-    console.log(img);
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/CATEGORIA/" + idp2,
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        let data = response.data;
-        dispatch(
-          categoriasMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-        Swal.fire("Error", "No se envió la información", "error");
-      });
+export const setImagen = (img, img2, idp2) => {
+  return async () => {
+    updateImg(img, `CATEGORIAS/${idp2}`, `categorias/update/${idp2}`, "icono");
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`CATEGORIAS/${idp2}`)
+      .child(`${img2}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 

@@ -1,5 +1,4 @@
 import React, { useState, Fragment, useEffect } from "react";
-// import firebase from "firebase";
 import IconButton from "@material-ui/core/IconButton";
 import TooltipE from "./../../tooltip";
 import Modal from "./../../modal";
@@ -7,7 +6,7 @@ import _Eliminar from "./../../modal/Eliminar.jsx";
 import _Actualizar from "./../../modal/Locatarios/Actualizar";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { getCantidades, getTrue } from "../../../../actions/plaza";
+import { getCantidades } from "../../../../actions/plaza";
 import PropTypes from "prop-types";
 import { DeleteLocatario } from "actions/locatarios";
 import Table from "@material-ui/core/Table";
@@ -18,35 +17,57 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
-import useStyles from "./styles.jsx";
+import AddIcon from "@material-ui/icons/Add";
+import useStyles from "../style";
+import Collapse from "@material-ui/core/Collapse";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import * as locales from "@material-ui/core/locale";
+import { getLocatarioId } from "actions/locatarios";
+import { Img } from "actions/imagen";
+import TablaProducto from "../TablaProductos";
+import { getProductoLocatario } from "actions/producto";
+import { getLocatarioCedula } from "actions/locatarios";
+import firebase from "firebase";
+import Crear from "components/shared/modal/Productos/Crear";
 
-const TablaLocatarios = ({ datos, getLocali }) => {
+const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const { plazastrues, categorias, localidades } = useSelector(
     (state) => state.plaza
   );
+  const { prolocatarios, msg } = useSelector((state) => state.producto);
   const dispatch = useDispatch();
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [img1, setImg1] = useState("");
+  const [img2, setImg2] = useState("");
+  const [telefono1, setTelefono1] = useState([]);
+  const [horario1, setHorario1] = useState([]);
   const [local3, setLocal3] = useState([]);
+  const [locatario, setLocatario] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
+  const [opent, setOpent] = React.useState(false);
+  const [locatario2, setLocatario2] = useState([]);
   const [idp, setIdp] = useState(0);
   const [idp1, setIdp1] = useState(0);
   const [idp2, setIdp2] = useState(0);
+  const [idp3, setIdp3] = useState(0);
 
   const columns = [
-    { id: "id", label: "ID" },
-    { id: "número", label: "Nombre del local" },
-    { id: "locatario", label: "Locatario" },
+    { id: "id", label: "ID", width: "30px" },
+    { id: "número", label: "Nombre del local", width: "200px" },
+    { id: "locatario", label: "Locatario", width: "200px" },
+    { id: "local", label: "Local" },
     { id: "estado", label: "Estado" },
     { id: "categorias", label: "Categorías" },
-    { id: "acciones", label: "Acciones" },
+    { id: "acciones", label: "Acciones", width: "200px" },
   ];
 
   useEffect(() => {
@@ -54,8 +75,10 @@ const TablaLocatarios = ({ datos, getLocali }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getTrue());
-  }, [dispatch]);
+    if (locatario?.id) {
+      DatosLocatario();
+    }
+  }, [locatario]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -66,8 +89,9 @@ const TablaLocatarios = ({ datos, getLocali }) => {
     setPage(0);
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
     setOpen(true);
+    dispatch(getLocatarioId(setLocatario, id));
   };
 
   const handleClose = () => {
@@ -100,30 +124,87 @@ const TablaLocatarios = ({ datos, getLocali }) => {
     dispatch(DeleteLocatario(idp2));
   };
 
-  console.log(
-    localidades.filter(
-      (loc) =>
-        loc.id ===
-        plazastrues.filter((item) => item.id === datos[0]?.plaza)[0]
-          ?.localidad_id
-    )[0]?.label
-  );
-  // const tableItems = console.log(local3);
+  const getDatosPro = () => {
+    dispatch(getProductoLocatario(idp3));
+  };
+
+  const DatosLocatario = () => {
+    var telefonoss = [];
+    var horarios = [];
+    console.log(locatario);
+    dispatch(
+      Img(
+        `LOCATARIOS/img/${locatario.id}/${locatario.img}`,
+        setImg1,
+        locatario.img
+      )
+    );
+    dispatch(
+      Img(
+        `LOCATARIOS/logo/${locatario.id}/${locatario.logo}`,
+        setImg2,
+        locatario.logo
+      )
+    );
+    if (locatario.telefonos) {
+      if (locatario.telefonos.length > 0) {
+        for (let i = 0; i <= locatario?.telefonos.length; i++) {
+          const element = locatario?.telefonos[i];
+          if (element) {
+            console.log(element);
+            telefonoss.push({ telefono: element });
+            setTelefono1(telefonoss);
+          }
+        }
+      } else {
+        telefonoss.push({ telefono: "El locatario no tiene telefonos" });
+        setTelefono1(telefonoss);
+      }
+    } else {
+      telefonoss.push({ telefono: "El locatario no tiene telefonos" });
+      setTelefono1(telefonoss);
+    }
+
+    console.log(locatario.horarios);
+    if (locatario.horarios.length > 0) {
+      for (let i = 0; i <= locatario?.horarios.length; i++) {
+        const element = locatario?.horarios[i];
+        horarios.push(element);
+        setHorario1(horarios);
+      }
+    } else {
+      horarios.push("No tiene horario");
+      setHorario1(horarios);
+    }
+  };
+
+  console.log(idp);
+  console.log(noimg);
+  console.log(idp3);
+  console.log(prolocatarios);
   return (
     <Grid container direction="row" justify="center" alignItems="center">
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
-            <TableHead>
+            <TableHead color="#DE9E12">
               <TableRow>
-                <TableCell align="center" colSpan={3}>
+                <TableCell
+                  align="center"
+                  colSpan={3}
+                  className={classes.encabezado}
+                >
                   Plaza:{" "}
                   {
                     plazastrues.filter((item) => item.id === datos[0]?.plaza)[0]
                       ?.nombre
                   }
                 </TableCell>
-                <TableCell align="center" colSpan={3}>
+                <TableCell
+                  align="center"
+                  colSpan={4}
+                  className={classes.encabezado}
+                >
                   Localidad:{" "}
                   {
                     localidades.filter(
@@ -141,7 +222,8 @@ const TablaLocatarios = ({ datos, getLocali }) => {
                   <TableCell
                     key={column.id}
                     align="center"
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.width }}
+                    className={classes.encabezado}
                   >
                     {column.label}
                   </TableCell>
@@ -154,6 +236,7 @@ const TablaLocatarios = ({ datos, getLocali }) => {
                 .map((item) => {
                   // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (item) {
+                    console.log(item);
                     let data = [];
                     if (item?.categorias) {
                       if (item?.categorias.length > 0) {
@@ -174,74 +257,191 @@ const TablaLocatarios = ({ datos, getLocali }) => {
                         : "-"
                     );
                     return (
-                      <TableRow key={`${item.id}`}>
-                        <TableCell align="center">{item.conteo}</TableCell>
-                        <TableCell align="center">
-                          <Button
-                            color="secondary"
-                            key={`${item.local}`}
-                            onClick={() => {
-                              handleClickOpen();
-                              setIdp(item.id);
-                            }}
+                      <>
+                        <TableRow key={`${item.id}`}>
+                          <TableCell align="center">{item.conteo}</TableCell>
+                          <TableCell align="center">
+                            <Button
+                              color="secondary"
+                              key={`${item.local}`}
+                              onClick={() => {
+                                handleClickOpen(item.id);
+                                setIdp(item.id);
+                              }}
+                            >
+                              <b style={{ fontSize: "14px" }}>{item.local}</b>
+                            </Button>
+                          </TableCell>
+                          <TableCell align="center">
+                            {" "}
+                            <p style={{ fontSize: "14px" }}>
+                              {item.nombre ? (
+                                item.nombre.toUpperCase()
+                              ) : (
+                                <p className={classes.nombre}>
+                                  NO TIENE NOMBRE
+                                </p>
+                              )}
+                            </p>
+                          </TableCell>
+                          <TableCell align="center">
+                            {item.numero_local}
+                          </TableCell>
+                          <TableCell key={`${item.activo}`} align="center">
+                            {item.activo}
+                          </TableCell>
+                          <TableCell
+                            key={`${item.activo}${item.local}`}
+                            style={{ width: "180px" }}
+                            align="center"
                           >
-                            <b>{item.local}</b>
-                          </Button>
-                        </TableCell>
-                        <TableCell align="center">{item.nombre}</TableCell>
-                        <TableCell key={`${item.activo}`} align="center">
-                          {item.activo}
-                        </TableCell>
-                        <TableCell
-                          key={`${item.activo}${item.local}`}
-                          style={{ width: "180px" }}
-                          align="center"
-                        >
-                          {data.map((item) => {
-                            return (
-                              <TooltipE title={item.label} key={item.id}>
-                                <img
-                                  src={
-                                    process.env.REACT_APP_URL_API +
-                                    `uploads/retorna/CATEGORIA/${item.icono}`
-                                  }
-                                  alt=""
-                                  width="30px"
-                                  height="30px"
-                                  style={{ marginRight: "5px" }}
-                                />
-                              </TooltipE>
-                            );
-                          })}
-                        </TableCell>
-                        <TableCell align="center">
-                          {item?.acciones.map((cat) => {
-                            return (
-                              <TooltipE title={cat.name} key={cat.name}>
-                                <IconButton
-                                  color="default"
-                                  component="span"
-                                  key={cat.name}
-                                  onClick={
-                                    cat.name === "Editar"
-                                      ? () => {
-                                          handleClickOpen2();
-                                          setIdp1(cat.id);
-                                          datoActualizar(cat.id);
-                                        }
-                                      : () => {
-                                          handleClickOpen1();
-                                          setIdp2(cat.id);
-                                        }
-                                  }
+                            {data.map((cat) => {
+                              if (cat.icono) {
+                                var desertRef1 = firebase
+                                  .storage()
+                                  .ref()
+                                  .child(`CATEGORIAS/${cat.id}/${cat.icono}`);
+                                desertRef1
+                                  .getDownloadURL()
+                                  .then(function (url) {
+                                    var img = document.getElementById(
+                                      `img${cat.id}${item.cedula}`
+                                    );
+                                    img.src = url;
+                                  });
+                              } else {
+                                var desertRef2 = firebase
+                                  .storage()
+                                  .ref()
+                                  .child(`no-photo.svg`);
+                                desertRef2
+                                  .getDownloadURL()
+                                  .then(function (url) {
+                                    var img = document.getElementById(
+                                      `img${cat.id}${item.cedula}`
+                                    );
+                                    img.src = url;
+                                  });
+                              }
+                              return (
+                                <TooltipE title={cat.label} key={cat.id}>
+                                  <img
+                                    src={""}
+                                    alt=""
+                                    id={`img${cat.id}${item.cedula}`}
+                                    width="30px"
+                                    height="30px"
+                                    style={{ marginRight: "5px" }}
+                                  />
+                                </TooltipE>
+                              );
+                            })}
+                          </TableCell>
+                          <TableCell align="center">
+                            {item?.acciones.map((cat) => {
+                              return (
+                                <TooltipE title={cat.name} key={cat.name}>
+                                  <IconButton
+                                    component="span"
+                                    key={cat.name}
+                                    size="small"
+                                    className={classes.iconos}
+                                    onClick={
+                                      cat.name === "Editar"
+                                        ? () => {
+                                            handleClickOpen2();
+                                            setIdp1(cat.id);
+                                            datoActualizar(cat.id);
+                                          }
+                                        : cat.name === "Eliminar"
+                                        ? () => {
+                                            handleClickOpen1();
+                                            setIdp2(cat.id);
+                                          }
+                                        : () => {
+                                            setOpent(!opent);
+                                            setIdp3(cat.id);
+                                            dispatch(
+                                              getProductoLocatario(cat.id)
+                                            );
+                                            dispatch(
+                                              getLocatarioCedula(
+                                                setLocatario2,
+                                                item.cedula
+                                              )
+                                            );
+                                          }
+                                    }
+                                  >
+                                    {cat.icon}
+                                  </IconButton>
+                                </TooltipE>
+                              );
+                            })}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            style={{ paddingBottom: 0, paddingTop: 0 }}
+                            colSpan={7}
+                          >
+                            <Collapse
+                              in={item.id === idp3 && opent}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Box
+                                margin={1}
+                                borderColor="#DE9E12"
+                                borderRight={0}
+                                borderLeft={0}
+                                border={2}
+                                padding={2}
+                              >
+                                <a
+                                  className="ps-btn success2"
+                                  color="#450016"
+                                  onClick={() => setOpen4(true)}
                                 >
-                                  {cat.icon}
-                                </IconButton>
-                              </TooltipE>
-                            );
-                          })}
-                        </TableCell>
-                      </TableRow>
+                                  <AddIcon />
+                                  Agregar Producto
+                                </a>
+                                {msg === "error" ? (
+                                  <h3
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#FF2D42",
+                                    }}
+                                  >
+                                    El locatario no tiene productos
+                                  </h3>
+                                ) : (
+                                  <>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      component="div"
+                                      style={{
+                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        color: "#450016",
+                                      }}
+                                    >
+                                      Productos del local
+                                    </Typography>
+                                    <TablaProducto
+                                      datos={prolocatarios}
+                                      rol={"ADMIN_LOCATARIO"}
+                                      getDatos={getDatosPro}
+                                      locatario={locatario2}
+                                    />
+                                  </>
+                                )}
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </>
                     );
                   }
                 })}
@@ -264,160 +464,107 @@ const TablaLocatarios = ({ datos, getLocali }) => {
         <Modal
           open={open}
           handleClose={handleClose}
-          title={datos.map((item) => {
-            return item !== undefined && item.id === idp && item.local;
-          })}
+          title={
+            locatario.nombre_local
+              ? locatario.nombre_local
+              : "EL LOCAL NO TIENE NOMBRE"
+          }
           tamaño="sm"
         >
-          {datos.map((item) => {
-            let telefonoss = [];
-            let horarios = [];
-            let urll = "";
-            // var desertRef = firebase
-            //   .storage()
-            //   .ref()
-            //   .child(`LOCATARIOS/img/${item.id}/${item.img}`);
-
-            // desertRef.getDownloadURL().then(function (url) {
-            //   console.log(url);
-            //   var img = document.getElementById("myimg");
-            //   img.src = url;
-            // });
-
-            console.log(urll);
-            if (item?.telefonos) {
-              if (item?.telefonos.length > 0) {
-                console.log("aquiiii");
-                for (let i = 0; i <= item?.telefonos.length; i++) {
-                  const element = item?.telefonos[i];
-                  console.log(item?.telefonos[i]);
-                  telefonoss.push({ telefono: element });
-                }
-              }
-            } else {
-              telefonoss.push({ telefono: "El locatario no tiene telefonos" });
-            }
-
-            console.log(item.telefonos);
-            console.log(telefonoss);
-            if (item?.horarios !== null && item?.horarios.length > 0) {
-              for (let i = 0; i <= item?.horarios.length; i++) {
-                horarios.push(item?.horarios[i]);
-              }
-            }
-            console.log(horarios[2]);
-            console.log(horarios[1] === "-" ? "una hora" : "HORAS");
-            if (item !== undefined && item.id === idp) {
-              return (
+          {locatario && (
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={12} sm={12}>
+                <img src={img1} alt="" id="myimg" width="100%" height="150px" />
+                <p style={{ textAlign: "center" }}>
+                  <i>Banner</i>
+                </p>
+                <Divider variant="middle" />
+                <br></br>
+              </Grid>
+              <Grid item xs={12} sm={12}>
                 <Grid
                   container
                   direction="row"
                   justify="center"
                   alignItems="center"
                 >
-                  <Grid item xs={12} sm={12}>
-                    <img
-                      src={""}
-                      alt=""
-                      id="myimg"
-                      width="100%"
-                      height="150px"
-                    />
+                  <Grid item xs={12} sm={4} style={{ textAlign: "center" }}>
+                    <img src={img2} alt="" width="150px" height="150px" />
                     <p style={{ textAlign: "center" }}>
-                      <i>Banner</i>
+                      <i>Logo</i>
                     </p>
-                    <Divider variant="middle" />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                    >
-                      <Grid item xs={12} sm={4} style={{ textAlign: "center" }}>
-                        <img
-                          src={
-                            process.env.REACT_APP_URL_API +
-                            `uploads/retorna/LOCATARIO/${item.logo}`
-                          }
-                          alt=""
-                          width="150px"
-                          height="150px"
-                        />
-                        <p style={{ textAlign: "center" }}>
-                          <i>Logo</i>
-                        </p>
-                      </Grid>
-                      <Grid item xs={12} sm={8} style={{ textAlign: "center" }}>
-                        <h4>Locatario</h4>
-                        {item.nombre}
-                        <br></br>
-                        <h4>Cédula</h4>
-                        <p>{item.cedula}</p>
-                      </Grid>
-                    </Grid>
-                    <Divider variant="middle" />
+                  <Grid item xs={12} sm={8} style={{ textAlign: "center" }}>
+                    <h4>Locatario</h4>
+                    {locatario.nombre}
                     <br></br>
-                    <Grid item xs={12} sm={12}>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                      >
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          style={{ textAlign: "center" }}
-                        >
-                          <h4>Teléfonos</h4>
-                          {telefonoss.map((item) => {
-                            return (
-                              <p key={item?.telefono}> {item?.telefono}</p>
-                            );
-                          })}
-                          <h4>Correo electrónico</h4>
-                          <p>{item.email}</p>
-                        </Grid>
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          style={{ textAlign: "center" }}
-                        >
-                          <h4>Horarios</h4>
-                          {horarios[1] === "-" ? (
-                            <>
-                              <p>Lunes: {horarios[0]}</p>
-                              <p>Martes: {horarios[0]}</p>
-                              <p>Miercoles: {horarios[0]}</p>
-                              <p>Jueves: {horarios[0]}</p>
-                              <p>Viernes: {horarios[0]}</p>
-                              <p>Sabado: {horarios[0]}</p>
-                              <p>Domingo: {horarios[0]}</p>
-                            </>
-                          ) : (
-                            <>
-                              <p>Lunes: {horarios[0]}</p>
-                              <p>Martes: {horarios[1]}</p>
-                              <p>Miercoles: {horarios[2]}</p>
-                              <p>Jueves: {horarios[3]}</p>
-                              <p>Viernes: {horarios[4]}</p>
-                              <p>Sabado: {horarios[5]}</p>
-                              <p>Domingo: {horarios[6]}</p>
-                            </>
-                          )}
-                        </Grid>
-                      </Grid>
+                    <h4>Cédula</h4>
+                    <p>{locatario.cedula}</p>
+                  </Grid>
+                </Grid>
+                <Divider variant="middle" />
+                <br></br>
+                <Grid item xs={12} sm={12}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
+                      <h4>Teléfonos</h4>
+                      {telefono1.map((item) => {
+                        return <p key={item?.telefono}> {item?.telefono}</p>;
+                      })}
+                      <h4>Correo electrónico</h4>
+                      <p>{locatario.email}</p>
+                    </Grid>
+                    <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
+                      <h4>Horarios</h4>
+                      {horario1[0] === "No tiene horario" ? (
+                        horario1[0]
+                      ) : horario1[1] === "-" ? (
+                        <>
+                          <p>Lunes: {horario1[0]}</p>
+                          <p>Martes: {horario1[0]}</p>
+                          <p>Miercoles: {horario1[0]}</p>
+                          <p>Jueves: {horario1[0]}</p>
+                          <p>Viernes: {horario1[0]}</p>
+                          <p>Sabado: {horario1[0]}</p>
+                          <p>Domingo: {horario1[0]}</p>
+                        </>
+                      ) : (
+                        <>
+                          <p>Lunes: {horario1[0]}</p>
+                          <p>Martes: {horario1[1]}</p>
+                          <p>Miercoles: {horario1[2]}</p>
+                          <p>Jueves: {horario1[3]}</p>
+                          <p>Viernes: {horario1[4]}</p>
+                          <p>Sabado: {horario1[5]}</p>
+                          <p>Domingo: {horario1[6]}</p>
+                        </>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
-              );
-            }
-          })}
+              </Grid>
+            </Grid>
+          )}
         </Modal>
+        <Crear
+          key="2015"
+          open={open4}
+          handleClose={() => {
+            setOpen4(false), getDatosPro();
+          }}
+          locatario={locatario2}
+          rol="ADMIN_LOCATARIO"
+        />
         <_Eliminar
           open={open1}
           handleClose={handleClose1}
@@ -457,6 +604,7 @@ const TablaLocatarios = ({ datos, getLocali }) => {
 TablaLocatarios.propTypes = {
   datos: PropTypes.array,
   getLocali: PropTypes.func,
+  noimg: PropTypes.string,
 };
 
 export default TablaLocatarios;
