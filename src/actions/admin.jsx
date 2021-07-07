@@ -21,22 +21,19 @@ export const getAdminsCedula = (cedula, nombre, telefonos) => {
       .then((response) => {
         console.log(response);
       })
-      .catch((e) => {
+      .catch(() => {
         /**
          * Sí, canta error significa que no el usuario no esta registrado
          * en la base de datos, por lo tanto registramos el usuario nuevo.
          *
          */
-        console.log("ERROR!!!!!", e);
-        let config = {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        };
+        const pass = "123456"
         axios
           .post(
             process.env.REACT_APP_URL_API + "admins/registerAdmin",
             {
               email: cedula,
-              password: "123456",
+              password: pass,
               rol: "ADMIN_LOCATARIO",
               nombre: nombre,
               apellido: "",

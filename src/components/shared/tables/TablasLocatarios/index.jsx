@@ -131,6 +131,11 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
     getLocali();
   };
 
+  const handleClose4 = () => {
+    setOpen4(false);
+    getDatosPro();
+  };
+
   const datoActualizar = (idL) => {
     setLocal3(datos?.filter((item) => item?.id === idL));
   };
@@ -565,9 +570,7 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
         <Crear
           key="2015"
           open={open4}
-          handleClose={() => {
-            setOpen4(false), getDatosPro();
-          }}
+          handleClose={handleClose4}
           locatario={locatario2}
           rol="ADMIN_LOCATARIO"
         />
@@ -577,11 +580,7 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
           eliminar={Eliminar}
           titulo3="Cambiar de estado"
           titulo2="el locatario"
-          titulo={
-            datos.filter((item) => {
-              item?.id === idp2;
-            })[0]?.nombre
-          }
+          titulo={datos.filter((item) => item?.id === idp2)[0]?.nombre}
         />
         <_Actualizar
           open={open2}

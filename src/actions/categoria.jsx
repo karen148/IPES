@@ -60,12 +60,12 @@ export const verificarCategorias = (
     };
     axios
       .get(
-        process.env.REACT_APP_URL_API + "categorias/findByName/" + nombre,
+        process.env.REACT_APP_URL_API + `categorias/findByName/${nombre}`,
         config
       )
       .then((response) => {
-        let data = response.data.categorias;
-        console.log(data);
+        let data = response.data.categoria;
+        console.log(response);
         axios
           .post(
             process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
@@ -75,34 +75,31 @@ export const verificarCategorias = (
             },
             config
           )
-          .then((response) => {
-            console.log(response);
+          .then((response1) => {
+            console.log(response1);
             setMsg(1);
           })
-          .catch((e) => {
-            console.log("ERROR!!!!!", e);
+          .catch(() => {
             axios
               .post(
                 process.env.REACT_APP_URL_API + "productos/crear",
                 {
-                  nombre: nombre,
-                  plaza: plaza,
+                  nombre: producto,
+                  plazas_id: plaza,
                   unidad: unidad,
-                  categoria: [data.id],
+                  categorias_id: [data.id],
                 },
                 config
               )
-              .then((response) => {
-                let data = response.data;
-                console.log(data);
+              .then((response2) => {
+                console.log(response2.data);
                 setMsg(2);
               })
-              .catch((e) => {
+              .catch(() => {
                 setMsg(3);
-                console.log("ERROR!!!!!", e);
               });
           })
-          .catch((e) => {
+          .catch(() => {
             setMsg(2);
             axios
               .post(
@@ -112,9 +109,9 @@ export const verificarCategorias = (
                 },
                 config
               )
-              .then((response) => {
-                console.log(response.data);
-                let data = response.data.categoria;
+              .then((response3) => {
+                console.log(response3.data);
+                let data = response3.data.categoria;
                 axios
                   .post(
                     process.env.REACT_APP_URL_API +
@@ -125,26 +122,24 @@ export const verificarCategorias = (
                     },
                     config
                   )
-                  .then((response) => {
-                    console.log(response);
+                  .then((response4) => {
+                    console.log(response4);
                     setMsg(1);
                   })
-                  .catch((e) => {
-                    console.log("ERROR!!!!!", e);
+                  .catch(() => {
                     axios
                       .post(
                         process.env.REACT_APP_URL_API + "productos/crear",
                         {
-                          nombre: nombre,
-                          plaza: plaza,
+                          nombre: producto,
+                          plazas_id: plaza,
                           unidad: unidad,
-                          categoria: [data.id],
+                          categorias_id: [data.id],
                         },
                         config
                       )
-                      .then((response) => {
-                        let data = response.data;
-                        console.log(data);
+                      .then((response5) => {
+                        console.log(response5.data);
                         setMsg(2);
                       })
                       .catch((e) => {
@@ -157,7 +152,6 @@ export const verificarCategorias = (
                 console.log("ERROR!!!!!", e);
                 Swal.fire("Error", "Datos incorrectos", "error");
               });
-            console.log(e);
           });
       });
   };

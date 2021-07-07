@@ -35,9 +35,9 @@ const Archivo = ({ open, handleClose }) => {
       hojas[0]?.data?.map((item) => {
         dispatch(
           verificarCategorias(
-            item["Categoría"].toLowerCase(),
-            item["Nombre Producto"],
+            item["Categoría"].toUpperCase(),
             item["Unidad de Medida"],
+            item["Nombre Producto"],
             plazaids,
             setMsg
           )
@@ -45,6 +45,7 @@ const Archivo = ({ open, handleClose }) => {
       });
     }
   }, [hojas[0]?.data]);
+
   console.log(msg1);
   console.log(hojas[0]?.data);
   const handleNext = () => {

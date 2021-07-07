@@ -58,9 +58,9 @@ export const starChecking = () => {
               localStorage.getItem("id"),
             config1
           )
-          .then((response) => {
-            console.log(response);
-            let datos = response.data.admin;
+          .then((response1) => {
+            console.log(response1);
+            let datos = response1.data.admin;
             dispatch(
               login({
                 rol: datos.rol,

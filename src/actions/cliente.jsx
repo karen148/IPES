@@ -46,8 +46,8 @@ export const UpdateImagen = (img, id) => {
       data: formData,
     };
     axios(config1)
-      .then((response) => {
-        let data = response.data;
+      .then((response1) => {
+        let data = response1.data;
         dispatch(
           ClienteMensaje({
             ok: data.ok,
@@ -114,33 +114,6 @@ export const getCliente = (setCliente, id) => {
       });
   };
 };
-// export const ExportarCliente = (idLocatario) => {
-//     return async (dispatch) => {
-//       let config = {
-//         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-//       };
-//       axios
-//         .get(
-//           process.env.REACT_APP_URL_API + "/clientes/downladXLSX" + idLocatario,
-//           {
-//             activo: false,
-//           },
-//           config
-//         )
-//         .then((response) => {
-//           let data = response.data;
-//           dispatch(
-//             ClienteMensaje({
-//               ok: data.ok,
-//               msg: data.msg,
-//             })
-//           );
-//         })
-//         .catch((e) => {
-//           console.log("ERROR!!!!!", e);
-//         });
-//     };
-//   };
 
 const ClienteMensaje = (mensajes) => ({
   type: types.clienteMensaje,

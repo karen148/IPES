@@ -246,11 +246,11 @@ const Pedidos = () => {
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
-        title="Pedidos"
+        title={rol === "SUPER_ADMIN" ? "Pedidos" : "Ventas"}
         description={
           rol === "SUPER_ADMIN"
             ? "Información de los pedidos de las plazas"
-            : "Información de los pedidos de las plazas"
+            : "Información de las ventas de los locatarios"
         }
       />
       <section className="ps-items-listing">

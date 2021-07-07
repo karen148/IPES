@@ -6,6 +6,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
 
 const ModalForm = ({ open, handleClose, title, children, tamaño, Limpiar }) => {
+  const getOut = () => {
+    handleClose();
+    Limpiar();
+  };
   return (
     <Dialog
       open={open}
@@ -18,12 +22,7 @@ const ModalForm = ({ open, handleClose, title, children, tamaño, Limpiar }) => 
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent id="alert-dialog-description">{children}</DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => {
-            handleClose(), Limpiar();
-          }}
-          color="secondary"
-        >
+        <Button onClick={getOut} color="secondary">
           Salir
         </Button>
       </DialogActions>

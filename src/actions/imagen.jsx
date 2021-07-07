@@ -140,13 +140,13 @@ export const Img = (url, setImg, img) => {
   return async () => {
     if (img) {
       var desertRef1 = firebase.storage().ref().child(`${url}`);
-      desertRef1.getDownloadURL().then(function (url) {
-        setImg(url);
+      desertRef1.getDownloadURL().then(function (url1) {
+        setImg(url1);
       });
     } else {
       var desertRef2 = firebase.storage().ref().child(`no-photo.svg`);
-      desertRef2.getDownloadURL().then(function (url) {
-        setImg(url);
+      desertRef2.getDownloadURL().then(function (url1) {
+        setImg(url1);
       });
     }
   };

@@ -602,15 +602,11 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
         titulo2="el producto"
         titulo={
           rol === "SUPER_ADMIN"
-            ? datos.filter((item) => {
-                item.id === idp2;
-              })[0]?.nombre
+            ? datos.filter((item) => item.id === idp2)[0]?.nombre
             : productos.filter(
                 (pro) =>
                   pro.id ===
-                  datos.filter((item) => {
-                    item.id === idp2;
-                  })[0]?.producto_id
+                  datos.filter((item) => item.id === idp2)[0]?.producto_id
               )[0]?.nombre
         }
       />

@@ -553,7 +553,6 @@ figure {
     display: block;
     padding: 10px 0;
     font-size: 16px;
-    font-weight: 400;
     line-height: 20px;
     color: #450016;
     font-weight: 500;
@@ -602,8 +601,7 @@ figure {
     height: 50px;
     font-size: 14px;
     padding: 0 20px;
-    border: none;
-    height: 50px;
+    /* border: none; */
     border-radius: 0;
     border: 1px solid #ddd;
     transition: all 0.4s ease;
@@ -998,7 +996,6 @@ figure {
 .ps-table thead tr th {
     padding: var(--space-md);
     border: none;
-    border: none;
     color: #999;
     background-color: #fff;
 }
@@ -1093,7 +1090,6 @@ th {
     border-radius: 10px;
     width: 50px;
     height: 50px;
-    border-radius: 10px;
     background-color: #fff;
 }
 .ps-block--stat .ps-block__left i {
@@ -1202,7 +1198,6 @@ th {
     overflow: hidden;
     border-radius: 50px;
     background-color: rgba(206, 135, 58, .6);
-    display: inline-block;
 }
 .menu-toggle span, .ps-btn--hamburger span, .menu-toggle:before, .ps-btn--hamburger:before, .menu-toggle:after, .ps-btn--hamburger:after {
     position: absolute;

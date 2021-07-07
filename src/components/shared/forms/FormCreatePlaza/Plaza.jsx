@@ -123,7 +123,7 @@ const Plaza = ({
             id="auto-select"
             autoSelect
             options={localidades}
-            getOptionLabel={(option) => option?.label}
+            getOptionLabel={(option) => (option?.label ? option?.label : "")}
             value={localidad}
             onChange={(event, newValue) => {
               setLocalidad(newValue);
@@ -149,7 +149,7 @@ const Plaza = ({
               setFuncionarios(newValue);
             }}
             options={funcionarios}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => (option.label ? option.label : "")}
             renderInput={(params) => (
               <TextField
                 {...params}
