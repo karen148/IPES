@@ -52,6 +52,12 @@ const MenuSidebar = () => {
       rol: roles,
     },
     {
+      text: "Promociones",
+      url: "/admin/promociones",
+      icon: "lnr lnr-gift",
+      rol: admin,
+    },
+    {
       text: "Perfil",
       url: rol === "SUPER_ADMIN" ? "/admin/perfil" : "/locatario/perfil",
       icon: "lnr lnr-user",

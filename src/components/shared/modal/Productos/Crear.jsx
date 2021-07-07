@@ -13,18 +13,17 @@ import Producto from "components/shared/forms/FormProducto/Producto";
 import Imagenes from "components/shared/forms/FormProducto/Imagenes";
 import Categorias from "components/shared/forms/FormProducto/Categorias";
 import { setProductos } from "actions/producto";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setProductosLocatario } from "actions/producto";
 
 const Crear = ({ open, handleClose, locatario, rol }) => {
-  const { msg } = useSelector((state) => state.producto);
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps1 = ["Producto"];
   const steps = ["Producto", "Imagenes", "Categorías"];
-  const [alerta, setAlerta] = useState(false);
+  const [msg1, setMsg] = useState(0);
 
   const [plaza, setPlaza] = useState([]);
   const [nombre, setNombre] = useState("");
@@ -34,7 +33,6 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
   const [promocion, setPromocion] = useState(false);
   const [precio, setPrecio] = useState(0);
   const [rebaja, setRebaja] = useState(0);
-  const [descripcion, setDescripion] = useState("");
   const [sku, setSku] = useState("");
 
   const [imggaleria, setImgGaleria] = useState("img");
@@ -54,11 +52,11 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
+  console.log(cat);
   const Registrar = () => {
     if (rol === "SUPER_ADMIN") {
       dispatch(
-        setProductos(plaza, nombre, descripcion, sku, img1, img3, img5, cat)
+        setProductos(plaza, nombre, unidad, sku, img1, img3, img5, cat, setMsg)
       );
     } else {
       if (precio > rebaja) {
@@ -67,7 +65,6 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
         dispatch(
           setProductosLocatario(
             plaza,
-            descripcion,
             sku,
             unidad,
             cantidad,
@@ -75,19 +72,18 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
             promocion,
             precio,
             rebaja,
-            locatario.id
+            locatario.id,
+            setMsg
           )
         );
-        setAlerta(true);
         setTimeout(() => {
-          setAlerta(false);
+          setMsg(0);
         }, 3000);
       }
     }
   };
 
   console.log(sku);
-  console.log(descripcion);
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -99,8 +95,6 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
             setPlaza={setPlaza}
             nombre={nombre}
             setNombre={setNombre}
-            descripcion={descripcion}
-            setDescripion={setDescripion}
             sku={sku}
             setSku={setSku}
             unidad={unidad}
@@ -149,7 +143,6 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
   const Limpiar = () => {
     setPlaza([]);
     setNombre("");
-    setDescripion("");
     setSku("");
     setImgGaleria("img");
     setImg1(null);
@@ -165,6 +158,7 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
     setPromocion(false);
     setPrecio(0);
     setRebaja(0);
+    setActiveStep(0);
   };
 
   return (
@@ -215,9 +209,14 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
                     )}
                     {activeStep === steps.length - 1 ? (
                       <>
-                        {alerta && (
-                          <Alert severity="success" style={{ width: "100%" }}>
-                            {msg}
+                        {msg1 === 1 && (
+                          <Alert severity="success">
+                            "Se creo el producto para el locatario"
+                          </Alert>
+                        )}
+                        {msg1 === 2 && (
+                          <Alert severity="error">
+                            "ERROR: no se envió la información"
                           </Alert>
                         )}
                         <Button
@@ -271,9 +270,12 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
                   )}
                   {activeStep === steps1.length - 1 ? (
                     <>
-                      {alerta && (
-                        <Alert severity="success" style={{ width: "100%" }}>
-                          {msg}
+                      {msg1 === 1 && (
+                        <Alert severity="success">"Se creo el producto"</Alert>
+                      )}
+                      {msg1 === 2 && (
+                        <Alert severity="error">
+                          "ERROR: no se envió la información"
                         </Alert>
                       )}
                       <Button

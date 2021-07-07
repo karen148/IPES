@@ -224,6 +224,7 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Limpiar = () => {
+    setActiveStep(0);
     setImg(null);
     setImg1(null);
     setImg2(null);

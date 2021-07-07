@@ -19,6 +19,7 @@ import Pedidos from "pages/Pedidos";
 import useStyles from "./style";
 import img1 from "./logo.png";
 import "./../components/layaouts/ContainerDashboard/style.css";
+import Promocion from "pages/Promociones";
 
 export const AppRouter = () => {
   const dispatch = useDispatch();
@@ -30,8 +31,10 @@ export const AppRouter = () => {
   // const locatario = ["ADMIN_LOCATARIO"];
 
   useEffect(() => {
-    dispatch(starChecking());
-  }, [dispatch]);
+    if (checking) {
+      dispatch(starChecking());
+    }
+  }, [dispatch, checking]);
 
   if (checking) {
     return (
@@ -136,6 +139,14 @@ export const AppRouter = () => {
             isAuthenticated={!!id}
             userRole={rol}
             requiredRoles={roles}
+          />
+          <PrivateRoute
+            exact
+            path="/admin/promociones"
+            component={Promocion}
+            isAuthenticated={!!id}
+            userRole={rol}
+            requiredRoles={admin}
           />
           <Redirect to={rol === "SUPER_ADMIN" ? "/admin" : "/locatario"} />
         </Switch>

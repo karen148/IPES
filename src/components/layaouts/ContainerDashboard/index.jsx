@@ -12,6 +12,13 @@ import PropTypes from "prop-types";
 import "./style.css";
 import DrawerMenu from "components/shared/menus/DrawerMenu";
 
+/**
+ * ContainerDashboard es el layaout principal el cual maquetea las vistas que se
+ * encuentran en la carpeta pages.
+ * @param {Array} children - Contenedor de los componentes paginas
+ * @returns {Object} Contenido de las vitas (page)
+ */
+
 const ContainerDashboard = ({ children }) => {
   // const class2 = useStyles();
 

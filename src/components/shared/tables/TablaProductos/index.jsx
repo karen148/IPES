@@ -15,6 +15,7 @@ import { DeleteProductoLoc } from "actions/producto";
 import Actualizar from "components/shared/modal/Productos/Actualizar";
 import Formatear from "components/shared/formatoNumero/Formatear_numeros";
 import useStyles from "../style";
+import firebase from "firebase";
 
 const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
   const dispatch = useDispatch();
@@ -290,130 +291,241 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
       >
         {rol === "SUPER_ADMIN"
           ? datos?.map((item) => {
-              let plazasP = [];
-              if (item.plaza.length > 0) {
-                for (let index = 0; index < item.plaza.length; index++) {
-                  const element = item.plaza[index];
-                  plazastrues.map((pla) => {
-                    if (pla.id === element) {
-                      plazasP.push(pla);
+              if (open && idp === item.id) {
+                let plazasP = [];
+                if (item.plaza.length > 0) {
+                  for (let index = 0; index < item.plaza.length; index++) {
+                    const element = item.plaza[index];
+                    plazastrues.map((pla) => {
+                      if (pla.id === element) {
+                        plazasP.push(pla);
+                      }
+                    });
+                  }
+                }
+                if (item.imagen_principal) {
+                  var desertRef1 = firebase
+                    .storage()
+                    .ref()
+                    .child(
+                      `PRODUCTO/imagen_principal/${idp}/${item.imagen_principal}`
+                    );
+                  desertRef1.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_principal${item.imagen_principal}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
+                    }
+                  });
+                } else {
+                  var desertRef2 = firebase
+                    .storage()
+                    .ref()
+                    .child(`no-photo.svg`);
+                  desertRef2.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_principal${item.imagen_principal}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
                     }
                   });
                 }
-              }
-              console.log(plazasP);
-              if (item !== undefined && item?.id === idp) {
-                return (
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
-                      <img
-                        src={
-                          process.env.REACT_APP_URL_API +
-                          `uploads/retorna/PRODUCTOS/${item.imagen_principal}`
-                        }
-                        alt=""
-                        width="150px"
-                        height="150px"
-                      />
-                      <p style={{ textAlign: "center" }}>
-                        <i>Imagen principal</i>
-                      </p>
-                      <Divider variant="middle" />
-                    </Grid>
-                    {item.imagen_1 || item.imagen_2 ? (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        style={{ textAlign: "center" }}
-                      >
-                        <br></br>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
-                          <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            style={{ textAlign: "center" }}
-                          >
-                            <img
-                              src={
-                                process.env.REACT_APP_URL_API +
-                                `uploads/retorna/PRODUCTOS/${item.imagen_1}`
-                              }
-                              alt=""
-                              width="150px"
-                              height="150px"
-                            />
-                            <p style={{ textAlign: "center" }}>
-                              <i>Imagen 1°</i>
-                            </p>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            style={{ textAlign: "center" }}
-                          >
-                            <img
-                              src={
-                                process.env.REACT_APP_URL_API +
-                                `uploads/retorna/PRODUCTOS/${item.imagen_2}`
-                              }
-                              alt=""
-                              width="150px"
-                              height="150px"
-                            />
-                            <p style={{ textAlign: "center" }}>
-                              <i>Imagen 2°</i>
-                            </p>
-                          </Grid>
-                        </Grid>
-                        <Divider variant="middle" />
-                        <br></br>
-                      </Grid>
-                    ) : (
-                      <p>El producto no tiene imagenes en la galería</p>
-                    )}
+                if (item.imagen_1) {
+                  var desertRef3 = firebase
+                    .storage()
+                    .ref()
+                    .child(`PRODUCTO/imagen_1/${idp}/${item.imagen_1}`);
+                  desertRef3.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_1${item.imagen_1}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
+                    }
+                  });
+                } else {
+                  var desertRef4 = firebase
+                    .storage()
+                    .ref()
+                    .child(`no-photo.svg`);
+                  desertRef4.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_1${item.imagen_1}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
+                    }
+                  });
+                }
+                if (item.imagen_2) {
+                  var desertRef5 = firebase
+                    .storage()
+                    .ref()
+                    .child(`PRODUCTO/imagen_2/${idp}/${item.imagen_2}`);
+                  desertRef5.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_2${item.imagen_2}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
+                    }
+                  });
+                } else {
+                  var desertRef6 = firebase
+                    .storage()
+                    .ref()
+                    .child(`no-photo.svg`);
+                  desertRef6.getDownloadURL().then(function (url) {
+                    var img = document.getElementById(
+                      `imagen_2${item.imagen_2}`
+                    );
+                    console.log(url);
+                    if (url) {
+                      img.src = url;
+                    }
+                  });
+                }
+                console.log(plazasP);
+                if (item !== undefined && item?.id === idp) {
+                  return (
                     <Grid
                       container
                       direction="row"
                       justify="center"
                       alignItems="center"
                     >
-                      <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
-                        <h5>PLAZAS</h5>
-                        {plazasP.map((item) => {
-                          return <p key={item.id}>{item.nombre}</p>;
-                        })}
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        style={{ textAlign: "center" }}
+                      >
+                        <img
+                          src={""}
+                          id={`imagen_principal${item.imagen_principal}`}
+                          alt=""
+                          width="150px"
+                          height="150px"
+                        />
+                        <p style={{ textAlign: "center" }}>
+                          <i>Imagen principal</i>
+                        </p>
+                        <Divider variant="middle" />
                       </Grid>
-                      <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
-                        <h5>SKU</h5>
+                      {item.imagen_1 || item.imagen_2 ? (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={12}
+                          style={{ textAlign: "center" }}
+                        >
+                          <br></br>
+                          <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                          >
+                            <Grid
+                              item
+                              xs={12}
+                              sm={6}
+                              style={{ textAlign: "center" }}
+                            >
+                              <img
+                                src={""}
+                                id={`imagen_1${item.imagen_1}`}
+                                alt=""
+                                width="150px"
+                                height="150px"
+                              />
+                              <p style={{ textAlign: "center" }}>
+                                <i>Imagen 1°</i>
+                              </p>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={12}
+                              sm={6}
+                              style={{ textAlign: "center" }}
+                            >
+                              <img
+                                src={""}
+                                alt=""
+                                id={`imagen_2${item.imagen_2}`}
+                                width="150px"
+                                height="150px"
+                              />
+                              <p style={{ textAlign: "center" }}>
+                                <i>Imagen 2°</i>
+                              </p>
+                            </Grid>
+                          </Grid>
+                          <Divider variant="middle" />
+                          <br></br>
+                        </Grid>
+                      ) : (
+                        <p>El producto no tiene imagenes en la galería</p>
+                      )}
+                      <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          style={{ textAlign: "center" }}
+                        >
+                          <h5>PLAZAS</h5>
+                          {plazasP.map((item) => {
+                            return <p key={item.id}>{item.nombre}</p>;
+                          })}
+                        </Grid>
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          style={{ textAlign: "center" }}
+                        >
+                          <h5>SKU</h5>
+                          <p>
+                            {item.sku ? item.sku : "El producto no tiene sku"}
+                          </p>
+                          <h5>UNIDAD</h5>
+                          <p>
+                            {item.unidad
+                              ? item.unidad
+                              : "El producto no tiene unidades"}
+                          </p>
+                        </Grid>
+                        <Divider variant="middle" />
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        style={{ textAlign: "center" }}
+                      >
+                        <h5>DESCRIPCIÓN</h5>
                         <p>
-                          {item.sku ? item.sku : "El producto no tiene sku"}
+                          {item.descripcion
+                            ? item.descripcion
+                            : "El producto no tiene escripción"}
                         </p>
                       </Grid>
-                      <Divider variant="middle" />
                     </Grid>
-                    <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
-                      <h5>DESCRIPCIÓN</h5>
-                      <p>
-                        {item.descripcion
-                          ? item.descripcion
-                          : "El producto no tiene escripción"}
-                      </p>
-                    </Grid>
-                  </Grid>
-                );
+                  );
+                }
               }
             })
           : datos?.map((item) => {
@@ -444,7 +556,13 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
                     </Grid>
                     <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
                       <h5>UNIDAD</h5>
-                      <p>{item.unidad}</p>
+                      <p>
+                        {
+                          productos.filter(
+                            (pro) => pro.id === item.producto_id
+                          )[0]?.unidad
+                        }
+                      </p>
                       <Divider variant="middle" />
                       <br></br>
                     </Grid>
@@ -505,7 +623,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
         plazapro={producto?.plaza}
         categorias1={producto?.categorias}
         sku1={producto?.sku}
-        descripcion1={producto?.descripcion}
+        unidad1={producto?.unidad}
         imagen_principal={producto?.imagen_principal}
         imagen1={producto?.imagen_1}
         imagen2={producto?.imagen_2}
@@ -519,7 +637,6 @@ const TablaProducto = ({ getDatos, datos, rol, locatario }) => {
         idProducto={proloc?.producto_id}
         stock={proloc?.stock === "Sí hay" ? true : false}
         en_promocion={proloc?.en_promocion === "Sí" ? true : false}
-        unidad1={proloc?.unidad}
         descripcion1={proloc?.descripcion}
         cantidad_unidad={proloc?.cantidad_unidad}
         precio_rebajado={proloc?.precio_rebajado}

@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import xlsx from "xlsx";
 
-const ArchivoCSV = ({ hojas, setHojas }) => {
+const ArchivoCSV = ({ hojas, setHojas, titulo }) => {
   const handleImg1 = (event) => {
     var reader = new FileReader();
     let hojas = [];
@@ -30,7 +30,7 @@ const ArchivoCSV = ({ hojas, setHojas }) => {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Archivo para subir locatarios
+        {titulo}
       </Typography>
       <br></br>
       <Grid container spacing={3}>
@@ -51,6 +51,7 @@ const ArchivoCSV = ({ hojas, setHojas }) => {
 ArchivoCSV.propTypes = {
   hojas: PropTypes.array,
   setHojas: PropTypes.func,
+  titulo: PropTypes.string,
 };
 
 export default ArchivoCSV;

@@ -1,14 +1,16 @@
-import React, { useState, Fragment, useEffect } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import TooltipE from "./../../tooltip";
-import Modal from "./../../modal";
-import _Eliminar from "./../../modal/Eliminar.jsx";
-import _Actualizar from "./../../modal/Locatarios/Actualizar";
-import Button from "@material-ui/core/Button";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCantidades } from "../../../../actions/plaza";
-import PropTypes from "prop-types";
-import { DeleteLocatario } from "actions/locatarios";
+import {
+  DeleteLocatario,
+  getLocatarioId,
+  getLocatarioCedula,
+} from "actions/locatarios";
+import { Img } from "actions/imagen";
+import { getProductoLocatario } from "actions/producto";
+
+//Material
+import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,20 +20,26 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/Add";
-import useStyles from "../style";
 import Collapse from "@material-ui/core/Collapse";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import * as locales from "@material-ui/core/locale";
-import { getLocatarioId } from "actions/locatarios";
-import { Img } from "actions/imagen";
-import TablaProducto from "../TablaProductos";
-import { getProductoLocatario } from "actions/producto";
-import { getLocatarioCedula } from "actions/locatarios";
-import firebase from "firebase";
+import Button from "@material-ui/core/Button";
+
+//Componentes
+import TooltipE from "./../../tooltip";
+import Modal from "./../../modal";
+import _Eliminar from "./../../modal/Eliminar.jsx";
+import _Actualizar from "./../../modal/Locatarios/Actualizar";
 import Crear from "components/shared/modal/Productos/Crear";
+import TablaProducto from "../TablaProductos";
+
+//Style
+import useStyles from "../style";
+import PropTypes from "prop-types";
+import ModalLocatario from "components/shared/modal/ModalLocatario";
 
 const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const { plazastrues, categorias, localidades } = useSelector(
@@ -53,12 +61,14 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
+  const [open5, setOpen5] = React.useState(false);
   const [opent, setOpent] = React.useState(false);
   const [locatario2, setLocatario2] = useState([]);
   const [idp, setIdp] = useState(0);
   const [idp1, setIdp1] = useState(0);
   const [idp2, setIdp2] = useState(0);
   const [idp3, setIdp3] = useState(0);
+  const [idp4, setIdp4] = useState(0);
 
   const columns = [
     { id: "id", label: "ID", width: "30px" },
@@ -109,6 +119,11 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
 
   const handleClickOpen2 = () => {
     setOpen2(true);
+  };
+
+  const handleClickOpen5 = (id) => {
+    setOpen5(true);
+    setIdp4(id);
   };
 
   const handleClose2 = () => {
@@ -278,14 +293,27 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                               {item.nombre ? (
                                 item.nombre.toUpperCase()
                               ) : (
-                                <p className={classes.nombre}>
-                                  NO TIENE NOMBRE
-                                </p>
+                                <h5 className={classes.error}>---</h5>
                               )}
                             </p>
                           </TableCell>
                           <TableCell align="center">
-                            {item.numero_local}
+                            {item.numero_local ? (
+                              item.numero_local.length === 1 ? (
+                                item.numero_local
+                              ) : (
+                                <Button
+                                  color="primary"
+                                  variant="contained"
+                                  style={{ color: "white" }}
+                                  onClick={() => handleClickOpen5(item.id)}
+                                >
+                                  NÚMEROS
+                                </Button>
+                              )
+                            ) : (
+                              <h5 className={classes.error}>---</h5>
+                            )}
                           </TableCell>
                           <TableCell key={`${item.activo}`} align="center">
                             {item.activo}
@@ -295,47 +323,25 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                             style={{ width: "180px" }}
                             align="center"
                           >
-                            {data.map((cat) => {
-                              if (cat.icono) {
-                                var desertRef1 = firebase
-                                  .storage()
-                                  .ref()
-                                  .child(`CATEGORIAS/${cat.id}/${cat.icono}`);
-                                desertRef1
-                                  .getDownloadURL()
-                                  .then(function (url) {
-                                    var img = document.getElementById(
-                                      `img${cat.id}${item.cedula}`
-                                    );
-                                    img.src = url;
-                                  });
-                              } else {
-                                var desertRef2 = firebase
-                                  .storage()
-                                  .ref()
-                                  .child(`no-photo.svg`);
-                                desertRef2
-                                  .getDownloadURL()
-                                  .then(function (url) {
-                                    var img = document.getElementById(
-                                      `img${cat.id}${item.cedula}`
-                                    );
-                                    img.src = url;
-                                  });
-                              }
-                              return (
-                                <TooltipE title={cat.label} key={cat.id}>
-                                  <img
-                                    src={""}
-                                    alt=""
-                                    id={`img${cat.id}${item.cedula}`}
-                                    width="30px"
-                                    height="30px"
-                                    style={{ marginRight: "5px" }}
-                                  />
-                                </TooltipE>
-                              );
-                            })}
+                            {data.length !== 0 ? (
+                              data.map((cat) => {
+                                return (
+                                  <p
+                                    key={cat.id}
+                                    style={{
+                                      textAlign: "center",
+                                      fontSize: "14px",
+                                      color: "#DE9E12",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {cat.label}
+                                  </p>
+                                );
+                              })
+                            ) : (
+                              <h5 className={classes.error}>---</h5>
+                            )}
                           </TableCell>
                           <TableCell align="center">
                             {item?.acciones.map((cat) => {
@@ -595,6 +601,12 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
           numero_local={local3?.length > 0 && local3[0]?.numero_local}
           productos1={local3?.length > 0 && local3[0]?.productos}
           locatarios={datos}
+        />
+        <ModalLocatario
+          open={open5}
+          handleClose={() => setOpen5(false)}
+          locatario={datos.filter((item) => item.id === idp4)[0]?.nombre}
+          datos={datos.filter((item) => item.id === idp4)}
         />
       </Grid>
     </Grid>

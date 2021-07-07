@@ -25,6 +25,7 @@ const Crear = ({ open, handleClose, locatarios }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ["Locatario", "Plaza", "Horarios", "Imagen"];
+  const [msg1, setMsg] = useState(0);
 
   const [imglogo, setImgLogo] = useState("img");
   const [img, setImg] = useState(null);
@@ -56,7 +57,6 @@ const Crear = ({ open, handleClose, locatarios }) => {
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
   const [mensaje, setMensaje] = useState("");
   const [alerta1, setAlerta1] = useState(false);
-  const [alerta, setAlerta] = useState(false);
 
   const [plaza, setPlaza] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -232,12 +232,12 @@ const Crear = ({ open, handleClose, locatarios }) => {
         plaza,
         cat,
         productos,
-        id
+        id,
+        setMsg
       )
     );
-    setAlerta(true);
     setTimeout(() => {
-      setAlerta(false);
+      setMsg(0);
     }, 3000);
   };
 
@@ -263,6 +263,11 @@ const Crear = ({ open, handleClose, locatarios }) => {
     setPlaza("");
     setTelefonos([{ telefono: "" }]);
     setEmail("");
+    setNombre("");
+    setCedula("");
+    setnumeroLocal([{ local1: "" }]);
+    setLocal("");
+    setActiveStep(0);
   };
   return (
     <ModalForm
@@ -307,12 +312,14 @@ const Crear = ({ open, handleClose, locatarios }) => {
                   )}
                   {activeStep === steps.length - 1 ? (
                     <>
-                      {alerta && (
-                        <Alert
-                          severity="success"
-                          style={{ marginBottom: "10px" }}
-                        >
-                          {msg}
+                      {msg1 === 1 && (
+                        <Alert severity="success">
+                          "Se incluyo el locatario"
+                        </Alert>
+                      )}
+                      {msg1 === 2 && (
+                        <Alert severity="error">
+                          "ERROR: no se envió la información"
                         </Alert>
                       )}
                       <Button

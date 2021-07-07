@@ -19,18 +19,19 @@ import { UpdateProductos } from "actions/producto";
 import { UpdateImagen } from "actions/producto";
 import { UpdateImagen2 } from "actions/producto";
 import { UpdateImagen1 } from "actions/producto";
+import { Img } from "actions/imagen";
 // import { useForm } from "./../../../../hooks/useForm";
 
 const Actualizar = ({
   open,
   handleClose,
   rol,
+  unidad1,
   idProducto,
   nombrepro,
   plazapro,
   categorias1,
   sku1,
-  descripcion1,
   imagen_principal,
   imagen1,
   imagen2,
@@ -46,8 +47,8 @@ const Actualizar = ({
 
   const [plaza, setPlaza] = useState([]);
   const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripion] = useState("");
   const [sku, setSku] = useState("");
+  const [unidad, setUnidad] = useState("");
 
   const [imggaleria, setImgGaleria] = useState("img");
   const [img1, setImg1] = useState(null);
@@ -62,17 +63,14 @@ const Actualizar = ({
   useEffect(() => {
     setNombre(nombrepro);
     setSku(sku1);
-    setDescripion(descripcion1);
-    setImg2(
-      process.env.REACT_APP_URL_API +
-        `uploads/retorna/PRODUCTOS/${imagen_principal}`
+    setUnidad(unidad1);
+    Img(
+      `PRODUCTO/imagen_principal/${idProducto}/${imagen_principal}`,
+      setImg2,
+      imagen_principal
     );
-    setImg4(
-      process.env.REACT_APP_URL_API + `uploads/retorna/PRODUCTOS/${imagen1}`
-    );
-    setImg6(
-      process.env.REACT_APP_URL_API + `uploads/retorna/PRODUCTOS/${imagen2}`
-    );
+    Img(`PRODUCTO/imagen_1/${idProducto}/${imagen1}`, setImg4, imagen1);
+    Img(`PRODUCTO/imagen_2/${idProducto}/${imagen2}`, setImg6, imagen2);
 
     let plaza1 = [];
     if (plazapro !== null && plazapro?.length > 0) {
@@ -104,10 +102,10 @@ const Actualizar = ({
     plazapro,
     categorias1,
     sku1,
-    descripcion1,
     imagen_principal,
     imagen1,
     imagen2,
+    unidad1,
   ]);
 
   const handleNext = () => {
@@ -128,10 +126,10 @@ const Actualizar = ({
             setPlaza={setPlaza}
             nombre={nombre}
             setNombre={setNombre}
-            descripcion={descripcion}
-            setDescripion={setDescripion}
             sku={sku}
             setSku={setSku}
+            unidad={unidad}
+            setUnidad={setUnidad}
           />
         );
       case 1:
@@ -165,7 +163,7 @@ const Actualizar = ({
   }
 
   const ActualizarProducto = () => {
-    dispatch(UpdateProductos(plaza, nombre, descripcion, sku, cat, idProducto));
+    dispatch(UpdateProductos(plaza, nombre, sku, cat, unidad, idProducto));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -173,7 +171,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagenP = () => {
-    dispatch(UpdateImagen(img1, idProducto));
+    dispatch(UpdateImagen(img1, img2, idProducto));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -181,7 +179,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen1 = () => {
-    dispatch(UpdateImagen1(img3, idProducto));
+    dispatch(UpdateImagen1(img3, img4, idProducto));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -189,7 +187,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen2 = () => {
-    dispatch(UpdateImagen2(img5, idProducto));
+    dispatch(UpdateImagen2(img5, img6, idProducto));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -317,10 +315,10 @@ Actualizar.propTypes = {
   plazapro: PropTypes.array,
   categorias1: PropTypes.array,
   sku1: PropTypes.string,
-  descripcion1: PropTypes.string,
   imagen_principal: PropTypes.string,
   imagen1: PropTypes.string,
   imagen2: PropTypes.string,
+  unidad1: PropTypes.string,
 };
 
 export default Actualizar;

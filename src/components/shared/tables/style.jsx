@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   iconos: {
     color: "#450016",
   },
+  error: {
+    color: "#FF2D42",
+  },
 }));
 
 export default useStyles;

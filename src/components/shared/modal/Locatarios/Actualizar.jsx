@@ -194,7 +194,11 @@ const Actualizar = ({
   ]);
 
   const validarEmail = (email) => {
-    if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)) {
+    if (email === "") {
+      return true;
+    } else if (
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)
+    ) {
       return true;
     } else {
       return false;

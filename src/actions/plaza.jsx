@@ -2,19 +2,33 @@ import axios from "axios";
 import { types } from "./../types";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { updateImg } from "./imagen";
+import firebase from "firebase";
 
-export const setPlazasExcel = (nombre) => {
+export const setPlazasExcel = (
+  nombrepla,
+  numerolocal,
+  cedula,
+  nombre,
+  telefonos,
+  admin,
+  local,
+  setMsg
+) => {
   let config = {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   };
-  return async (dispatch) => {
+  return async () => {
+    let local1 = [];
+    if (numerolocal.length === 1) {
+      local1.push(numerolocal);
+    }
     axios
       .post(
         process.env.REACT_APP_URL_API + "plazas/crear",
         {
-          admin_id: [],
+          admin_id: [admin],
           localidad_id: "",
-          nombre: nombre,
+          nombre: nombrepla,
           categorias_id: [],
           productos_id: [],
           direccion: "",
@@ -25,77 +39,175 @@ export const setPlazasExcel = (nombre) => {
         config
       )
       .then((response) => {
-        let data = response.data;
-        dispatch(
-          PlazaMensaje({
-            ok: data.ok,
-            msg: data.msg,
+        let id = response.data.plaza.id;
+        // VERIFICAR LA EXISTENCIA DEL LOCATARIO
+        axios
+          .get(
+            process.env.REACT_APP_URL_API +
+              `locatarios/findByNumeroDeLocalYPlazaId/${id}/${numerolocal}`,
+            config
+          )
+          .then((response) => {
+            console.log(response);
+            // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+            axios
+              .get(
+                process.env.REACT_APP_URL_API + "admins/findByCedula/" + cedula,
+                config
+              )
+              .then((response) => {
+                if (response.status === 200) {
+                  console.log("existe en admin");
+                }
+              })
+              .catch((e) => {
+                /**
+                 * Sí, canta error significa que no es admin locatario
+                 * en la base de datos, por lo tanto registramos lo datos
+                 * para que pueda ingresar al modulo locatario.
+                 *
+                 */
+                console.log("ERROR!!!!!", e);
+                let config = {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                };
+                axios
+                  .post(
+                    process.env.REACT_APP_URL_API + "admins/registerAdmin",
+                    {
+                      email: cedula,
+                      password: "123456",
+                      rol: "ADMIN_LOCATARIO",
+                      nombre: nombre,
+                      apellido: "",
+                      cedula: cedula,
+                      telefonos: telefonos,
+                    },
+                    config
+                  )
+                  .then((response) => {
+                    console.log(response);
+                  })
+                  .catch((e) => {
+                    console.log("ERROR!!!!!", e);
+                  });
+              });
           })
-        );
+          .catch((e) => {
+            console.log(e);
+            setMsg("No existe");
+            axios
+              .post(
+                process.env.REACT_APP_URL_API + "locatarios/crear",
+                {
+                  admin_id: [admin],
+                  plaza_id: id,
+                  nombre_local: local,
+                  numero_local: numerolocal.length === 1 ? local1 : numerolocal,
+                  categorias_id: [],
+                  productos_locatarios_id: [],
+                  nombre: nombre,
+                  apellido: "",
+                  cedula: cedula,
+                  horarios: [],
+                  email: "",
+                  telefonos: telefonos,
+                },
+                config
+              )
+              .then((response) => {
+                if (response.status === 200) {
+                  // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+                  axios
+                    .get(
+                      process.env.REACT_APP_URL_API +
+                        "admins/findByCedula/" +
+                        cedula,
+                      config
+                    )
+                    .then((response) => {
+                      console.log(response);
+                    })
+                    .catch((e) => {
+                      /**
+                       * Sí, canta error significa que no es admin locatario
+                       * en la base de datos, por lo tanto registramos lo datos
+                       * para que pueda ingresar al modulo locatario.
+                       *
+                       */
+                      console.log("ERROR!!!!!", e);
+                      let config = {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                          )}`,
+                        },
+                      };
+                      axios
+                        .post(
+                          process.env.REACT_APP_URL_API +
+                            "admins/registerAdmin",
+                          {
+                            email: cedula,
+                            password: "123456",
+                            rol: "ADMIN_LOCATARIO",
+                            nombre: nombre,
+                            apellido: "",
+                            cedula: cedula,
+                            telefonos: telefonos,
+                          },
+                          config
+                        )
+                        .then((response) => {
+                          console.log(response);
+                        })
+                        .catch((e) => {
+                          console.log("ERROR!!!!!", e);
+                        });
+                    });
+                }
+              })
+              .catch((e) => {
+                console.log("ERROR!!!!!", e);
+              });
+          });
       })
       .catch((e) => {
+        setMsg("No creo la plaza");
         console.log("ERROR!!!!!", e);
       });
   };
 };
 
-export const UpdateLogo = (img2, ids) => {
-  updateImg(img2, `PLAZA/logo/${ids}`);
-  return async (dispatch) => {
-    const formData = new FormData();
-    formData.append("imagen", img2);
-    formData.append("plaza", "logo");
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        let data = response.data;
-        dispatch(
-          PlazaMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateLogo = (img2, img3, ids) => {
+  return async () => {
+    updateImg(img2, `PLAZA/logo/${ids}`, `plazas/update/${ids}`, "logo");
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/PLAZA/logo/${ids}`)
+      .child(`${img3}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
-export const UpdateBanner = (img, ids) => {
-  return async (dispatch) => {
-    updateImg(img, `PLAZA/img/${ids}`);
-    const formData = new FormData();
-    formData.append("imagen", img);
-    formData.append("plaza", "img");
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        let data = response.data;
-        dispatch(
-          PlazaMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateBanner = (img, img1, ids) => {
+  return async () => {
+    updateImg(img, `PLAZA/img/${ids}`, `plazas/update/${ids}`, "img");
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/PLAZA/img/${ids}`)
+      .child(`${img1}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
@@ -260,62 +372,13 @@ export const setPlazasMercado = (
           })
         );
         if (response.status === 200) {
+          console.log(response);
           let ids = data.plaza.id;
           if (img) {
             updateImg(img, `PLAZA/img/${ids}`);
-            const formData = new FormData();
-            formData.append("imagen", img);
-            formData.append("plaza", "img");
-
-            let config1 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config1)
-              .then((response) => {
-                let data = response.data;
-                dispatch(
-                  PlazaMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
           }
           if (img2) {
-            const formData = new FormData();
             updateImg(img2, `PLAZA/logo/${ids}`);
-            formData.append("imagen", img2);
-            formData.append("plaza", "logo");
-
-            let config2 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PLAZA/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config2)
-              .then((response) => {
-                let data = response.data;
-                dispatch(
-                  PlazaMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
           }
         }
       })
@@ -340,12 +403,15 @@ export const getTrue = () => {
       .then((response) => {
         let data = response.data.plazas;
         let plazatrues = [];
+        let dataid = [];
         data.map((item) => {
           if (item.activo === true) {
             plazatrues.push(item);
+            dataid.push(item.id);
           }
         });
         dispatch(PlazaTrue(plazatrues));
+        dispatch(PlazaID(dataid));
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -356,6 +422,11 @@ export const getTrue = () => {
 const PlazaTrue = (plazatrues) => ({
   type: types.plazaDatosTrue,
   plazatrue: plazatrues,
+});
+
+const PlazaID = (dataid) => ({
+  type: types.plazaID,
+  plazaid: dataid,
 });
 
 export const getPlaz = () => {

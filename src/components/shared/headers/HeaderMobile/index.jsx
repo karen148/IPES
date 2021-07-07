@@ -2,6 +2,7 @@ import { toggleDrawerMenu } from "actions/menu";
 import React from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+import { startLogout } from "actions/auth";
 // import { connect, useDispatch } from 'react-redux';
 // import { toggleDrawerMenu } from './../../../../store/app/action';
 // // { isDrawerMenu }
@@ -10,6 +11,10 @@ const HeaderMobile = ({ isDrawerMenu }) => {
   const handleOpenDrawer = () => {
     dispatch(toggleDrawerMenu(true));
     console.log(dispatch(toggleDrawerMenu(true)));
+  };
+
+  const exitApp = () => {
+    dispatch(startLogout());
   };
   console.log(isDrawerMenu);
   return (
@@ -26,7 +31,7 @@ const HeaderMobile = ({ isDrawerMenu }) => {
         </a>
       </div>
       <div className="header__right">
-        <a className="header__site-link" href="/">
+        <a className="header__site-link" href="/home" onClick={exitApp}>
           <i className="lnr lnr-exit"></i>
         </a>
       </div>

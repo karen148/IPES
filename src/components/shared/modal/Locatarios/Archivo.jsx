@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import ModalForm from "./../modalForm";
@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from "react-redux";
 import ArchivoCSV from "components/shared/forms/FormProducto/ArchivoCSV";
 import { ArchivoLocatario } from "actions/locatarios";
 import { setPlazasExcel } from "actions/plaza";
-import { getLocatarioPlaza } from "actions/locatarios";
+import { setLocatariosExcel } from "actions/locatarios";
 
 const Archivo = ({ open, handleClose }) => {
+  const { id } = useSelector((state) => state.auth);
   const { msg } = useSelector((state) => state.locatario);
   const { plazastrues } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
@@ -26,8 +27,54 @@ const Archivo = ({ open, handleClose }) => {
   const steps = ["Archivo"];
 
   const [hojas, setHojas] = useState([]);
-  const [locatarios, setLocatario] = useState([]);
   const [alerta, setAlerta] = useState(false);
+  const [msg1, setMsg] = useState("");
+
+  useEffect(() => {
+    console.log("buenas");
+    hojas.map((item) => {
+      let plaza = plazastrues.filter(
+        (pla) =>
+          pla.nombre.trim().toLowerCase() === item.plaza.trim().toLowerCase()
+      )[0];
+      if (plaza) {
+        console.log("crear locatario");
+        item.data.map((dat) => {
+          console.log(dat["NUMERO DEL LOCAL"].length);
+          dispatch(
+            setLocatariosExcel(
+              dat["NUMERO DE CEDULA"]?.toString(),
+              dat["NOMBRE DEL COMERCIANTE"]?.toString(),
+              dat["NUMERO DEL LOCAL"]?.toString(),
+              dat["NOMBRE DEL LOCAL"]?.toString(),
+              dat["TELEFONOS DE DOMICILIOS"]?.toString(),
+              id,
+              plaza.id
+            )
+          );
+        });
+      } else {
+        console.log("crear plaza");
+        item.data.map((dat) => {
+          console.log(dat["NUMERO DEL LOCAL"]?.toString().length);
+          dispatch(
+            setPlazasExcel(
+              item.plaza.toUpperCase(),
+              dat["NUMERO DEL LOCAL"]?.toString(),
+              dat["NUMERO DE CEDULA"]?.toString(),
+              dat["NOMBRE DEL COMERCIANTE"]?.toString(),
+              dat["TELEFONOS DE DOMICILIOS"]?.toString(),
+              id,
+              dat["NOMBRE DEL LOCAL"]?.toString(),
+              setMsg
+            )
+          );
+        });
+      }
+    });
+  }, [hojas.length > 0 && hojas]);
+
+  console.log(msg1);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -40,53 +87,25 @@ const Archivo = ({ open, handleClose }) => {
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return <ArchivoCSV hojas={hojas} setHojas={setHojas} />;
+        return (
+          <ArchivoCSV
+            hojas={hojas}
+            setHojas={setHojas}
+            titulo={"Archivo Excel para subir información de los locatarios"}
+          />
+        );
       default:
         throw new Error("Error");
     }
   };
 
   const Registrar = () => {
-    hojas.map((item) => {
-      if (
-        plazastrues.filter(
-          (pla) =>
-            pla.nombre.trim().toLowerCase() === item.plaza.trim().toLowerCase()
-        )[0]
-      ) {
-        dispatch(
-          getLocatarioPlaza(
-            setLocatario,
-            plazastrues.filter(
-              (pla) =>
-                pla.nombre.trim().toLowerCase() ===
-                item.plaza.trim().toLowerCase()
-            )[0]?.id
-          )
-        );
-        item.data.map((dat) => {
-          // console.log(dat["Numero de cédula"]);
-          if (
-            locatarios.filter(
-              (loc) => loc.cedula === dat["Numero de cédula"].toString()
-            )[0]
-          ) {
-            console.log(dat["Numero de cédula"] + "-" + item.plaza);
-          }
-        });
-      } else {
-        console.log(item.plaza);
-        dispatch(setPlazasExcel(item.plaza));
-      }
-    });
     dispatch(ArchivoLocatario(hojas));
     setAlerta(true);
     setTimeout(() => {
       setAlerta(false);
     }, 4000);
   };
-
-  console.log(locatarios);
 
   const Limpiar = () => {
     setHojas([]);

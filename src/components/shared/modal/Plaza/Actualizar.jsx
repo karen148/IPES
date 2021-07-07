@@ -15,6 +15,7 @@ import Horarios from "components/shared/forms/FormCreatePlaza/horarios";
 import Categoria from "components/shared/forms/FormCreatePlaza/categoria";
 import Imagen from "components/shared/forms/FormCreatePlaza/Imagen";
 import { UpdatePlazasMercado, UpdateBanner, UpdateLogo } from "actions/plaza";
+import { Img } from "actions/imagen";
 
 const Actualizar = ({
   open,
@@ -157,10 +158,9 @@ const Actualizar = ({
       setPlaza(nombre1);
       setDireccion(direccion1);
       setEmail(email1);
-      setImg1(
-        process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${imagen}`
-      );
-      setImg3(process.env.REACT_APP_URL_API + `uploads/retorna/PLAZA/${logo1}`);
+
+      Img(`PLAZAS/img/${idPlaza}/${imagen}`, setImg1, imagen);
+      Img(`PLAZAS/logo/${idPlaza}/${logo1}`, setImg3, logo1);
       setLocalidad(localidades.filter((item) => item.id === locali)[0]);
 
       setTelefonos(telefonos1);
@@ -179,8 +179,27 @@ const Actualizar = ({
     logo1,
   ]);
 
+  const validarEmail = (email) => {
+    if (email === "") {
+      return true;
+    } else if (
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (validarEmail(email)) {
+      setActiveStep(activeStep + 1);
+    } else {
+      setAlerta("El correo electrónico no es valido");
+      setTimeout(() => {
+        setAlerta("Actualizar plaza");
+      }, 3600);
+    }
   };
 
   const handleBack = () => {
@@ -268,7 +287,7 @@ const Actualizar = ({
   };
 
   const ActualizarLogo = () => {
-    dispatch(UpdateLogo(img2, idPlaza));
+    dispatch(UpdateLogo(img2, img3, idPlaza));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar plaza");
@@ -276,7 +295,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen = () => {
-    dispatch(UpdateBanner(img, idPlaza));
+    dispatch(UpdateBanner(img, img1, idPlaza));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar plaza");

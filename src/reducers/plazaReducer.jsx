@@ -7,6 +7,7 @@ const initialState = {
   localidades: [],
   categorias: [],
   cantidades: [],
+  plazaids: [],
 };
 
 export const plazaReducer = (state = initialState, action) => {
@@ -51,6 +52,12 @@ export const plazaReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case types.plazaID:
+      return {
+        ...state,
+        plazaids: [...action.plazaid],
       };
 
     default:

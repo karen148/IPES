@@ -67,6 +67,62 @@ export const updateImg = async (img1, url, url2, verificar) => {
         .catch((e) => {
           console.log("ERROR", e);
         });
+    } else if (verificar === "imagen_principal") {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + `${url2}`,
+          { imagen_principal: imagen },
+          config1
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
+    } else if (verificar === "imagen_1") {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + `${url2}`,
+          { imagen_1: imagen },
+          config1
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
+    } else if (verificar === "imagen_2") {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + `${url2}`,
+          { imagen_2: imagen },
+          config1
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
+    } else if (verificar === "imagen") {
+      axios
+        .put(
+          process.env.REACT_APP_URL_API + `${url2}`,
+          { imagen: imagen },
+          config1
+        )
+        .then((response) => {
+          let data = response.data;
+          console.log(data);
+        })
+        .catch((e) => {
+          console.log("ERROR", e);
+        });
     }
   }
 };

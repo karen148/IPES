@@ -100,8 +100,6 @@ const useStyles = makeStyles((theme) => ({
     },
     img: {
       display: "none",
-      width: "0px",
-      marginLeft: "0px",
     },
     cardd: {
       display: "inline-block",
@@ -186,14 +184,37 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
-  "@media (max-width: 360px)": {
+  "@media (max-width: 480px)": {
     cardd: {
       display: "inline-block",
-      marginTop: "-15px",
+      marginTop: "30px",
       width: "100%",
+      height: "140vh",
     },
     form: {
       marginTop: "-6px",
+    },
+  },
+  "@media (max-width: 360px)": {
+    cardd: {
+      display: "inline-block",
+      marginTop: "30px",
+      width: "100%",
+      height: "70vh",
+    },
+    form: {
+      marginTop: "-6px",
+    },
+  },
+  "@media (max-width: 320px)": {
+    cardd: {
+      display: "inline-block",
+      marginTop: "0px",
+      width: "100%",
+      height: "100vh",
+    },
+    form: {
+      marginTop: "-25px",
     },
   },
 }));

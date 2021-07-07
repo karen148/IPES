@@ -21,8 +21,10 @@ const CategoriesPage = () => {
   // }, []);
 
   useEffect(() => {
-    dispatch(getCategorias());
-  }, [dispatch]);
+    if (categorias.length === 0) {
+      dispatch(getCategorias());
+    }
+  }, [categorias.length === 0 && categorias]);
 
   const filtrar2 = (e) => {
     setMostrar(true);

@@ -3,6 +3,30 @@ import { types } from "./../types";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
 
+export const getLocatariosCedulaPlaza = (plaza, numerolocal, setMsg) => {
+  return async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      plazaId: plaza,
+      numeroLocal: numerolocal,
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API +
+          `locatarios/findByNumeroDeLocalYPlazaId/${plaza}/${numerolocal}`,
+        config
+      )
+      .then((response) => {
+        console.log(response);
+        setMsg("Existe");
+      })
+      .catch((e) => {
+        setMsg("No existe");
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 export const UpdateLocatariosEmail = (email, idLocatario, setMsg) => {
   let config = {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -384,6 +408,100 @@ export const UpdateLocatarios = (
   };
 };
 
+export const setLocatariosExcel = (
+  cedula,
+  nombre,
+  numero_local,
+  local,
+  telefonos,
+  id,
+  plaza
+) => {
+  return async () => {
+    let admin = [];
+    let local1 = [];
+    admin.push(id);
+
+    if (numero_local.length === 1) {
+      local1.push(numero_local);
+    }
+
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+
+    axios
+      .post(
+        process.env.REACT_APP_URL_API + "locatarios/crear",
+        {
+          admin_id: admin,
+          plaza_id: plaza,
+          nombre_local: local,
+          numero_local: numero_local.length === 1 ? local1 : numero_local,
+          categorias_id: [],
+          productos_locatarios_id: [],
+          nombre: nombre,
+          apellido: "",
+          cedula: cedula,
+          horarios: [],
+          email: "",
+          telefonos: telefonos,
+        },
+        config
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+          axios
+            .get(
+              process.env.REACT_APP_URL_API + "admins/findByCedula/" + cedula,
+              config
+            )
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((e) => {
+              /**
+               * Sí, canta error significa que no es admin locatario
+               * en la base de datos, por lo tanto registramos lo datos
+               * para que pueda ingresar al modulo locatario.
+               *
+               */
+              console.log("ERROR!!!!!", e);
+              let config = {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              };
+              axios
+                .post(
+                  process.env.REACT_APP_URL_API + "admins/registerAdmin",
+                  {
+                    email: cedula,
+                    password: "123456",
+                    rol: "ADMIN_LOCATARIO",
+                    nombre: nombre,
+                    apellido: "",
+                    cedula: cedula,
+                    telefonos: telefonos,
+                  },
+                  config
+                )
+                .then((response) => {
+                  console.log(response);
+                })
+                .catch((e) => {
+                  console.log("ERROR!!!!!", e);
+                });
+            });
+        }
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 export const setLocatarios = (
   horario_m1,
   horario_m2,
@@ -410,7 +528,8 @@ export const setLocatarios = (
   plaza,
   cat,
   productos,
-  id
+  id,
+  setMsg
 ) => {
   return async (dispatch) => {
     let horario = [];
@@ -473,6 +592,7 @@ export const setLocatarios = (
         config
       )
       .then((response) => {
+        setMsg(1);
         let data = response.data;
         dispatch(
           LocatarioMensaje({
@@ -492,6 +612,7 @@ export const setLocatarios = (
         }
       })
       .catch((e) => {
+        setMsg(2);
         console.log("ERROR!!!!!", e);
       });
   };

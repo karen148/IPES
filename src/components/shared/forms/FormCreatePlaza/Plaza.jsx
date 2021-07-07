@@ -231,7 +231,7 @@ Plaza.propTypes = {
   setPlaza: PropTypes.func,
   direccion: PropTypes.string,
   setDireccion: PropTypes.func,
-  localidad: PropTypes.array,
+  localidad: PropTypes.object,
   setLocalidad: PropTypes.func,
   funcionario: PropTypes.array,
   setFuncionarios: PropTypes.func,

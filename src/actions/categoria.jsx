@@ -47,6 +47,122 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
   };
 };
 
+export const verificarCategorias = (
+  nombre,
+  unidad,
+  producto,
+  plaza,
+  setMsg
+) => {
+  return async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API + "categorias/findByName/" + nombre,
+        config
+      )
+      .then((response) => {
+        let data = response.data.categorias;
+        console.log(data);
+        axios
+          .post(
+            process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
+            {
+              name: producto,
+              unit: unidad,
+            },
+            config
+          )
+          .then((response) => {
+            console.log(response);
+            setMsg(1);
+          })
+          .catch((e) => {
+            console.log("ERROR!!!!!", e);
+            axios
+              .post(
+                process.env.REACT_APP_URL_API + "productos/crear",
+                {
+                  nombre: nombre,
+                  plaza: plaza,
+                  unidad: unidad,
+                  categoria: [data.id],
+                },
+                config
+              )
+              .then((response) => {
+                let data = response.data;
+                console.log(data);
+                setMsg(2);
+              })
+              .catch((e) => {
+                setMsg(3);
+                console.log("ERROR!!!!!", e);
+              });
+          })
+          .catch((e) => {
+            setMsg(2);
+            axios
+              .post(
+                process.env.REACT_APP_URL_API + "categorias/crear",
+                {
+                  nombre: nombre,
+                },
+                config
+              )
+              .then((response) => {
+                console.log(response.data);
+                let data = response.data.categoria;
+                axios
+                  .post(
+                    process.env.REACT_APP_URL_API +
+                      "productos/findByNameAndUnit",
+                    {
+                      name: producto,
+                      unit: unidad,
+                    },
+                    config
+                  )
+                  .then((response) => {
+                    console.log(response);
+                    setMsg(1);
+                  })
+                  .catch((e) => {
+                    console.log("ERROR!!!!!", e);
+                    axios
+                      .post(
+                        process.env.REACT_APP_URL_API + "productos/crear",
+                        {
+                          nombre: nombre,
+                          plaza: plaza,
+                          unidad: unidad,
+                          categoria: [data.id],
+                        },
+                        config
+                      )
+                      .then((response) => {
+                        let data = response.data;
+                        console.log(data);
+                        setMsg(2);
+                      })
+                      .catch((e) => {
+                        setMsg(3);
+                        console.log("ERROR!!!!!", e);
+                      });
+                  });
+              })
+              .catch((e) => {
+                console.log("ERROR!!!!!", e);
+                Swal.fire("Error", "Datos incorrectos", "error");
+              });
+            console.log(e);
+          });
+      });
+  };
+};
+
 export const getCategorias = () => {
   return async (dispatch) => {
     let config = {

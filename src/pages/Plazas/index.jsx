@@ -49,13 +49,15 @@ const Plazas = () => {
   const [nomplaza1, setNomplaza1] = useState("");
 
   useEffect(() => {
-    dispatch(getFuncionarios());
-    dispatch(getCategorias());
-    dispatch(getLocalidades());
-    dispatch(getTrue());
-    dispatch(getCantidades());
-    dispatch(toggleDrawerMenu(false));
-  }, [dispatch]);
+    if (categorias.length === 0) {
+      dispatch(getFuncionarios());
+      dispatch(getCategorias());
+      dispatch(getLocalidades());
+      dispatch(getTrue());
+      dispatch(getCantidades());
+      dispatch(toggleDrawerMenu(false));
+    }
+  }, [categorias.length === 0 && categorias]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -133,21 +135,9 @@ const Plazas = () => {
       data = plaza1.filter((item) => item.localidad === currency2);
     } else if (currency2 === "" && currency1 !== "") {
       data = plaza1.map((item) => {
-        if (item.categorias !== "" && item.categorias.length > 0) {
-          for (let i = 0; i < item.categorias.length; i++) {
-            const element = item.categorias[i];
-            console.log(element);
-            if (element === currency1) {
-              return item;
-            }
-          }
-        }
-      });
-    } else {
-      console.log("hola");
-      data = plaza1.map((item) => {
-        if (item.localidad === currency2) {
-          if (item.categorias !== " " && item.categorias.length > 0) {
+        console.log(item.categorias);
+        if (item.categorias) {
+          if (item.categorias.length > 0) {
             for (let i = 0; i < item.categorias.length; i++) {
               const element = item.categorias[i];
               console.log(element);
@@ -156,6 +146,26 @@ const Plazas = () => {
               }
             }
           }
+        }
+      });
+    } else {
+      data = plaza1.map((item) => {
+        if (item.localidad) {
+          if (item.localidad === currency2) {
+            if (item.categorias) {
+              if (item.categorias !== " " && item.categorias.length > 0) {
+                for (let i = 0; i < item.categorias.length; i++) {
+                  const element = item.categorias[i];
+                  console.log(element);
+                  if (element === currency1) {
+                    return item;
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          console.log("error");
         }
       });
     }

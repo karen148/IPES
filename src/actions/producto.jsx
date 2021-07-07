@@ -3,109 +3,76 @@ import { types } from "./../types";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { updateImg } from "./imagen";
+import firebase from "firebase";
 
-export const UpdateImagen1 = (img3, idProducto) => {
-  return async (dispatch) => {
-    updateImg(img3, `PRODUCTOS/imagen_1/${idProducto}`);
-    const formData = new FormData();
-    formData.append("imagen", img3);
-    formData.append("producto", "imagen_1");
-    console.log(img3);
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        console.log(response);
-        let data = response.data;
-        dispatch(
-          ProductoMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateImagen1 = (img3, img4, idProducto) => {
+  return async () => {
+    updateImg(
+      img3,
+      `PRODUCTO/imagen_1/${idProducto}`,
+      `productos/update/${idProducto}`,
+      "imagen_1"
+    );
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/PRODUCTO/imagen_1/${idProducto}/`)
+      .child(`${img4}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
-export const UpdateImagen2 = (img5, idProducto) => {
-  return async (dispatch) => {
-    updateImg(img5, `PRODUCTOS/imagen_2/${idProducto}`);
-    const formData = new FormData();
-    formData.append("imagen", img5);
-    formData.append("producto", "imagen_2");
-    console.log(img5);
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        console.log(response);
-        let data = response.data;
-        dispatch(
-          ProductoMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateImagen2 = (img5, img6, idProducto) => {
+  return async () => {
+    updateImg(
+      img5,
+      `PRODUCTO/imagen_2/${idProducto}`,
+      `productos/update/${idProducto}`,
+      "imagen_2"
+    );
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/PRODUCTO/imagen_2/${idProducto}/`)
+      .child(`${img6}`);
+    await desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
   };
 };
 
-export const UpdateImagen = (img1, idProducto) => {
-  return async (dispatch) => {
-    updateImg(img1, `PRODUCTOS/imagen_principal/${idProducto}`);
-    const formData = new FormData();
-    formData.append("imagen", img1);
-    formData.append("producto", "imagen_principal");
-    console.log(img1);
-    let config1 = {
-      method: "put",
-      url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + idProducto,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: formData,
-    };
-    axios(config1)
-      .then((response) => {
-        console.log(response);
-        let data = response.data;
-        dispatch(
-          ProductoMensaje({
-            ok: data.ok,
-            msg: data.msg,
-          })
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR", e);
-      });
+export const UpdateImagen = (img1, img2, idProducto) => {
+  return async () => {
+    if (img1) {
+      updateImg(
+        img1,
+        `PRODUCTO/imagen_principal/${idProducto}`,
+        `productos/update/${idProducto}`,
+        "imagen_principal"
+      );
+      var desertRef = firebase
+        .app()
+        .storage("gs://ipes-adeda.appspot.com")
+        .ref(`/PRODUCTO/imagen_principal/${idProducto}/`)
+        .child(`${img2}`);
+      await desertRef
+        .delete()
+        .then((ref) => console.log("success =>", ref))
+        .catch((error) => console.log(error));
+    }
   };
 };
 
 export const UpdateProductos = (
   plaza,
   nombre,
-  descripcion,
   sku,
   cat,
+  unidad,
   idProducto
 ) => {
   return async (dispatch) => {
@@ -128,7 +95,7 @@ export const UpdateProductos = (
           nombre: nombre,
           categorias_id: cate,
           plazas_id: plazas,
-          descripcion: descripcion,
+          unidad: unidad,
           sku: sku,
         },
         config
@@ -153,13 +120,13 @@ export const setProductosLocatario = (
   plaza,
   descripcion,
   sku,
-  unidad,
   cantidad,
   existe,
   promocion,
   precio,
   rebaja,
-  locatario
+  locatario,
+  setMsg
 ) => {
   return async (dispatch) => {
     let config = {
@@ -173,7 +140,6 @@ export const setProductosLocatario = (
           locatario_id: locatario,
           stock: existe,
           en_promocion: promocion,
-          unidad: unidad,
           cantidad_unidad: cantidad,
           precio: precio,
           precio_rebajado: rebaja,
@@ -184,6 +150,7 @@ export const setProductosLocatario = (
       )
       .then((response) => {
         console.log(response);
+        setMsg(1);
         let data = response.data;
         dispatch(
           ProductoMensaje({
@@ -193,6 +160,7 @@ export const setProductosLocatario = (
         );
       })
       .catch((e) => {
+        setMsg(2);
         console.log("ERROR!!!!!", e);
       });
   };
@@ -202,7 +170,6 @@ export const UpdateProductosLocatario = (
   plaza,
   descripcion,
   sku,
-  unidad,
   cantidad,
   existe,
   promocion,
@@ -223,7 +190,6 @@ export const UpdateProductosLocatario = (
           locatario_id: locatario,
           stock: existe,
           en_promocion: promocion,
-          unidad: unidad,
           cantidad_unidad: cantidad,
           precio: precio,
           precio_rebajado: rebaja,
@@ -251,18 +217,20 @@ export const UpdateProductosLocatario = (
 export const setProductos = (
   plaza,
   nombre,
-  descripcion,
+  unidad,
   sku,
   img1,
   img3,
   img5,
-  cat
+  cat,
+  setMsg
 ) => {
   return async (dispatch) => {
     let cate = [];
     cat.map((item) => {
       Array.prototype.push.apply(cate, [item.id]);
     });
+    console.log(cat);
     let plazas = [];
     plaza.map((item) => {
       Array.prototype.push.apply(plazas, [item.id]);
@@ -278,7 +246,7 @@ export const setProductos = (
           nombre: nombre,
           categorias_id: cate,
           plazas_id: plazas,
-          descripcion: descripcion,
+          unidad: unidad,
           sku: sku,
         },
         config
@@ -286,6 +254,7 @@ export const setProductos = (
       .then((response) => {
         console.log(response);
         let data = response.data;
+        setMsg(1);
         dispatch(
           ProductoMensaje({
             ok: data.ok,
@@ -296,95 +265,33 @@ export const setProductos = (
           console.log(response);
           let ids = data.producto.id;
           if (img1) {
-            updateImg(img1, `PRODUCTOS/imagen_principal/${ids}`);
-            const formData = new FormData();
-            formData.append("imagen", img1);
-            formData.append("producto", "imagen_principal");
-            console.log(img1);
-            let config1 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config1)
-              .then((response) => {
-                console.log(response);
-                let data = response.data;
-                dispatch(
-                  ProductoMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
+            updateImg(
+              img1,
+              `PRODUCTO/imagen_principal/${ids}`,
+              `productos/update/${ids}`,
+              "imagen_principal"
+            );
           }
           if (img3) {
-            updateImg(img3, `PRODUCTOS/imagen_1/${ids}`);
-            const formData = new FormData();
-            formData.append("imagen", img3);
-            formData.append("producto", "imagen_1");
-            console.log(img3);
-            let config2 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config2)
-              .then((response) => {
-                console.log(response);
-                let data = response.data;
-                dispatch(
-                  ProductoMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
+            updateImg(
+              img3,
+              `PRODUCTO/imagen_1/${ids}`,
+              `productos/update/${ids}`,
+              "imagen_1"
+            );
           }
           if (img5) {
-            updateImg(img3, `PRODUCTOS/imagen_2/${ids}`);
-            const formData = new FormData();
-            formData.append("imagen", img5);
-            formData.append("producto", "imagen_2");
-            console.log(img5);
-            let config2 = {
-              method: "put",
-              url: process.env.REACT_APP_URL_API + "uploads/PRODUCTOS/" + ids,
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              data: formData,
-            };
-            axios(config2)
-              .then((response) => {
-                console.log(response);
-                let data = response.data;
-                dispatch(
-                  ProductoMensaje({
-                    ok: data.ok,
-                    msg: data.msg,
-                  })
-                );
-              })
-              .catch((e) => {
-                console.log("ERROR", e);
-              });
+            updateImg(
+              img5,
+              `PRODUCTO/imagen_2/${ids}`,
+              `productos/update/${ids}`,
+              "imagen_2"
+            );
           }
         }
       })
       .catch((e) => {
+        setMsg(2);
         console.log("ERROR!!!!!", e);
       });
   };
@@ -405,7 +312,7 @@ export const getProducto = () => {
           nombre: item.nombre,
           categorias: item.categorias_id,
           plaza: item.plazas_id,
-          descripcion: item.descripcion,
+          unidad: item.unidad,
           sku: item.sku,
           activo: item.activo ? "Activo" : "Inactivo",
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
@@ -457,7 +364,6 @@ export const getProductoLocatario = (producto) => {
               producto_id: item.producto_id,
               stock: item.stock ? "Sí hay" : "No hay",
               en_promocion: item.en_promocion ? "Sí" : "No",
-              unidad: item.unidad,
               cantidad_unidad: item.cantidad_unidad,
               activo: item.activo ? "Activo" : "Inactivo",
               precio: item.precio,

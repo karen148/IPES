@@ -22,6 +22,7 @@ import NotesIcon from "@material-ui/icons/Notes";
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import Crear from "../../components/shared/modal/Productos/Crear";
+import Archivo from "components/shared/modal/Productos/Archivo";
 
 const estados = [
   {
@@ -70,6 +71,7 @@ const Productos = () => {
   const [currency4, setCurrency4] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = React.useState(false);
   const [locatario, setLocatario] = useState([]);
   const [nomproducto, setNomProducto] = useState("");
   const [mostrar, setMostrar] = useState(false);
@@ -90,14 +92,21 @@ const Productos = () => {
     }
   }, [dispatch, locatario.id]);
 
-  console.log(locatario);
-  console.log(prolocatarios);
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    getDatos();
+  };
+
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
     getDatos();
   };
 
@@ -284,10 +293,16 @@ const Productos = () => {
       <section className="ps-items-listing">
         <div className="ps-section__actions">
           {rol === "SUPER_ADMIN" ? (
-            <a className="ps-btn success" onClick={handleClickOpen}>
-              <AddIcon />
-              Nuevo Producto
-            </a>
+            <>
+              <a className="ps-btn success" onClick={handleClickOpen}>
+                <AddIcon />
+                Nuevo Producto
+              </a>
+              <a className="ps-btn success" onClick={handleClickOpen1}>
+                <AddIcon />
+                Subir archivo
+              </a>
+            </>
           ) : (
             <a className="ps-btn success" onClick={handleClickOpen}>
               <AddIcon />
@@ -529,6 +544,7 @@ const Productos = () => {
         locatario={locatario}
         rol={rol}
       />
+      <Archivo open={open1} handleClose={handleClose1} />
     </ContainerDashboard>
   );
 };

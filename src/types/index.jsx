@@ -18,6 +18,7 @@ export const types = {
   plazaFuncionario: "[plaza] Obtener funcionarios",
   plazaCategorias: "[plaza] Obtener categorias",
   plazaMensaje: "[plaza] Mensaje que se envió la información",
+  plazaID: "[plaza] Plazas",
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
   locatariosMensaje: "[locatario] Mensaje que se envió la información",
@@ -35,4 +36,6 @@ export const types = {
 
   pedidoMensaje: "[pedido] Mensaje que se envió la información",
   pedidoDatos: "[pedido] Obtener datos del pedido",
+
+  promocionesDatos: "[promocion] Obtener datos de la promoción",
 };

@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import { useSelector } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
 
@@ -16,8 +15,6 @@ const Producto = ({
   setPlaza,
   nombre,
   setNombre,
-  descripcion,
-  setDescripion,
   sku,
   setSku,
   unidad,
@@ -184,25 +181,14 @@ const Producto = ({
           <>
             <Grid item xs={12} sm={6}>
               <label>Unidades</label>
-              <Autocomplete
-                limitTags={2}
-                id="auto-select"
-                autoSelect
-                options={uni}
+              <TextField
+                margin="normal"
+                variant="outlined"
+                type="text"
+                value={plaza.unidad}
                 name="unidad"
-                getOptionLabel={(option) => option?.label}
-                inputValue={unidad}
-                onInputChange={(event, newInputValue) => {
-                  setUnidad(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    type="text"
-                    margin="normal"
-                    variant="outlined"
-                  />
-                )}
+                fullWidth
+                disabled
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -212,7 +198,7 @@ const Producto = ({
                 variant="outlined"
                 type="text"
                 value={cantidad}
-                name="sku"
+                name="cantidad"
                 onChange={(e) => setCantidad(e.target.value)}
                 fullWidth
               />
@@ -306,30 +292,33 @@ const Producto = ({
           </>
         )}
         {rol === "SUPER_ADMIN" && (
-          <Grid item xs={12}>
-            <label>SKU</label>
-            <TextField
-              margin="normal"
-              variant="outlined"
-              type="text"
-              value={sku}
-              name="sku"
-              onChange={(e) => setSku(e.target.value)}
-              fullWidth
-            />
-          </Grid>
+          <>
+            <Grid item xs={12} sm={6}>
+              <label>SKU</label>
+              <TextField
+                margin="normal"
+                variant="outlined"
+                type="text"
+                value={sku}
+                name="sku"
+                onChange={(e) => setSku(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <label>Unidades</label>
+              <TextField
+                margin="normal"
+                variant="outlined"
+                type="text"
+                value={unidad}
+                name="unidad"
+                onChange={(e) => setUnidad(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+          </>
         )}
-        <Grid item xs={12} sm={12}>
-          <label>Descripción del producto</label>
-          <TextareaAutosize
-            aria-label="minimum height"
-            variant="outlined"
-            value={descripcion}
-            onChange={(e) => setDescripion(e.target.value)}
-            fullWidth
-            style={{ width: "100%", height: " 100px" }}
-          />
-        </Grid>
       </Grid>
     </React.Fragment>
   );
@@ -342,8 +331,6 @@ Producto.propTypes = {
   setPlaza: PropTypes.func,
   nombre: PropTypes.string,
   setNombre: PropTypes.func,
-  descripcion: PropTypes.string,
-  setDescripion: PropTypes.func,
   sku: PropTypes.string,
   setSku: PropTypes.func,
   unidad: PropTypes.string,
