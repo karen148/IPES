@@ -2,7 +2,7 @@ import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-export const updateImg = async (img1, url, url2, verificar) => {
+export const updateImg = async (img1, url, url2, verificar, producto) => {
   if (img1) {
     const nombre = img1.name.split(".", 2);
     const extension = nombre[nombre.length - 1];
@@ -71,7 +71,7 @@ export const updateImg = async (img1, url, url2, verificar) => {
       axios
         .put(
           process.env.REACT_APP_URL_API + `${url2}`,
-          { imagen_principal: imagen },
+          { nombre: producto, imagen_principal: imagen },
           config1
         )
         .then((response) => {
@@ -85,7 +85,7 @@ export const updateImg = async (img1, url, url2, verificar) => {
       axios
         .put(
           process.env.REACT_APP_URL_API + `${url2}`,
-          { imagen_1: imagen },
+          { nombre: producto, imagen_1: imagen },
           config1
         )
         .then((response) => {
@@ -99,7 +99,7 @@ export const updateImg = async (img1, url, url2, verificar) => {
       axios
         .put(
           process.env.REACT_APP_URL_API + `${url2}`,
-          { imagen_2: imagen },
+          { nombre: producto, imagen_2: imagen },
           config1
         )
         .then((response) => {

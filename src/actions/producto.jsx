@@ -4,14 +4,16 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
+import uniqid from "uniqid";
 
-export const UpdateImagen1 = (img3, img4, idProducto) => {
+export const UpdateImagen1 = (img3, img4, idProducto, nombre) => {
   return async () => {
     updateImg(
       img3,
       `PRODUCTO/imagen_1/${idProducto}`,
       `productos/update/${idProducto}`,
-      "imagen_1"
+      "imagen_1",
+      nombre
     );
     var desertRef = firebase
       .app()
@@ -25,13 +27,14 @@ export const UpdateImagen1 = (img3, img4, idProducto) => {
   };
 };
 
-export const UpdateImagen2 = (img5, img6, idProducto) => {
+export const UpdateImagen2 = (img5, img6, idProducto, nombre) => {
   return async () => {
     updateImg(
       img5,
       `PRODUCTO/imagen_2/${idProducto}`,
       `productos/update/${idProducto}`,
-      "imagen_2"
+      "imagen_2",
+      nombre
     );
     var desertRef = firebase
       .app()
@@ -45,14 +48,15 @@ export const UpdateImagen2 = (img5, img6, idProducto) => {
   };
 };
 
-export const UpdateImagen = (img1, img2, idProducto) => {
+export const UpdateImagen = (img1, img2, idProducto, nombre) => {
   return async () => {
     if (img1) {
       updateImg(
         img1,
         `PRODUCTO/imagen_principal/${idProducto}`,
         `productos/update/${idProducto}`,
-        "imagen_principal"
+        "imagen_principal",
+        nombre
       );
       var desertRef = firebase
         .app()
@@ -77,6 +81,7 @@ export const UpdateProductos = (
 ) => {
   return async (dispatch) => {
     let cate = [];
+    console.log(sku);
     cat.map((item) => {
       Array.prototype.push.apply(cate, [item.id]);
     });
@@ -96,7 +101,7 @@ export const UpdateProductos = (
           categorias_id: cate,
           plazas_id: plazas,
           unidad: unidad,
-          sku: sku,
+          sku: uniqid(),
         },
         config
       )
@@ -226,6 +231,7 @@ export const setProductos = (
   setMsg
 ) => {
   return async (dispatch) => {
+    console.log(sku);
     let cate = [];
     cat.map((item) => {
       Array.prototype.push.apply(cate, [item.id]);
@@ -247,7 +253,7 @@ export const setProductos = (
           categorias_id: cate,
           plazas_id: plazas,
           unidad: unidad,
-          sku: sku,
+          sku: uniqid(),
         },
         config
       )

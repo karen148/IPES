@@ -110,10 +110,7 @@ const Locatarios = () => {
           horarios: item.horarios,
           img: item.img,
           logo: item.logo,
-          local:
-            item.nombre_local === null
-              ? "El local no tiene nombre"
-              : item.nombre_local,
+          local: item.nombre_local,
           cedula: item.cedula,
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           email: item.email === null ? "" : item.email,

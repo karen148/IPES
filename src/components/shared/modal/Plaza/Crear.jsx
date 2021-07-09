@@ -67,10 +67,9 @@ const Crear = ({ open, handleClose }) => {
     }
   };
 
-  const verficarDatos = (plaza, email) => {
+  const verficarDatos = (plaza) => {
     let plaz = plazastrues.filter((item) => item.nombre === plaza)[0]?.nombre;
-    let correo = plazastrues.filter((item) => item.email === email)[0]?.email;
-    if (plaza === plaz || correo === email) {
+    if (plaza === plaz) {
       return false;
     } else {
       return true;

@@ -171,7 +171,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagenP = () => {
-    dispatch(UpdateImagen(img1, img2, idProducto));
+    dispatch(UpdateImagen(img1, img2, idProducto, nombre));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -179,7 +179,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen1 = () => {
-    dispatch(UpdateImagen1(img3, img4, idProducto));
+    dispatch(UpdateImagen1(img3, img4, idProducto, nombre));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");
@@ -187,7 +187,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen2 = () => {
-    dispatch(UpdateImagen2(img5, img6, idProducto));
+    dispatch(UpdateImagen2(img5, img6, idProducto, nombre));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar producto");

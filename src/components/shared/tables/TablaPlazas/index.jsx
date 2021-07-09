@@ -334,7 +334,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`PLAZA/img/${idp}/${item.img}`);
-                  deserTableRowef1.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef1.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `img${item.id}${item.img}`
                     );
@@ -345,7 +345,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`no-photo.svg`);
-                  deserTableRowef2.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef2.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `img${item.id}${item.img}`
                     );
@@ -357,7 +357,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`PLAZA/logo/${idp}/${item.logo}`);
-                  deserTableRowef3.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef3.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `logo${item.id}${item.logo}`
                     );
@@ -368,7 +368,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`no-photo.svg`);
-                  deserTableRowef4.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef4.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `logo${item.id}${item.logo}`
                     );

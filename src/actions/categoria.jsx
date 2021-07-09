@@ -5,6 +5,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
+import uniqid from "uniqid";
 
 export const setCategorias = (nombre, slug, descripcion, img) => {
   return async (dispatch) => {
@@ -47,14 +48,66 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
   };
 };
 
-export const verificarCategorias = (
-  nombre,
-  unidad,
-  producto,
-  plaza,
-  setMsg
-) => {
+export const plazasCategorias = (idCategorias, producto, unidad, setMsg) => {
   return async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API +
+          `plazas/findPlazasByCategoriaId/${idCategorias}`,
+        config
+      )
+      .then((response1) => {
+        let data1 = response1.data.plazas;
+        let idPlaza = [];
+        data1.map((item) => {
+          idPlaza.push(item.plazaId);
+        });
+        axios
+          .post(
+            process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
+            {
+              name: producto,
+              unit: unidad.toLowerCase(),
+            },
+            config
+          )
+          .then(() => {
+            setMsg("El producto ya existe");
+          })
+          .catch(() => {
+            axios
+              .post(
+                process.env.REACT_APP_URL_API + "productos/crear",
+                {
+                  nombre: producto,
+                  plazas_id: idPlaza,
+                  unidad: unidad.toLowerCase(),
+                  categorias_id: [idCategorias],
+                  sku: uniqid(),
+                },
+                config
+              )
+              .then((response2) => {
+                if (response2.status === 200) {
+                  setMsg("Se creo el producto exitosamente");
+                }
+              })
+              .catch(() => {
+                setMsg("Error: No se creo el producto");
+              });
+          });
+      })
+      .catch(() => {
+        setMsg("Error: No hay plazas");
+      });
+  };
+};
+
+export const verificarCategorias = (nombre, unidad, producto, setMsg) => {
+  return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
@@ -65,93 +118,25 @@ export const verificarCategorias = (
       )
       .then((response) => {
         let data = response.data.categoria;
-        console.log(response);
+        dispatch(plazasCategorias(data.id, producto, unidad, setMsg));
+      })
+      .catch(() => {
         axios
           .post(
-            process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
+            process.env.REACT_APP_URL_API + "categorias/crear",
             {
-              name: producto,
-              unit: unidad,
+              nombre: nombre,
             },
             config
           )
-          .then((response1) => {
-            console.log(response1);
-            setMsg(1);
+          .then((response3) => {
+            console.log(response3.data);
+            let data1 = response3.data.categoria;
+            dispatch(plazasCategorias(data1.id, producto, unidad, setMsg));
           })
-          .catch(() => {
-            axios
-              .post(
-                process.env.REACT_APP_URL_API + "productos/crear",
-                {
-                  nombre: producto,
-                  plazas_id: plaza,
-                  unidad: unidad,
-                  categorias_id: [data.id],
-                },
-                config
-              )
-              .then((response2) => {
-                console.log(response2.data);
-                setMsg(2);
-              })
-              .catch(() => {
-                setMsg(3);
-              });
-          })
-          .catch(() => {
-            setMsg(2);
-            axios
-              .post(
-                process.env.REACT_APP_URL_API + "categorias/crear",
-                {
-                  nombre: nombre,
-                },
-                config
-              )
-              .then((response3) => {
-                console.log(response3.data);
-                let data = response3.data.categoria;
-                axios
-                  .post(
-                    process.env.REACT_APP_URL_API +
-                      "productos/findByNameAndUnit",
-                    {
-                      name: producto,
-                      unit: unidad,
-                    },
-                    config
-                  )
-                  .then((response4) => {
-                    console.log(response4);
-                    setMsg(1);
-                  })
-                  .catch(() => {
-                    axios
-                      .post(
-                        process.env.REACT_APP_URL_API + "productos/crear",
-                        {
-                          nombre: producto,
-                          plazas_id: plaza,
-                          unidad: unidad,
-                          categorias_id: [data.id],
-                        },
-                        config
-                      )
-                      .then((response5) => {
-                        console.log(response5.data);
-                        setMsg(2);
-                      })
-                      .catch((e) => {
-                        setMsg(3);
-                        console.log("ERROR!!!!!", e);
-                      });
-                  });
-              })
-              .catch((e) => {
-                console.log("ERROR!!!!!", e);
-                Swal.fire("Error", "Datos incorrectos", "error");
-              });
+          .catch((e) => {
+            console.log("ERROR!!!!!", e);
+            Swal.fire("Error", "Datos incorrectos", "error");
           });
       });
   };

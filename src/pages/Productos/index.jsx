@@ -23,6 +23,7 @@ import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
 import Crear from "../../components/shared/modal/Productos/Crear";
 import Archivo from "components/shared/modal/Productos/Archivo";
+import { NoImg } from "actions/imagen";
 
 const estados = [
   {
@@ -76,15 +77,19 @@ const Productos = () => {
   const [nomproducto, setNomProducto] = useState("");
   const [mostrar, setMostrar] = useState(false);
   const [pro, setPro] = useState([]);
+  const [img, setImg] = useState([]);
   // const [pro1, setPro1] = useState([]);
   // const [pro2, setPro2] = useState([]);
 
   useEffect(() => {
-    dispatch(getLocatarioCedula(setLocatario, codigo));
-    dispatch(getProducto());
-    dispatch(getTrue());
-    dispatch(getCategorias());
-  }, [dispatch]);
+    if (productos.length === 0) {
+      dispatch(getLocatarioCedula(setLocatario, codigo));
+      dispatch(getProducto());
+      dispatch(getTrue());
+      dispatch(getCategorias());
+      dispatch(NoImg(setImg));
+    }
+  }, []);
 
   useEffect(() => {
     if (locatario.id) {
@@ -524,6 +529,7 @@ const Productos = () => {
             getDatos={getDatos}
             rol={rol}
             locatario={locatario}
+            img={img}
             datos={
               rol === "SUPER_ADMIN"
                 ? mostrar

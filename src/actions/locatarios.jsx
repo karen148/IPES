@@ -151,10 +151,7 @@ export const getLocatarioPlaza = (setLocatario, plaza) => {
           telefonos: item.telefonos,
           numero: item.numero_local,
           cedula: item.cedula,
-          local:
-            item.nombre_local === null
-              ? "El local no tiene nombre"
-              : item.nombre_local,
+          local: item.nombre_local,
           activo: item.activo ? "Activo" : "Inactivo",
         }));
         setLocatario(locatarios);

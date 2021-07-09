@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
+import firebase from "firebase";
+import { ArchivoLocatario } from "actions/locatarios";
+import { useEffect } from "react";
+import { verificarCategorias } from "actions/categoria";
+import { useDispatch } from "react-redux";
 
 import ModalForm from "./../modalForm";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,15 +15,9 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import useStyles from "components/shared/forms/style";
-import { useDispatch, useSelector } from "react-redux";
 import ArchivoCSV from "components/shared/forms/FormProducto/ArchivoCSV";
-import { ArchivoLocatario } from "actions/locatarios";
-import { useEffect } from "react";
-import { verificarCategorias } from "actions/categoria";
 
 const Archivo = ({ open, handleClose }) => {
-  const { msg } = useSelector((state) => state.locatario);
-  const { plazaids } = useSelector((state) => state.plaza);
   const dispatch = useDispatch();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
@@ -27,7 +25,7 @@ const Archivo = ({ open, handleClose }) => {
 
   const [hojas, setHojas] = useState([]);
   const [alerta, setAlerta] = useState(false);
-  const [msg1, setMsg] = useState(0);
+  const [msg1, setMsg] = useState("");
 
   useEffect(() => {
     if (hojas[0]?.data?.length > 0) {
@@ -38,7 +36,6 @@ const Archivo = ({ open, handleClose }) => {
             item["Categoría"].toUpperCase(),
             item["Unidad de Medida"],
             item["Nombre Producto"],
-            plazaids,
             setMsg
           )
         );
@@ -86,24 +83,13 @@ const Archivo = ({ open, handleClose }) => {
   console.log(hojas);
 
   const ExportarPlantilla = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(
-        process.env.REACT_APP_URL_API + "locatarios/descargaPlantilla",
-        config
-      )
-      .then((response) => {
-        console.log(response);
-        window.open(
-          process.env.REACT_APP_URL_API + "locatarios/descargaPlantilla",
-          "_self"
-        );
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
+    var deserTableRowef4 = firebase
+      .storage()
+      .ref()
+      .child(`PLANTILLA/PRODUCTOS/PLANTILLA_PRODCUTO.xlsx`);
+    deserTableRowef4.getDownloadURL().then(function (url) {
+      window.open(url);
+    });
   };
 
   return (
@@ -129,9 +115,7 @@ const Archivo = ({ open, handleClose }) => {
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  {msg}
-                </Typography>
+                <Typography variant="h5" gutterBottom></Typography>
                 {/* <Typography variant="subtitle1">
                   Your order number is #2001539. We have emailed your order
                   confirmation, and will send you an update when your order has
@@ -154,7 +138,7 @@ const Archivo = ({ open, handleClose }) => {
                           severity="success"
                           style={{ marginBottom: "10px", width: "100%" }}
                         >
-                          {msg}
+                          {msg1}
                         </Alert>
                       )}
                       <Button

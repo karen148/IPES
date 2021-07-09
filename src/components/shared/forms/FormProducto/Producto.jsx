@@ -61,10 +61,12 @@ const Producto = ({
   let producto = [];
   if (rol === "ADMIN_LOCATARIO") {
     productos.map((item) => {
-      for (let index = 0; index < item.plaza.length; index++) {
-        const element = item.plaza[index];
-        if (element === locatario?.plaza_id) {
-          producto.push(item);
+      if (item.plaza) {
+        for (let index = 0; index < item.plaza.length; index++) {
+          const element = item.plaza[index];
+          if (element === locatario?.plaza_id) {
+            producto.push(item);
+          }
         }
       }
     });
@@ -293,18 +295,21 @@ const Producto = ({
         )}
         {rol === "SUPER_ADMIN" && (
           <>
-            <Grid item xs={12} sm={6}>
-              <label>SKU</label>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                type="text"
-                value={sku}
-                name="sku"
-                onChange={(e) => setSku(e.target.value)}
-                fullWidth
-              />
-            </Grid>
+            {sku && (
+              <Grid item xs={12} sm={6}>
+                <label>SKU</label>
+                <TextField
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  value={sku}
+                  name="sku"
+                  disabled
+                  onChange={(e) => setSku(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+            )}
             <Grid item xs={12} sm={6}>
               <label>Unidades</label>
               <TextField

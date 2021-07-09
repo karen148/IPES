@@ -41,6 +41,7 @@ const ArchivoCSV = ({ hojas, setHojas, titulo }) => {
             placeholder=""
             style={{ paddingTop: "10px" }}
             onChange={handleImg1}
+            accept=".xlsx"
           />
         </Grid>
       </Grid>

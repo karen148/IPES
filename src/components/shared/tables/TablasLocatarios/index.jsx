@@ -281,16 +281,20 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                         <TableRow key={`${item.id}`}>
                           <TableCell align="center">{item.conteo}</TableCell>
                           <TableCell align="center">
-                            <Button
-                              color="secondary"
-                              key={`${item.local}`}
-                              onClick={() => {
-                                handleClickOpen(item.id);
-                                setIdp(item.id);
-                              }}
-                            >
-                              <b style={{ fontSize: "14px" }}>{item.local}</b>
-                            </Button>
+                            {item.local ? (
+                              <Button
+                                color="secondary"
+                                key={`${item.local}`}
+                                onClick={() => {
+                                  handleClickOpen(item.id);
+                                  setIdp(item.id);
+                                }}
+                              >
+                                <b style={{ fontSize: "14px" }}>{item.local}</b>
+                              </Button>
+                            ) : (
+                              <h5 className={classes.error}>---</h5>
+                            )}
                           </TableCell>
                           <TableCell align="center">
                             {" "}
