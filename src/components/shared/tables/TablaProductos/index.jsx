@@ -42,6 +42,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
   const [open4, setOpen4] = useState(false);
+  const [img1, setImg1] = useState(img);
   const [producto, setProducto] = useState([]);
   const [proloc, setProLoc] = useState([]);
   const [idp, setIdp] = useState(0);
@@ -63,15 +64,15 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
   ];
 
   const columns2 = [
-    { id: "id", label: "ID", width: "30px" },
-    { id: "nombre", label: "Nombre del producto", width: "200px" },
-    { id: "sku", label: "SKU", width: "200px" },
+    { id: "id", label: "ID" },
+    { id: "nombre", label: "Nombre del producto" },
+    { id: "sku", label: "SKU" },
     { id: "estado", label: "Estado" },
-    { id: "precio", label: "Precio", width: "200px" },
+    { id: "precio", label: "Precio" },
     { id: "promocion", label: "En promoción" },
     { id: "inventario", label: "Inventario" },
     { id: "fecha", label: "Fechas" },
-    { id: "acciones", label: "Acciones", width: "200px" },
+    { id: "acciones", label: "Acciones" },
   ];
 
   /**
@@ -370,7 +371,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
           handleClose={handleClose}
           title={datos
             ?.filter((item) => item?.id === idp)[0]
-            ?.nombre.toUpperCase()}
+            ?.nombre?.toUpperCase()}
           tamaño="xs"
         >
           {rol === "SUPER_ADMIN"
@@ -384,13 +385,14 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                         `PRODUCTO/imagen_principal/${idp}/${item.imagen_principal}`
                       );
                     desertRef1.getDownloadURL().then(function (url) {
-                      var img = document.getElementById(
-                        `imagen_principal${item.imagen_principal}`
-                      );
-                      console.log(url);
-                      if (url) {
-                        img.src = url;
-                      }
+                      setImg1(url);
+                      // var img = document.getElementById(
+                      //   `imagen_principal${item.imagen_principal}`
+                      // );
+                      // console.log(url);
+                      // if (url) {
+                      //   img.src = url;
+                      // }
                     });
                   }
                   if (item.imagen_1) {
@@ -438,7 +440,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                           style={{ textAlign: "center" }}
                         >
                           <img
-                            src={img}
+                            src={img1 ? img1 : img}
                             id={`imagen_principal${item.imagen_principal}`}
                             alt=""
                             width="150px"

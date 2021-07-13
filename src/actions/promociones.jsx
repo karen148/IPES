@@ -105,7 +105,8 @@ export const setPromocion = (plaza, producto, categoria, img, setMsg) => {
               img,
               `PROMOCIONES/img/${ids}`,
               `promociones/update/${ids}`,
-              "imagen"
+              "imagen",
+              setMsg
             );
           }
         }
@@ -158,13 +159,14 @@ export const UpdatePromocion = (idp, plaza, producto, categoria, setMsg) => {
   };
 };
 
-export const UpdateImagen = (img, img1, idp) => {
+export const UpdateImagen = (img, img1, idp, setMsg1) => {
   return async () => {
     updateImg(
       img,
       `PROMOCIONES/img/${idp}`,
       `promociones/update/${idp}`,
-      "imagen"
+      "imagen",
+      setMsg1
     );
     var desertRef = firebase
       .app()

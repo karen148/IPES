@@ -303,7 +303,7 @@ figure {
     border-bottom: 1px solid #ddd;
 }
 .ps-sidebar .ps-block--user-wellcome {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 .ps-sidebar .ps-sidebar__top {
     padding-right: 20px;
@@ -323,10 +323,10 @@ figure {
 }
 @media screen and (min-width: 1440px) {
     .ps-sidebar .ps-block--user-wellcome {
-        margin-bottom: 40px;
+        margin-bottom: 10px;
    }
     .ps-sidebar .ps-sidebar__top {
-        margin-bottom: 50px;
+        margin-bottom: 10px;
    }
 }
 @media screen and (min-width: 1680px) {
@@ -1483,6 +1483,7 @@ th {
     border: none;
     font-size: 20px;
     color: #000;
+    background-color: transparent;
 }
 .ps-drawer--mobile .menu li a.active:after {
     display: none;
@@ -1497,15 +1498,19 @@ th {
     padding: 10px 20px;
     padding-right: 10px;
     border-bottom: 1px solid #ddd;
+    background-color: #DE9E12;
 }
 .ps-drawer--mobile .ps-drawer__header h4 {
     margin-bottom: 0;
     font-weight: 500;
     font-size: 20px;
+    color: white;
 }
 .ps-drawer--mobile .ps-drawer__content {
     padding: 10px 20px;
     height: 100%;
+    background-color: #DE9E12;
+    overflow: scroll;
 }
 .ps-drawer--mobile.active {
     transform: translateX(0);

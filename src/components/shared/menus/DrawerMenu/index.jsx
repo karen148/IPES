@@ -1,4 +1,5 @@
 import { toggleDrawerMenu } from "actions/menu";
+import FooterCopyright from "components/shared/footers/FooterCopyright";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MenuSidebar from "../MenuSidebar";
@@ -19,6 +20,9 @@ const DrawerMenu = () => {
       </div>
       <div className="ps-drawer__content">
         <MenuSidebar />
+        <div style={{ marginTop: "15px" }}>
+          <FooterCopyright />
+        </div>
       </div>
     </aside>
   );

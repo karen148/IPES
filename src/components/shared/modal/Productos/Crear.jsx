@@ -24,6 +24,8 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
   const steps1 = ["Producto"];
   const steps = ["Producto", "Imagenes", "Categorías"];
   const [msg1, setMsg] = useState(0);
+  const [alerta, setAlerta] = useState(false);
+  const [msg2, setMsg1] = useState({ tipo: "", msg: "" });
 
   const [plaza, setPlaza] = useState([]);
   const [nombre, setNombre] = useState("");
@@ -56,7 +58,7 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
   const Registrar = () => {
     if (rol === "SUPER_ADMIN") {
       dispatch(
-        setProductos(plaza, nombre, unidad, sku, img1, img3, img5, cat, setMsg)
+        setProductos(plaza, nombre, unidad, sku, img1, img3, img5, cat, setMsg1)
       );
     } else {
       if (precio > rebaja) {
@@ -76,11 +78,13 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
             setMsg
           )
         );
-        setTimeout(() => {
-          setMsg(0);
-        }, 3000);
       }
     }
+    setAlerta(true);
+    setTimeout(() => {
+      setMsg(0);
+      setAlerta(false);
+    }, 5000);
   };
 
   console.log(sku);
@@ -209,15 +213,8 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
                     )}
                     {activeStep === steps.length - 1 ? (
                       <>
-                        {msg1 === 1 && (
-                          <Alert severity="success">
-                            "Se creo el producto para el locatario"
-                          </Alert>
-                        )}
-                        {msg1 === 2 && (
-                          <Alert severity="error">
-                            "ERROR: no se envió la información"
-                          </Alert>
+                        {alerta && (
+                          <Alert severity={msg2.tipo}>{msg2.msg}</Alert>
                         )}
                         <Button
                           variant="contained"

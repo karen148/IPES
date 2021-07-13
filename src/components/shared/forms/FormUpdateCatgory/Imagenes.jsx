@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setImagen } from "actions/categoria";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import Alert from "@material-ui/lab/Alert";
-// import TextField from "@material-ui/core/TextField";
-// import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import Checkbox from "@material-ui/core/Checkbox";
 
 const Imagen = ({ idCategoria, img }) => {
   const dispatch = useDispatch();
 
-  const { msg } = useSelector((state) => state.categoria);
-
   const [img1, setImg1] = useState(null);
   const [img2, setImg2] = useState(null);
   const [alerta, setAlerta] = useState(false);
+  const [msg1, setMsg1] = useState({ tipo: "", msg: "" });
 
   useEffect(() => {
     if (img) {
@@ -40,12 +36,13 @@ const Imagen = ({ idCategoria, img }) => {
     };
   };
 
+  console.log(img);
   const ActualizarImagen = () => {
-    dispatch(setImagen(img1, img2, idCategoria));
+    dispatch(setImagen(img1, img, idCategoria, setMsg1));
     setAlerta(true);
     setTimeout(() => {
       setAlerta(false);
-    }, 4000);
+    }, 5000);
   };
 
   return (
@@ -81,8 +78,8 @@ const Imagen = ({ idCategoria, img }) => {
         </Grid>
         <Grid item xs={12} sm={12} style={{ textAlign: "center" }}>
           {alerta && (
-            <Alert severity="success" style={{ marginBottom: "10px" }}>
-              {msg}
+            <Alert severity={msg1.tipo} style={{ marginBottom: "10px" }}>
+              {msg1.msg}
             </Alert>
           )}
           <Button

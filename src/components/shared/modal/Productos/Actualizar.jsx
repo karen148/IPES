@@ -44,6 +44,7 @@ const Actualizar = ({
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ["Producto", "Categorías", "Imagenes"];
   const [alerta, setAlerta] = useState("Actualizar producto");
+  const [msg2, setMsg1] = useState({ tipo: "", msg: "Actualizar producto" });
 
   const [plaza, setPlaza] = useState([]);
   const [nombre, setNombre] = useState("");
@@ -162,6 +163,7 @@ const Actualizar = ({
     }
   }
 
+  console.log(alerta);
   const ActualizarProducto = () => {
     dispatch(UpdateProductos(plaza, nombre, sku, cat, unidad, idProducto));
     setAlerta(msg);
@@ -171,26 +173,24 @@ const Actualizar = ({
   };
 
   const ActualizarImagenP = () => {
-    dispatch(UpdateImagen(img1, img2, idProducto, nombre));
+    dispatch(UpdateImagen(img1, imagen_principal, idProducto, setMsg1, nombre));
     setAlerta(msg);
     setTimeout(() => {
-      setAlerta("Actualizar producto");
+      setMsg1({ tipo: "", msg: "Actualizar producto" });
     }, 3000);
   };
 
   const ActualizarImagen1 = () => {
-    dispatch(UpdateImagen1(img3, img4, idProducto, nombre));
-    setAlerta(msg);
+    dispatch(UpdateImagen1(img3, imagen1, idProducto, setMsg1, nombre));
     setTimeout(() => {
-      setAlerta("Actualizar producto");
+      setMsg1({ tipo: "", msg: "Actualizar producto" });
     }, 3000);
   };
 
   const ActualizarImagen2 = () => {
-    dispatch(UpdateImagen2(img5, img6, idProducto, nombre));
-    setAlerta(msg);
+    dispatch(UpdateImagen2(img5, imagen2, idProducto, setMsg1, nombre));
     setTimeout(() => {
-      setAlerta("Actualizar producto");
+      setMsg1({ tipo: "", msg: "Actualizar producto" });
     }, 3000);
   };
 
@@ -202,7 +202,7 @@ const Actualizar = ({
     <ModalForm
       open={open}
       handleClose={handleClose}
-      title={alerta}
+      title={msg2.msg}
       tamaño="sm"
       Limpiar={Limpiar}
     >

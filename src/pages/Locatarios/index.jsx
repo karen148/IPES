@@ -236,8 +236,8 @@ const Locatarios = () => {
                   className={classes.margin}
                 >
                   {estados.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                    <MenuItem key={option?.value} value={option?.value}>
+                      {option?.label}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -275,7 +275,9 @@ const Locatarios = () => {
               <Autocomplete
                 id="free-solo-demo"
                 freeSolo
-                options={locatario2.map((option) => option.nombre)}
+                options={locatario2?.map((option) =>
+                  option?.nombre ? option?.nombre : ""
+                )}
                 inputValue={nomplaza1}
                 onInputChange={(event, newInputValue) => {
                   setNomplaza1(newInputValue);

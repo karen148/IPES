@@ -6,13 +6,14 @@ import { updateImg } from "./imagen";
 import firebase from "firebase";
 import uniqid from "uniqid";
 
-export const UpdateImagen1 = (img3, img4, idProducto, nombre) => {
+export const UpdateImagen1 = (img3, img4, idProducto, setMsg, nombre) => {
   return async () => {
     updateImg(
       img3,
       `PRODUCTO/imagen_1/${idProducto}`,
       `productos/update/${idProducto}`,
       "imagen_1",
+      setMsg,
       nombre
     );
     var desertRef = firebase
@@ -27,13 +28,14 @@ export const UpdateImagen1 = (img3, img4, idProducto, nombre) => {
   };
 };
 
-export const UpdateImagen2 = (img5, img6, idProducto, nombre) => {
+export const UpdateImagen2 = (img5, img6, idProducto, setMsg, nombre) => {
   return async () => {
     updateImg(
       img5,
       `PRODUCTO/imagen_2/${idProducto}`,
       `productos/update/${idProducto}`,
       "imagen_2",
+      setMsg,
       nombre
     );
     var desertRef = firebase
@@ -48,7 +50,7 @@ export const UpdateImagen2 = (img5, img6, idProducto, nombre) => {
   };
 };
 
-export const UpdateImagen = (img1, img2, idProducto, nombre) => {
+export const UpdateImagen = (img1, img2, idProducto, setMsg, nombre) => {
   return async () => {
     if (img1) {
       updateImg(
@@ -56,6 +58,7 @@ export const UpdateImagen = (img1, img2, idProducto, nombre) => {
         `PRODUCTO/imagen_principal/${idProducto}`,
         `productos/update/${idProducto}`,
         "imagen_principal",
+        setMsg,
         nombre
       );
       var desertRef = firebase
@@ -260,7 +263,10 @@ export const setProductos = (
       .then((response) => {
         console.log(response);
         let data = response.data;
-        setMsg(1);
+        setMsg({
+          tipo: "success",
+          msg: "El producto se creo exitosamente",
+        });
         dispatch(
           ProductoMensaje({
             ok: data.ok,
@@ -270,12 +276,15 @@ export const setProductos = (
         if (response.status === 200) {
           console.log(response);
           let ids = data.producto.id;
+          let nombre = data.producto.nombre;
           if (img1) {
             updateImg(
               img1,
               `PRODUCTO/imagen_principal/${ids}`,
               `productos/update/${ids}`,
-              "imagen_principal"
+              "imagen_principal",
+              setMsg,
+              nombre
             );
           }
           if (img3) {
@@ -283,7 +292,9 @@ export const setProductos = (
               img3,
               `PRODUCTO/imagen_1/${ids}`,
               `productos/update/${ids}`,
-              "imagen_1"
+              "imagen_1",
+              setMsg,
+              nombre
             );
           }
           if (img5) {
@@ -291,7 +302,9 @@ export const setProductos = (
               img5,
               `PRODUCTO/imagen_2/${ids}`,
               `productos/update/${ids}`,
-              "imagen_2"
+              "imagen_2",
+              setMsg,
+              nombre
             );
           }
         }

@@ -20,7 +20,7 @@ const Crear = ({ open, handleClose }) => {
   const steps = ["Promoción", "Imagen"];
 
   const [activeStep, setActiveStep] = useState(0);
-  const [msg, setMsg] = useState(0);
+  const [msg1, setMsg1] = useState({ tipo: "vacio", msg: "" });
 
   const [plaza, setPlaza] = useState([]);
   const [producto, setProducto] = useState([]);
@@ -38,9 +38,9 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Registrar = () => {
-    dispatch(setPromocion(plaza, producto, categorias, img, setMsg));
+    dispatch(setPromocion(plaza, producto, categorias, img, setMsg1));
     setTimeout(() => {
-      setMsg(0);
+      setMsg1({ tipo: "vacio", msg: "" });
     }, 3000);
   };
 
@@ -114,14 +114,9 @@ const Crear = ({ open, handleClose }) => {
                   )}
                   {activeStep === steps.length - 1 ? (
                     <>
-                      {msg === 1 && (
-                        <Alert severity="success" style={{ width: "100%" }}>
-                          La información se envio
-                        </Alert>
-                      )}
-                      {msg === 2 && (
-                        <Alert severity="success" style={{ width: "100%" }}>
-                          Error: No se pudo enviar la información
+                      {msg1.tipo !== "vacio" && (
+                        <Alert severity={msg1.tipo} style={{ width: "100%" }}>
+                          {msg1.msg}
                         </Alert>
                       )}
                       <Button

@@ -190,7 +190,7 @@ const TableCategoryItems = ({ datos, getDatos }) => {
         idCategoria={idp1}
         nombre={categoria.length !== 0 ? categoria[0].nombre : ""}
         slug={categoria.length !== 0 ? categoria[0].slug : ""}
-        img={categoria.length !== 0 ? categoria[0].img : ""}
+        img={categoria.length !== 0 ? categoria[0].icono : ""}
         descripcion={categoria.length !== 0 ? categoria[0].descripcion : ""}
       />
     </div>

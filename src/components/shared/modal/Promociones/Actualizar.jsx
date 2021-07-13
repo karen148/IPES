@@ -32,8 +32,7 @@ const Actualizar = ({
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [msg, setMsg] = useState(0);
-  const [alerta, setAlerta] = useState("");
+  const [msg1, setMsg1] = useState({ tipo: "", msg: "" });
 
   const steps = ["Promoción", "Imagen"];
 
@@ -112,17 +111,14 @@ const Actualizar = ({
   }
 
   const ActualizarPromocion = () => {
-    dispatch(UpdatePromocion(id, plaza, producto, categorias2, setMsg));
-    setAlerta(
-      msg === 1 ? "Se actualizo la información" : "ERROR: No se actualizo"
-    );
+    dispatch(UpdatePromocion(id, plaza, producto, categorias2, setMsg1));
     setTimeout(() => {
-      setAlerta("Actualizar Locatario");
+      setMsg1({ tipo: "", msg: "Actualizar Locatario" });
     }, 3000);
   };
 
   const ActualizarImagen = () => {
-    dispatch(UpdateImagen(img, imagen1, id));
+    dispatch(UpdateImagen(img, imagen1, id, setMsg1));
   };
 
   const Limpiar = () => {
@@ -133,7 +129,7 @@ const Actualizar = ({
     <ModalForm
       open={open}
       handleClose={handleClose}
-      title={alerta}
+      title={msg1.msg}
       tamaño="sm"
       Limpiar={Limpiar}
     >
@@ -153,7 +149,7 @@ const Actualizar = ({
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  {msg}
+                  {msg1.msg}
                 </Typography>
                 {/* <Typography variant="subtitle1">
                   Your order number is #2001539. We have emailed your order

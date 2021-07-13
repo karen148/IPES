@@ -69,13 +69,14 @@ export const plazasCategorias = (idCategorias, producto, unidad, setMsg) => {
           .post(
             process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
             {
-              name: producto,
+              name: producto.toUpperCase(),
               unit: unidad.toLowerCase(),
             },
             config
           )
-          .then(() => {
-            setMsg("El producto ya existe");
+          .then((response3) => {
+            let nombre_producto = response3.data.producto;
+            setMsg(`${nombre_producto.nombre} ya existe`);
           })
           .catch(() => {
             axios
@@ -244,9 +245,15 @@ export const UpdateCategoria = (nombre, slug, descripcion, idp2) => {
   };
 };
 
-export const setImagen = (img, img2, idp2) => {
+export const setImagen = (img, img2, idp2, setMsg) => {
   return async () => {
-    updateImg(img, `CATEGORIAS/${idp2}`, `categorias/update/${idp2}`, "icono");
+    updateImg(
+      img,
+      `CATEGORIAS/${idp2}`,
+      `categorias/update/${idp2}`,
+      "icono",
+      setMsg
+    );
     var desertRef = firebase
       .app()
       .storage("gs://ipes-adeda.appspot.com")

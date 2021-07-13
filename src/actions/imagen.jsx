@@ -2,7 +2,14 @@ import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-export const updateImg = async (img1, url, url2, verificar, producto) => {
+export const updateImg = async (
+  img1,
+  url,
+  url2,
+  verificar,
+  setMsg,
+  producto
+) => {
   if (img1) {
     const nombre = img1.name.split(".", 2);
     const extension = nombre[nombre.length - 1];
@@ -14,10 +21,17 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
     task.on(
       "state_changed",
       () => {
-        console.log("Exito");
+        setMsg({
+          tipo: "success",
+          msg: "Imagen acualizada en el servidor de Google",
+        });
       },
       (error) => {
         console.log(error.message);
+        setMsg({
+          tipo: "error",
+          msg: "El icono no se actualizo en el servidor de Google",
+        });
       }
     );
     let config1 = {
@@ -60,12 +74,18 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
           { icono: imagen },
           config1
         )
-        .then((response) => {
-          let data = response.data;
-          console.log(data);
+        .then(() => {
+          setMsg({
+            tipo: "success",
+            msg: "Icono actualizado en la base de datos",
+          });
         })
         .catch((e) => {
           console.log("ERROR", e);
+          setMsg({
+            tipo: "error",
+            msg: "Icono no actualizado en la base de datos",
+          });
         });
     } else if (verificar === "imagen_principal") {
       axios
@@ -77,9 +97,17 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
         .then((response) => {
           let data = response.data;
           console.log(data);
+          setMsg({
+            tipo: "success",
+            msg: "La imagen se actualizo en la base de datos",
+          });
         })
         .catch((e) => {
           console.log("ERROR", e);
+          setMsg({
+            tipo: "error",
+            msg: "La imagen no se actualizo en la base de datos",
+          });
         });
     } else if (verificar === "imagen_1") {
       axios
@@ -91,9 +119,17 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
         .then((response) => {
           let data = response.data;
           console.log(data);
+          setMsg({
+            tipo: "success",
+            msg: "La imagen se actualizo en la base de datos",
+          });
         })
         .catch((e) => {
           console.log("ERROR", e);
+          setMsg({
+            tipo: "error",
+            msg: "La imagen no se actualizo en la base de datos",
+          });
         });
     } else if (verificar === "imagen_2") {
       axios
@@ -105,9 +141,17 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
         .then((response) => {
           let data = response.data;
           console.log(data);
+          setMsg({
+            tipo: "success",
+            msg: "La imagen se actualizo en la base de datos",
+          });
         })
         .catch((e) => {
           console.log("ERROR", e);
+          setMsg({
+            tipo: "error",
+            msg: "La imagen no se actualizo en la base de datos",
+          });
         });
     } else if (verificar === "imagen") {
       axios
@@ -119,9 +163,17 @@ export const updateImg = async (img1, url, url2, verificar, producto) => {
         .then((response) => {
           let data = response.data;
           console.log(data);
+          setMsg({
+            tipo: "success",
+            msg: "Icono actualizado en la base de datos",
+          });
         })
         .catch((e) => {
           console.log("ERROR", e);
+          setMsg({
+            tipo: "error",
+            msg: "La imagen no se actualizo en la base de datos",
+          });
         });
     }
   }

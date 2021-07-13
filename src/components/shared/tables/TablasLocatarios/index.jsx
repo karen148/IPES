@@ -405,54 +405,63 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                               timeout="auto"
                               unmountOnExit
                             >
-                              <Box
-                                margin={1}
-                                borderColor="#DE9E12"
-                                borderRight={0}
-                                borderLeft={0}
-                                border={2}
-                                padding={2}
+                              <Grid
+                                container
+                                direction="row"
+                                justifyContent="center"
+                                alignItems="center"
                               >
-                                <a
-                                  className="ps-btn success2"
-                                  color="#450016"
-                                  onClick={() => setOpen4(true)}
-                                >
-                                  <AddIcon />
-                                  Agregar Producto
-                                </a>
-                                {msg === "error" ? (
-                                  <h3
-                                    style={{
-                                      textAlign: "center",
-                                      color: "#FF2D42",
-                                    }}
+                                <Grid item xs={12} md={12}>
+                                  <Box
+                                    margin={1}
+                                    borderColor="#DE9E12"
+                                    borderRight={0}
+                                    borderLeft={0}
+                                    border={2}
+                                    padding={2}
                                   >
-                                    El locatario no tiene productos
-                                  </h3>
-                                ) : (
-                                  <>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      component="div"
-                                      style={{
-                                        textAlign: "center",
-                                        fontWeight: "bold",
-                                        color: "#450016",
-                                      }}
+                                    <a
+                                      className="ps-btn success2"
+                                      color="#450016"
+                                      onClick={() => setOpen4(true)}
                                     >
-                                      Productos del local
-                                    </Typography>
-                                    <TablaProducto
-                                      datos={prolocatarios}
-                                      rol={"ADMIN_LOCATARIO"}
-                                      getDatos={getDatosPro}
-                                      locatario={locatario2}
-                                    />
-                                  </>
-                                )}
-                              </Box>
+                                      <AddIcon />
+                                      Agregar Producto
+                                    </a>
+                                    {msg === "error" ? (
+                                      <h3
+                                        style={{
+                                          textAlign: "center",
+                                          color: "#FF2D42",
+                                        }}
+                                      >
+                                        El locatario no tiene productos
+                                      </h3>
+                                    ) : (
+                                      <>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          component="div"
+                                          style={{
+                                            textAlign: "center",
+                                            fontWeight: "bold",
+                                            color: "#450016",
+                                          }}
+                                        >
+                                          Productos del local
+                                        </Typography>
+                                        <TablaProducto
+                                          datos={prolocatarios}
+                                          rol={"ADMIN_LOCATARIO"}
+                                          getDatos={getDatosPro}
+                                          locatario={locatario2}
+                                        />
+                                      </>
+                                    )}
+                                  </Box>
+                                </Grid>
+                              </Grid>
                             </Collapse>
                           </TableCell>
                         </TableRow>

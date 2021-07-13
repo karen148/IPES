@@ -70,7 +70,7 @@ const Producto = ({
         }
       }
     });
-    setSku(plaza.sku);
+    setSku(plaza?.sku);
     if (!existe) {
       setPromocion(false);
       setRebaja(0);
