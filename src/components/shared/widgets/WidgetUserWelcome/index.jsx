@@ -21,7 +21,7 @@ const WidgetUserWelcome = () => {
   return (
     <div className="ps-block--user-wellcome">
       <div className="ps-block__left">
-        <img src={img1} id="myimg" alt="" width="80px" height="80px" />
+        <img src={img1} id="myimg" alt="" width="90px" height="90px" />
       </div>
       <div className="ps-block__right">
         <p style={{ color: "white" }}>

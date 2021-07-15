@@ -1,6 +1,7 @@
 import axios from "axios";
 import { types } from "./../types";
-import DeleteIcon from "@material-ui/icons/Delete";
+import CheckIcon from "@material-ui/icons/Check";
+import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
@@ -30,8 +31,13 @@ export const getPromocion = () => {
               id: item.id,
             },
             {
-              name: "Eliminar",
-              icon: <DeleteIcon />,
+              name: "Activar",
+              icon: <CheckIcon />,
+              id: item.id,
+            },
+            {
+              name: "Desactivar",
+              icon: <CloseIcon />,
               id: item.id,
             },
           ],
@@ -139,7 +145,7 @@ export const UpdatePromocion = (idp, plaza, producto, categoria, setMsg) => {
 
     axios
       .put(
-        process.env.REACT_APP_URL_API + "promociones/update" + idp,
+        process.env.REACT_APP_URL_API + "promociones/update/" + idp,
         {
           producto_id: pro,
           plazas_id: pla,
@@ -190,6 +196,29 @@ export const DeletePromocion = (idp) => {
         process.env.REACT_APP_URL_API + "promociones/update/" + idp,
         {
           activo: true,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
+export const DesactivarPromocion = (idp) => {
+  return async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .put(
+        process.env.REACT_APP_URL_API + "promociones/update/" + idp,
+        {
+          activo: false,
         },
         config
       )

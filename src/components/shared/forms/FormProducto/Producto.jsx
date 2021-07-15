@@ -19,8 +19,6 @@ const Producto = ({
   setSku,
   unidad,
   setUnidad,
-  cantidad,
-  setCantidad,
   existe,
   setExiste,
   promocion,
@@ -75,9 +73,12 @@ const Producto = ({
       setPromocion(false);
       setRebaja(0);
     }
+    if (!promocion) {
+      setRebaja(0);
+    }
   }
-  console.log(promocion);
-  console.log(existe);
+  console.log(rebaja);
+  console.log(precio);
   console.log(uni);
   return (
     <React.Fragment>
@@ -181,7 +182,7 @@ const Producto = ({
         )}
         {rol === "ADMIN_LOCATARIO" && (
           <>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <label>Unidades</label>
               <TextField
                 margin="normal"
@@ -191,18 +192,6 @@ const Producto = ({
                 name="unidad"
                 fullWidth
                 disabled
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <label>Cantidad por unidad</label>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                type="text"
-                value={cantidad}
-                name="cantidad"
-                onChange={(e) => setCantidad(e.target.value)}
-                fullWidth
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -310,7 +299,7 @@ const Producto = ({
                 />
               </Grid>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <label>Unidades</label>
               <TextField
                 margin="normal"

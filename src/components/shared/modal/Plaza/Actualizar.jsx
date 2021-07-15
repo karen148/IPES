@@ -287,7 +287,7 @@ const Actualizar = ({
   };
 
   const ActualizarLogo = () => {
-    dispatch(UpdateLogo(img2, img3, idPlaza));
+    dispatch(UpdateLogo(img2, logo1, idPlaza));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar plaza");
@@ -295,7 +295,7 @@ const Actualizar = ({
   };
 
   const ActualizarImagen = () => {
-    dispatch(UpdateBanner(img, img1, idPlaza));
+    dispatch(UpdateBanner(img, imagen, idPlaza));
     setAlerta(msg);
     setTimeout(() => {
       setAlerta("Actualizar plaza");

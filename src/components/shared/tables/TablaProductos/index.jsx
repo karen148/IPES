@@ -55,7 +55,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
   const columns1 = [
     { id: "id", label: "ID", width: "30px" },
     { id: "nombre", label: "Nombre del producto", width: "200px" },
-    { id: "sku", label: "SKU", width: "200px" },
+    { id: "unidad", label: "Unidad", width: "200px" },
     { id: "estado", label: "Estado" },
     { id: "plaza", label: "Plaza" },
     { id: "categorías", label: "Categorías" },
@@ -222,7 +222,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                             <b>{item.nombre}</b>
                           </Button>
                         </TableCell>
-                        <TableCell align="center">{item.sku}</TableCell>
+                        <TableCell align="center">{item.unidad}</TableCell>
                         <TableCell align="center">{item.activo}</TableCell>
                         <TableCell align="center">
                           <Button
@@ -572,7 +572,11 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                       <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
                         <h5>SKU</h5>
                         <p>
-                          {item.sku ? item.sku : "El producto no tiene sku"}
+                          {
+                            productos.filter(
+                              (pro) => pro.id === item.producto_id
+                            )[0]?.sku
+                          }
                         </p>
                         <Divider variant="middle" />
                       </Grid>
@@ -585,17 +589,6 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                             )[0]?.unidad
                           }
                         </p>
-                        <Divider variant="middle" />
-                        <br></br>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        style={{ textAlign: "center" }}
-                      >
-                        <h5>CANTIDAD POR UNIDAD: </h5>
-                        {item.cantidad_unidad}
                         <Divider variant="middle" />
                         <br></br>
                       </Grid>

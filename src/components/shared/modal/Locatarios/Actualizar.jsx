@@ -127,9 +127,9 @@ const Actualizar = ({
         }
 
         setCedula(ced1);
-        setLocalNombre(loc1.trim());
+        setLocalNombre(loc1?.trim());
         console.log(setLocalNombre);
-        console.log(loc1.trim());
+        console.log(loc1?.trim());
         setNombre(nom1);
         // setApellido(ape1);
         setEmail(email1);

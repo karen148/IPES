@@ -174,6 +174,7 @@ const Productos = () => {
     setMostrar(false);
     if (rol === "SUPER_ADMIN") {
       dispatch(getProducto());
+      dispatch(getCategorias());
     } else {
       dispatch(getProductoLocatario(locatario.id));
     }

@@ -2,9 +2,10 @@ import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { updateImg } from "actions/imagen";
+import firebase from "firebase";
 
 const FormAccountSettings = () => {
-  const { id, rol } = useSelector((state) => state.auth);
+  const { id, rol, img } = useSelector((state) => state.auth);
 
   const [ojo1, setOjo1] = useState("visibility_off");
   const [ojo2, setOjo2] = useState("visibility_off");
@@ -119,6 +120,19 @@ const FormAccountSettings = () => {
   console.log(img1);
   console.log(state.cedula);
   console.log(state.telefono);
+
+  const UpdateImagen = () => {
+    updateImg(img1, `ADMINS/${rol}/${id}`, `admins/updateAdmin/${id}`, "img");
+    var desertRef = firebase
+      .app()
+      .storage("gs://ipes-adeda.appspot.com")
+      .ref(`/ADMINS/${rol}/${id}`)
+      .child(`${img}`);
+    desertRef
+      .delete()
+      .then((ref) => console.log("success =>", ref))
+      .catch((error) => console.log(error));
+  };
 
   const ValiContraseña = (confirmar_contraseña) => {
     if (
@@ -401,14 +415,7 @@ const FormAccountSettings = () => {
         <div className="col-sm-12 text-center">
           <button
             className="ps-btn success"
-            onClick={() =>
-              updateImg(
-                img1,
-                `ADMINS/${rol}/${id}`,
-                `admins/updateAdmin/${id}`,
-                "img"
-              )
-            }
+            onClick={UpdateImagen}
             style={{ marginBottom: "30px" }}
           >
             Actualizar foto

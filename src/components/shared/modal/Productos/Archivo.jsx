@@ -3,7 +3,7 @@ import firebase from "firebase";
 import { ArchivoLocatario } from "actions/locatarios";
 import { useEffect } from "react";
 import { verificarCategorias } from "actions/categoria";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ModalForm from "./../modalForm";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,6 +19,7 @@ import ArchivoCSV from "components/shared/forms/FormProducto/ArchivoCSV";
 
 const Archivo = ({ open, handleClose }) => {
   const dispatch = useDispatch();
+  const { plazaids } = useSelector((state) => state.plaza);
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = ["Archivo"];
@@ -36,7 +37,8 @@ const Archivo = ({ open, handleClose }) => {
             item["Categoría"].toUpperCase(),
             item["Unidad de Medida"],
             item["Nombre Producto"],
-            setMsg
+            setMsg,
+            plazaids
           )
         );
       });

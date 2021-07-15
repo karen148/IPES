@@ -17,6 +17,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import * as locales from "@material-ui/core/locale";
+import Box from "@material-ui/core/Box";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 //Componentes
@@ -395,6 +396,19 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                       </p>
                       <Divider variant="middle" />
                     </Grid>
+                    {/* <Grid
+                      item
+                      xs={12}
+                      sm={4}
+                      style={{ textAlign: "center", position: "relative" }}
+                    >
+                      <img
+                        src={""}
+                        id={`logo${item.id}${item.logo}`}
+                        alt=""
+                        width="140px"
+                      />
+                    </Grid> */}
                     <Grid item xs={12} sm={12}>
                       <Grid
                         container
@@ -408,13 +422,18 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                           sm={4}
                           style={{ textAlign: "center" }}
                         >
-                          <img
-                            src={""}
-                            id={`logo${item.id}${item.logo}`}
-                            alt=""
-                            width="150px"
-                            height="150px"
-                          />
+                          <Box
+                            bgcolor="primary.main"
+                            style={{ borderRadius: "15px", marginTop: "10px" }}
+                          >
+                            <img
+                              src={""}
+                              id={`logo${item.id}${item.logo}`}
+                              alt=""
+                              width="150px"
+                              height="150px"
+                            />
+                          </Box>
                           <p style={{ textAlign: "center" }}>
                             <i>Logo</i>
                           </p>

@@ -48,7 +48,13 @@ export const setCategorias = (nombre, slug, descripcion, img) => {
   };
 };
 
-export const plazasCategorias = (idCategorias, producto, unidad, setMsg) => {
+export const plazasCategorias = (
+  idCategorias,
+  producto,
+  unidad,
+  setMsg,
+  plazaids
+) => {
   return async () => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -102,12 +108,55 @@ export const plazasCategorias = (idCategorias, producto, unidad, setMsg) => {
           });
       })
       .catch(() => {
-        setMsg("Error: No hay plazas");
+        setMsg("Error: La categoría no tiene plazas");
+        axios
+          .post(
+            process.env.REACT_APP_URL_API + "productos/findByNameAndUnit",
+            {
+              name: producto.toUpperCase(),
+              unit: unidad.toLowerCase(),
+            },
+            config
+          )
+          .then((response3) => {
+            let nombre_producto = response3.data.producto;
+            setMsg(`${nombre_producto.nombre} ya existe`);
+          })
+          .catch(() => {
+            axios
+              .post(
+                process.env.REACT_APP_URL_API + "productos/crear",
+                {
+                  nombre: producto,
+                  plazas_id: plazaids,
+                  unidad: unidad.toLowerCase(),
+                  categorias_id: [idCategorias],
+                  sku: uniqid(),
+                },
+                config
+              )
+              .then((response2) => {
+                if (response2.status === 200) {
+                  setMsg("Se creo el producto exitosamente");
+                }
+              })
+              .catch(() => {
+                setMsg(
+                  "Error: No se creo el producto porque no tiene plaza asignada"
+                );
+              });
+          });
       });
   };
 };
 
-export const verificarCategorias = (nombre, unidad, producto, setMsg) => {
+export const verificarCategorias = (
+  nombre,
+  unidad,
+  producto,
+  setMsg,
+  plazaids
+) => {
   return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -119,7 +168,7 @@ export const verificarCategorias = (nombre, unidad, producto, setMsg) => {
       )
       .then((response) => {
         let data = response.data.categoria;
-        dispatch(plazasCategorias(data.id, producto, unidad, setMsg));
+        dispatch(plazasCategorias(data.id, producto, unidad, setMsg, plazaids));
       })
       .catch(() => {
         axios
@@ -133,7 +182,9 @@ export const verificarCategorias = (nombre, unidad, producto, setMsg) => {
           .then((response3) => {
             console.log(response3.data);
             let data1 = response3.data.categoria;
-            dispatch(plazasCategorias(data1.id, producto, unidad, setMsg));
+            dispatch(
+              plazasCategorias(data1.id, producto, unidad, setMsg, plazaids)
+            );
           })
           .catch((e) => {
             console.log("ERROR!!!!!", e);

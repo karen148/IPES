@@ -18,6 +18,7 @@ import Box from "@material-ui/core/Box";
 import { DeletePromocion } from "actions/promociones";
 import { getPromocion } from "actions/promociones";
 import firebase from "firebase";
+import { DesactivarPromocion } from "actions/promociones";
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const CardPromocion = () => {
@@ -32,9 +33,11 @@ const CardPromocion = () => {
   const [expanded, setExpanded] = useState(false);
   const [dp1, setIdp1] = useState("");
   const [dp2, setIdp2] = useState("");
+  const [dp3, setIdp3] = useState("");
   const [promocion, setPromocion] = useState([]);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
 
   const handleExpandClick = (id) => {
     setExpanded(!expanded);
@@ -58,6 +61,26 @@ const CardPromocion = () => {
 
   const handleClose2 = () => {
     setOpen2(false);
+    dispatch(getPromocion());
+  };
+
+  const handleClickOpen3 = (id) => {
+    setOpen3(true);
+    setIdp3(id);
+  };
+
+  const handleClose3 = () => {
+    setOpen3(false);
+    dispatch(getPromocion());
+  };
+
+  const Activar = () => {
+    dispatch(DeletePromocion(dp1));
+    dispatch(getPromocion());
+  };
+
+  const Desactivar = () => {
+    dispatch(DesactivarPromocion(dp3));
     dispatch(getPromocion());
   };
 
@@ -127,7 +150,9 @@ const CardPromocion = () => {
                         onClick={
                           cat.name === "Editar"
                             ? () => handleClickOpen1(cat.id)
-                            : () => handleClickOpen2(cat.id)
+                            : cat.name === "Activar"
+                            ? () => handleClickOpen2(cat.id)
+                            : () => handleClickOpen3(cat.id)
                         }
                       >
                         {cat.icon}
@@ -189,11 +214,18 @@ const CardPromocion = () => {
         );
       })}
       <Eliminar
+        open={open3}
+        handleClose={handleClose3}
+        eliminar={Desactivar}
+        titulo3="Desactivar promoción"
+        titulo2="Desea desactivar la promoción"
+      />
+      <Eliminar
         open={open2}
         handleClose={handleClose2}
-        eliminar={() => dispatch(DeletePromocion(dp1))}
-        titulo3="Eliminar promoción"
-        titulo2="Desea eliminar la promoción"
+        eliminar={Activar}
+        titulo3="Activar promoción"
+        titulo2="Desea activar la promoción"
       />
       <Actualizar
         open={open1}

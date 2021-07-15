@@ -21,17 +21,18 @@ export const updateImg = async (
     task.on(
       "state_changed",
       () => {
-        setMsg({
-          tipo: "success",
-          msg: "Imagen acualizada en el servidor de Google",
-        });
+        console.log("Exito");
+        // setMsg({
+        //   tipo: "success",
+        //   msg: "Imagen acualizada en el servidor de Google",
+        // });
       },
       (error) => {
         console.log(error.message);
-        setMsg({
-          tipo: "error",
-          msg: "El icono no se actualizo en el servidor de Google",
-        });
+        // setMsg({
+        //   tipo: "error",
+        //   msg: "El icono no se actualizo en el servidor de Google",
+        // });
       }
     );
     let config1 = {

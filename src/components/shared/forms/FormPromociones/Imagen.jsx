@@ -33,7 +33,7 @@ const Imagen = ({ setImg, img1, setImg1 }) => {
             className="form-control"
             type="file"
             placeholder=""
-            accept=".png,.jpg"
+            accept=".png,.jpg,.webp"
             id="docs"
             name="imagen"
             onChange={(e) => handleImg(e.target.files)}
