@@ -118,8 +118,8 @@ export const plazasCategorias = (
             },
             config
           )
-          .then((response3) => {
-            let nombre_producto = response3.data.producto;
+          .then((response4) => {
+            let nombre_producto = response4.data.producto;
             setMsg(`${nombre_producto.nombre} ya existe`);
           })
           .catch(() => {
@@ -135,8 +135,8 @@ export const plazasCategorias = (
                 },
                 config
               )
-              .then((response2) => {
-                if (response2.status === 200) {
+              .then((response5) => {
+                if (response5.status === 200) {
                   setMsg("Se creo el producto exitosamente");
                 }
               })

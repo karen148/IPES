@@ -38,8 +38,8 @@ export const setPlazasExcel = (
         },
         config
       )
-      .then((response) => {
-        let id = response.data.plaza.id;
+      .then((response1) => {
+        let id = response1.data.plaza.id;
         // VERIFICAR LA EXISTENCIA DEL LOCATARIO
         axios
           .get(
@@ -55,24 +55,18 @@ export const setPlazasExcel = (
                 process.env.REACT_APP_URL_API + "admins/findByCedula/" + cedula,
                 config
               )
-              .then((response) => {
-                if (response.status === 200) {
+              .then((response2) => {
+                if (response2.status === 200) {
                   console.log("existe en admin");
                 }
               })
-              .catch((e) => {
+              .catch(() => {
                 /**
                  * Sí, canta error significa que no es admin locatario
                  * en la base de datos, por lo tanto registramos lo datos
                  * para que pueda ingresar al modulo locatario.
                  *
                  */
-                console.log("ERROR!!!!!", e);
-                let config = {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                };
                 axios
                   .post(
                     process.env.REACT_APP_URL_API + "admins/registerAdmin",
@@ -87,16 +81,15 @@ export const setPlazasExcel = (
                     },
                     config
                   )
-                  .then((response) => {
-                    console.log(response);
+                  .then(() => {
+                    console.log("EXITO");
                   })
-                  .catch((e) => {
-                    console.log("ERROR!!!!!", e);
+                  .catch(() => {
+                    console.log("ERROR!!!!!");
                   });
               });
           })
-          .catch((e) => {
-            console.log(e);
+          .catch(() => {
             setMsg("No existe");
             axios
               .post(
@@ -127,24 +120,16 @@ export const setPlazasExcel = (
                         cedula,
                       config
                     )
-                    .then((response) => {
-                      console.log(response);
+                    .then(() => {
+                      console.log("EXITO");
                     })
-                    .catch((e) => {
+                    .catch(() => {
                       /**
                        * Sí, canta error significa que no es admin locatario
                        * en la base de datos, por lo tanto registramos lo datos
                        * para que pueda ingresar al modulo locatario.
                        *
                        */
-                      console.log("ERROR!!!!!", e);
-                      let config = {
-                        headers: {
-                          Authorization: `Bearer ${localStorage.getItem(
-                            "token"
-                          )}`,
-                        },
-                      };
                       axios
                         .post(
                           process.env.REACT_APP_URL_API +
@@ -160,23 +145,22 @@ export const setPlazasExcel = (
                           },
                           config
                         )
-                        .then((response) => {
-                          console.log(response);
+                        .then(() => {
+                          console.log("EXITO");
                         })
-                        .catch((e) => {
-                          console.log("ERROR!!!!!", e);
+                        .catch(() => {
+                          console.log("ERROR!!!!!");
                         });
                     });
                 }
               })
-              .catch((e) => {
-                console.log("ERROR!!!!!", e);
+              .catch(() => {
+                console.log("ERROR!!!!!");
               });
           });
       })
-      .catch((e) => {
+      .catch(() => {
         setMsg("No creo la plaza");
-        console.log("ERROR!!!!!", e);
       });
   };
 };

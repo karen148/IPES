@@ -70,8 +70,8 @@ export const UpdateAdminEmail = (email, idLocatario, setMsg) => {
         },
         config
       )
-      .then((response) => {
-        let data = response.data;
+      .then((response2) => {
+        let data = response2.data;
         setMsg("El correo se actualizo");
         dispatch(
           LocatarioMensaje({
@@ -178,60 +178,7 @@ export const ArchivoLocatario = (archivo) => {
           msg: "prueba",
         })
       );
-      // let reader = new FileReader();
-      // let hojas = [];
-      // reader.readAsArrayBuffer(archivo);
-      // reader.onloadend = () => {
-      //   var data = new Uint8Array(archivo);
-      //   var work = xlsx.read(data, { type: "array" });
-      //   work.SheetNames.forEach(function (sheetName) {
-      //     var row = xlsx.utils.sheet_to_row_object_array(
-      //       work.Sheets[sheetName]
-      //     );
-      //     hojas.push({
-      //       data: row,
-      //       plaza: sheetName,
-      //     });
-      //   });
-      //   console.log(hojas);
-      // };
-      // const storageRef = firebase
-      //   .storage()
-      //   .ref(`LOCATARIOS/PLAZA/${archivo.name}`);
-      // const task = storageRef.put(archivo);
-      // task.on(
-      //   "state_changed",
-      //   () => {
-      //     console.log("Exito");
-      //   },
-      //   (error) => {
-      //     console.log(error.message);
-      //   }
-      // );
     }
-    // const formData = new FormData();
-    // formData.append("archivo", archivo);
-    // console.log(archivo);
-    // let config = {
-    //   method: "post",
-    //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    //   url: process.env.REACT_APP_URL_API + "locatarios/subirCSV",
-    //   data: formData,
-    // };
-    // axios(config)
-    //   .then((response) => {
-    //     console.log(response);
-    //     let data = response.data;
-    //     dispatch(
-    //       LocatarioMensaje({
-    //         ok: data.ok,
-    //         msg: data.msg,
-    //       })
-    //     );
-    //   })
-    //   .catch((e) => {
-    //     console.log("ERROR!!!!!", e);
-    //   });
   };
 };
 

@@ -59,17 +59,17 @@ const Crear = ({ open, handleClose }) => {
   const [telefonos, setTelefonos] = useState([{ telefono: "" }]);
   const [email, setEmail] = useState("");
 
-  const validarEmail = (email) => {
-    if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email)) {
+  const validarEmail = (email1) => {
+    if (/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,4})+$/.test(email1)) {
       return true;
     } else {
       return false;
     }
   };
 
-  const verficarDatos = (plaza) => {
-    let plaz = plazastrues.filter((item) => item.nombre === plaza)[0]?.nombre;
-    if (plaza === plaz) {
+  const verficarDatos = (plaza1) => {
+    let plaz = plazastrues.filter((item) => item.nombre === plaza1)[0]?.nombre;
+    if (plaza1 === plaz) {
       return false;
     } else {
       return true;

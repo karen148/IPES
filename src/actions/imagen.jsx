@@ -81,8 +81,7 @@ export const updateImg = async (
             msg: "Icono actualizado en la base de datos",
           });
         })
-        .catch((e) => {
-          console.log("ERROR", e);
+        .catch(() => {
           setMsg({
             tipo: "error",
             msg: "Icono no actualizado en la base de datos",
@@ -95,16 +94,13 @@ export const updateImg = async (
           { nombre: producto, imagen_principal: imagen },
           config1
         )
-        .then((response) => {
-          let data = response.data;
-          console.log(data);
+        .then(() => {
           setMsg({
             tipo: "success",
             msg: "La imagen se actualizo en la base de datos",
           });
         })
-        .catch((e) => {
-          console.log("ERROR", e);
+        .catch(() => {
           setMsg({
             tipo: "error",
             msg: "La imagen no se actualizo en la base de datos",
@@ -117,16 +113,13 @@ export const updateImg = async (
           { nombre: producto, imagen_1: imagen },
           config1
         )
-        .then((response) => {
-          let data = response.data;
-          console.log(data);
+        .then(() => {
           setMsg({
             tipo: "success",
             msg: "La imagen se actualizo en la base de datos",
           });
         })
-        .catch((e) => {
-          console.log("ERROR", e);
+        .catch(() => {
           setMsg({
             tipo: "error",
             msg: "La imagen no se actualizo en la base de datos",
@@ -139,16 +132,13 @@ export const updateImg = async (
           { nombre: producto, imagen_2: imagen },
           config1
         )
-        .then((response) => {
-          let data = response.data;
-          console.log(data);
+        .then(() => {
           setMsg({
             tipo: "success",
             msg: "La imagen se actualizo en la base de datos",
           });
         })
-        .catch((e) => {
-          console.log("ERROR", e);
+        .catch(() => {
           setMsg({
             tipo: "error",
             msg: "La imagen no se actualizo en la base de datos",
@@ -161,16 +151,13 @@ export const updateImg = async (
           { imagen: imagen },
           config1
         )
-        .then((response) => {
-          let data = response.data;
-          console.log(data);
+        .then(() => {
           setMsg({
             tipo: "success",
             msg: "Icono actualizado en la base de datos",
           });
         })
-        .catch((e) => {
-          console.log("ERROR", e);
+        .catch(() => {
           setMsg({
             tipo: "error",
             msg: "La imagen no se actualizo en la base de datos",
