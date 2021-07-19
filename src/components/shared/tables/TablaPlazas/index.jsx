@@ -36,7 +36,7 @@ import ModalCategorias from "components/shared/modal/ModalCategoria";
  * @param {Array} datos Array que contiene toda la información de las plazas
  * @param {Function} getPlaza Función que llama el endpoint de la plaza para
  * actualizar la información
- * @returns
+ * @returns Table
  */
 const TablaPlazas = ({ datos, getPlaza }) => {
   const { funcionarios, cantidades, categorias, localidades } = useSelector(

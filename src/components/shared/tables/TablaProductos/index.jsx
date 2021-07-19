@@ -287,13 +287,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                               setIdp(item.id);
                             }}
                           >
-                            <b>
-                              {
-                                productos.filter(
-                                  (pro) => pro.id === item.producto_id
-                                )[0]?.nombre
-                              }
-                            </b>
+                            <b>{item.nombre}</b>
                           </Button>
                         </TableCell>
                         <TableCell align="center">

@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: components/shared/tables/TablaPlazas/index.jsx</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: Source: components/shared/tables/TablaPlazas/index.jsx</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
 <body>
 
-<div id="main">
+  <div id="main">
 
     <h1 class="page-title">Source: components/shared/tables/TablaPlazas/index.jsx</h1>
 
-    
 
 
 
-    
+
+
     <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+      <article>
+        <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -45,6 +46,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import * as locales from "@material-ui/core/locale";
+import Box from "@material-ui/core/Box";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 //Componentes
@@ -63,7 +65,7 @@ import ModalCategorias from "components/shared/modal/ModalCategoria";
  * @param {Array} datos Array que contiene toda la información de las plazas
  * @param {Function} getPlaza Función que llama el endpoint de la plaza para
  * actualizar la información
- * @returns
+ * @returns Table
  */
 const TablaPlazas = ({ datos, getPlaza }) => {
   const { funcionarios, cantidades, categorias, localidades } = useSelector(
@@ -233,8 +235,8 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                       }
                       return (
                         &lt;TableRow key={item.id}>
-                          &lt;TableCell>{index + 1}&lt;/TableCell>
-                          &lt;TableCell>
+                          &lt;TableCell align="center">{index + 1}&lt;/TableCell>
+                          &lt;TableCell align="center">
                             &lt;Button
                               color="secondary"
                               onClick={() => {
@@ -245,19 +247,19 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                               &lt;b>{item.nombre}&lt;/b>
                             &lt;/Button>
                           &lt;/TableCell>
-                          &lt;TableCell>
+                          &lt;TableCell align="center">
                             {
                               localidades.filter(
                                 (local) => local.id === item.localidad
                               )[0]?.label
                             }
                           &lt;/TableCell>
-                          &lt;TableCell>
+                          &lt;TableCell align="center">
                             {cantidades.map((can) => {
                               return item.id === can.id &amp;&amp; can.total;
                             })}
                           &lt;/TableCell>
-                          &lt;TableCell style={{ width: "180px" }}>
+                          &lt;TableCell style={{ width: "180px" }} align="center">
                             &lt;Button
                               color="primary"
                               variant="contained"
@@ -267,14 +269,14 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                               Ver categorías
                             &lt;/Button>
                           &lt;/TableCell>
-                          &lt;TableCell>
+                          &lt;TableCell align="center">
                             {item.fecha === null ? (
                               &lt;p>No hay fecha&lt;/p>
                             ) : (
                               item.fecha.slice(0, 10)
                             )}
                           &lt;/TableCell>
-                          &lt;TableCell>
+                          &lt;TableCell align="center">
                             {item.acciones.map((cat) => {
                               return (
                                 &lt;TooltipE title={cat.name} key={cat.name}>
@@ -362,7 +364,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`PLAZA/img/${idp}/${item.img}`);
-                  deserTableRowef1.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef1.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `img${item.id}${item.img}`
                     );
@@ -373,7 +375,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`no-photo.svg`);
-                  deserTableRowef2.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef2.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `img${item.id}${item.img}`
                     );
@@ -385,7 +387,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`PLAZA/logo/${idp}/${item.logo}`);
-                  deserTableRowef3.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef3.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `logo${item.id}${item.logo}`
                     );
@@ -396,7 +398,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     .storage()
                     .ref()
                     .child(`no-photo.svg`);
-                  deserTableRowef4.geTableCellownloadURL().then(function (url) {
+                  deserTableRowef4.getDownloadURL().then(function (url) {
                     var img = document.getElementById(
                       `logo${item.id}${item.logo}`
                     );
@@ -423,6 +425,19 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                       &lt;/p>
                       &lt;Divider variant="middle" />
                     &lt;/Grid>
+                    {/* &lt;Grid
+                      item
+                      xs={12}
+                      sm={4}
+                      style={{ textAlign: "center", position: "relative" }}
+                    >
+                      &lt;img
+                        src={""}
+                        id={`logo${item.id}${item.logo}`}
+                        alt=""
+                        width="140px"
+                      />
+                    &lt;/Grid> */}
                     &lt;Grid item xs={12} sm={12}>
                       &lt;Grid
                         container
@@ -436,13 +451,18 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                           sm={4}
                           style={{ textAlign: "center" }}
                         >
-                          &lt;img
-                            src={""}
-                            id={`logo${item.id}${item.logo}`}
-                            alt=""
-                            width="150px"
-                            height="150px"
-                          />
+                          &lt;Box
+                            bgcolor="primary.main"
+                            style={{ borderRadius: "15px", marginTop: "10px" }}
+                          >
+                            &lt;img
+                              src={""}
+                              id={`logo${item.id}${item.logo}`}
+                              alt=""
+                              width="150px"
+                              height="150px"
+                            />
+                          &lt;/Box>
                           &lt;p style={{ textAlign: "center" }}>
                             &lt;i>Logo&lt;/i>
                           &lt;/p>
@@ -572,25 +592,39 @@ TablaPlazas.propTypes = {
 
 export default TablaPlazas;
 </code></pre>
-        </article>
+      </article>
     </section>
 
 
 
 
-</div>
+  </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#columns">columns</a></li><li><a href="global.html#ContainerDashboard">ContainerDashboard</a></li><li><a href="global.html#getAdminsCedula">getAdminsCedula</a></li><li><a href="global.html#handleChangePage">handleChangePage</a></li><li><a href="global.html#handleChangeRowsPerPage">handleChangeRowsPerPage</a></li><li><a href="global.html#ModalCategorias">ModalCategorias</a></li><li><a href="global.html#TablaPlazas">TablaPlazas</a></li></ul>
-</nav>
+  <nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Global</h3>
+    <ul>
+      <li><a href="global.html#columns">columns</a></li>
+      <li><a href="global.html#ContainerDashboard">ContainerDashboard</a></li>
+      <li><a href="global.html#getAdminsCedula">getAdminsCedula</a></li>
+      <li><a href="global.html#handleChangePage">handleChangePage</a></li>
+      <li><a href="global.html#handleChangeRowsPerPage">handleChangeRowsPerPage</a></li>
+      <li><a href="global.html#ModalCategorias">ModalCategorias</a></li>
+      <li><a href="global.html#ModalLocatario">ModalLocatario</a></li>
+      <li><a href="global.html#ModalPlazas">ModalPlazas</a></li>
+      <li><a href="global.html#TablaPlazas">TablaPlazas</a></li>
+    </ul>
+  </nav>
 
-<br class="clear">
+  <br class="clear">
 
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Jul 06 2021 10:13:21 GMT-0500 (hora estándar de Colombia)
-</footer>
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jul 19 2021 11:23:02
+    GMT-0500 (hora estándar de Colombia)
+  </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+  <script> prettyPrint();</script>
+  <script src="scripts/linenumber.js"> </script>
 </body>
+
 </html>

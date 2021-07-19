@@ -351,8 +351,22 @@ export const getProducto = () => {
             },
           ],
         }));
-        console.log(productos);
-        dispatch(Productos(productos));
+        // console.log(
+        //   productos.sort((a, b) => {
+        //     var x = a["nombre"];
+        //     var y = b["nombre"];
+        //     return x < y ? -1 : x > y ? 1 : 0;
+        //   })
+        // );
+        dispatch(
+          Productos(
+            productos.sort((a, b) => {
+              var x = a["nombre"];
+              var y = b["nombre"];
+              return x < y ? -1 : x > y ? 1 : 0;
+            })
+          )
+        );
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -380,6 +394,7 @@ export const getProductoLocatario = (producto) => {
           data.map((item) => {
             productos.push({
               id: item.id,
+              nombre: item.nombre,
               producto_id: item.producto_id,
               stock: item.stock ? "Sí hay" : "No hay",
               en_promocion: item.en_promocion ? "Sí" : "No",
@@ -407,7 +422,15 @@ export const getProductoLocatario = (producto) => {
           });
         }
         console.log(productos);
-        dispatch(ProductosLocatarios(productos));
+        dispatch(
+          ProductosLocatarios(
+            productos.sort((a, b) => {
+              var x = a["nombre"];
+              var y = b["nombre"];
+              return x < y ? -1 : x > y ? 1 : 0;
+            })
+          )
+        );
         dispatch(ProductoMensaje({ msg: "enviar" }));
       })
       .catch((e) => {
