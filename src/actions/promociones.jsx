@@ -19,7 +19,7 @@ export const getPromocion = () => {
         let promocion = data.map((item) => ({
           id: item.id,
           producto_id: item.producto_id,
-          plazas_id: item.plazas_id,
+          plaza: item.plazas_id,
           categorias_id: item.categorias_id,
           imagen: item.imagen,
           activo: item.activo ? "Activo" : "Inactivo",

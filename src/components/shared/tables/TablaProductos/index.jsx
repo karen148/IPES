@@ -652,7 +652,11 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
         <ModalPlazas
           open={open4}
           handleClose={() => setOpen4(false)}
-          plaza={datos.filter((item) => item.id === idp3)[0]?.nombre}
+          titulo={
+            "LISTADO DE PLAZAS DEL PRODUCTO " +
+            datos.filter((item) => item.id === idp3)[0]?.nombre
+          }
+          mensaje={"No hay plazas asignadas para el producto"}
           datos={datos.filter((item) => item.id === idp3)}
         />
       </Grid>

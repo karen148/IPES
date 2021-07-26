@@ -522,7 +522,11 @@ const TablaPlazas = ({ datos, getPlaza }) => {
         <ModalCategorias
           open={open3}
           handleClose={() => setOpen3(false)}
-          plaza={datos.filter((item) => item.id === idp3)[0]?.nombre}
+          titulo={
+            "LISTADO DE LAS CATEGORÍAS DE LA PLAZA " +
+            datos.filter((item) => item.id === idp3)[0]?.nombre.toUpperCase()
+          }
+          mensaje={"La plaza no tiene categorías asignadas"}
           datos={datos.filter((item) => item.id === idp3)}
         />
         <_Eliminar

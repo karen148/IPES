@@ -19,6 +19,8 @@ export const types = {
   plazaCategorias: "[plaza] Obtener categorias",
   plazaMensaje: "[plaza] Mensaje que se envió la información",
   plazaID: "[plaza] Plazas",
+  plazaNombre: "[plaza] Nombre",
+  plazaGanacias: "[plaza] Ganancias",
 
   locatariosDatos: "[locatario] Obtener datos de los locatarios",
   locatariosMensaje: "[locatario] Mensaje que se envió la información",
@@ -38,4 +40,8 @@ export const types = {
   pedidoDatos: "[pedido] Obtener datos del pedido",
 
   promocionesDatos: "[promocion] Obtener datos de la promoción",
+
+  balanceCantidadProductosVendidos:
+    "[balance] Obtener la cantidad de los producto vendidos",
+  balanceTopProductos: "[balance] Obtener el top de los productos más vendidos",
 };

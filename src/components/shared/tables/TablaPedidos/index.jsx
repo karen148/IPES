@@ -38,12 +38,9 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [mostrar, setMostrar] = useState(false);
   const [locatario, setLocatario] = useState([]);
-  // const [local3, setLocal3] = useState([]) ;
   const [open, setOpen] = React.useState(false);
   const [open1, setOpen1] = React.useState(false);
-  // const [open2, setOpen2] = React.useState(false);
   const [idp, setIdp] = useState(0);
-  // const [idp1, setIdp1] = useState(0);
   const [idp2, setIdp2] = useState(0);
 
   const columns = [
@@ -86,23 +83,6 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
     getDatos();
   };
 
-  // const handleClickOpen2 = () => {
-  //   setOpen2(true);
-  // };
-
-  // const handleClose2 = () => {
-  //   setOpen2(false);
-  //   getLocali();
-  // };
-
-  // const datoActualizar = (idL) => {
-  //   setLocal3(datos?.filter((item) => item?.id === idL));
-  // };
-
-  // const Eliminar = () => {
-  //   dispatch(DeletePedido(idp2));
-  //   getDatos();
-  // };
   console.log(prolocatarios);
   console.log(datos);
   return (
@@ -110,13 +90,14 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
-            <TableHead>
+            <TableHead color="#DE9E12">
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
                     align="center"
                     style={{ minWidth: column.minWidth }}
+                    className={classes.encabezado}
                   >
                     {column.label}
                   </TableCell>
@@ -145,16 +126,20 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                           <TableCell align="center">{item.pasarela}</TableCell>
                           <TableCell align="center">{item.conteo}</TableCell>
                           <TableCell align="center">
-                            <Button
-                              color="secondary"
-                              key={`${item.cliente}`}
-                              onClick={() => {
-                                handleClickOpen(item.locatario);
-                                setIdp(item.id);
-                              }}
-                            >
-                              <b>{item.cliente_dato.nombre}</b>
-                            </Button>
+                            {item.cliente_dato.nombre ? (
+                              <Button
+                                color="secondary"
+                                key={`${item.cliente}`}
+                                onClick={() => {
+                                  handleClickOpen(item.locatario);
+                                  setIdp(item.id);
+                                }}
+                              >
+                                <b>{item.cliente_dato.nombre}</b>
+                              </Button>
+                            ) : (
+                              <h5 className={classes.error}>---</h5>
+                            )}
                           </TableCell>
                           <TableCell align="center">
                             {item.fecha === null ? (
@@ -178,6 +163,7 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                                     color="default"
                                     component="span"
                                     key={cat.name}
+                                    className={classes.iconos}
                                     onClick={() => {
                                       handleClickOpen1();
                                       setIdp2(cat.id);
@@ -536,19 +522,10 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
               }
             })}
         </Modal>
-        {/* <_Eliminar
-          open={open1}
-          handleClose={handleClose1}
-          eliminar={Eliminar}
-          titulo3="Cancelar pedido"
-          titulo1="Desea cancelar"
-          titulo2="el pedido"
-          titulo={datos.filter((item) => item.id === idp2)[0]?.id}
-        /> */}
         <Actualizar
           open={open1}
           handleClose={handleClose1}
-          estado={datos.filter((item) => item.id === idp2)[0]?.estado}
+          estado={datos?.filter((item) => item.id === idp2)[0]?.estado}
           id={idp2}
         />
       </Grid>

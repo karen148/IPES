@@ -44,6 +44,7 @@ const Clientes = () => {
     fileName: "Clientes-IPES",
   };
 
+  console.log(cliente);
   useEffect(() => {
     dispatch(getClientes(setCliente));
   }, [dispatch]);

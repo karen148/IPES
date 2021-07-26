@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ModalForm from "./../modalForm";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Stepper from "@material-ui/core/Stepper";
@@ -15,6 +15,7 @@ import Imagen from "components/shared/forms/FormPromociones/Imagen";
 import { setPromocion } from "actions/promociones";
 
 const Crear = ({ open, handleClose }) => {
+  const { plazastrues } = useSelector((state) => state.plaza);
   const classes = useStyles();
   const dispatch = useDispatch();
   const steps = ["Promoción", "Imagen"];
@@ -22,12 +23,22 @@ const Crear = ({ open, handleClose }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [msg1, setMsg1] = useState({ tipo: "vacio", msg: "" });
 
-  const [plaza, setPlaza] = useState([]);
+  const [plaza, setPlaza] = useState(plazastrues);
   const [producto, setProducto] = useState([]);
   const [categorias, setCategorias] = useState([]);
 
   const [img, setImg] = useState(null);
   const [img1, setImg1] = useState(null);
+
+  useEffect(async () => {
+    const plazas = () => {
+      if (plazastrues.length > 0) {
+        console.log("aquii");
+        setPlaza(plazastrues);
+      }
+    };
+    plazas();
+  }, [plaza, plazastrues]);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);

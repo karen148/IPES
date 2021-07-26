@@ -422,7 +422,7 @@ export const setLocatariosExcel = (
                   process.env.REACT_APP_URL_API + "admins/registerAdmin",
                   {
                     email: cedula,
-                    password: "123456",
+                    password: "CC" + cedula,
                     rol: "ADMIN_LOCATARIO",
                     nombre: nombre,
                     apellido: "",

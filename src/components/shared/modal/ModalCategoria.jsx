@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
  * @returns Listado de categorías
  * @author Karen V. González M.
  */
-const ModalCategorias = ({ open, handleClose, plaza, datos }) => {
+const ModalCategorias = ({ open, handleClose, titulo, mensaje, datos }) => {
   const { categorias } = useSelector((state) => state.plaza);
   console.log(datos);
   return (
@@ -30,9 +30,7 @@ const ModalCategorias = ({ open, handleClose, plaza, datos }) => {
       fullWidth
       style={{ borderRadius: "10px" }}
     >
-      <DialogTitle id="alert-dialog-title">
-        LISTA DE CATEGORÍAS DE LA PLAZA {plaza}
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{titulo}</DialogTitle>
       <DialogContent id="alert-dialog-description">
         {open &&
           datos.map((item) => {
@@ -77,7 +75,7 @@ const ModalCategorias = ({ open, handleClose, plaza, datos }) => {
               </Grid>
             ) : (
               <h4 style={{ textAlign: "center", color: "#FF2D42" }}>
-                LA PLAZA NO TIENE CATEGORÍAS
+                {mensaje}
               </h4>
             );
           })}
@@ -94,7 +92,8 @@ const ModalCategorias = ({ open, handleClose, plaza, datos }) => {
 ModalCategorias.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  plaza: PropTypes.string,
+  titulo: PropTypes.string,
+  mensaje: PropTypes.string,
   datos: PropTypes.array,
 };
 

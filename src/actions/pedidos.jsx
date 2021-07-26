@@ -11,7 +11,7 @@ export const DeletePedido = (id, estado) => {
       .put(
         process.env.REACT_APP_URL_API + "pedidos/update/" + id,
         {
-          estado: estado,
+          estado: parseInt(estado),
         },
         config
       )

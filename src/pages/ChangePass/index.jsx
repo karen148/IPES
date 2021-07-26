@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
 import useStyles from "./style";
+import { useParams } from "react-router-dom";
 
 // function Copyright() {
 //   return (
@@ -36,6 +37,7 @@ export default function ChangePass({ history }) {
     contraseña: "",
     ncontraseña: "",
   });
+  let token = useParams();
 
   const handleState = (event) => {
     const { value, name } = event.target;
@@ -77,7 +79,7 @@ export default function ChangePass({ history }) {
 
   let fecthApi = async () => {
     let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: { reset: `${token.token}` },
     };
     if (ValiContraseña(state.ncontraseña)) {
       axios

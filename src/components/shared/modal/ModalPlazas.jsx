@@ -10,16 +10,14 @@ import { useSelector } from "react-redux";
 /**
  * @function
  * @name ModalPlazas
- * @description Modal categorías es una sección que va mostrar un listado de categorías
- * por plaza.
+ * @description Modal plazas es una sección que va mostrar un listado de las plazas.
  * @param {Boolean} open
  * @param {Function} handleClose Es una función para cerrar el modal
  * @returns Listado de categorías
  * @author Karen V. González M.
  */
-const ModalPlazas = ({ open, handleClose, plaza, datos }) => {
+const ModalPlazas = ({ open, handleClose, titulo, datos, mensaje }) => {
   const { plazastrues } = useSelector((state) => state.plaza);
-  console.log(datos);
   return (
     <Dialog
       open={open}
@@ -30,9 +28,7 @@ const ModalPlazas = ({ open, handleClose, plaza, datos }) => {
       fullWidth
       style={{ borderRadius: "10px" }}
     >
-      <DialogTitle id="alert-dialog-title">
-        LISTADO DE PLAZAS DEL PRODUCTO {plaza && plaza.toUpperCase()}
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{titulo}</DialogTitle>
       <DialogContent id="alert-dialog-description">
         {open &&
           datos.map((item) => {
@@ -78,7 +74,7 @@ const ModalPlazas = ({ open, handleClose, plaza, datos }) => {
               </Grid>
             ) : (
               <h4 style={{ textAlign: "center", color: "#FF2D42" }}>
-                EL PRODUCTO NO TIENE PLAZAS REGISTRADAS
+                {mensaje}
               </h4>
             );
           })}
@@ -95,7 +91,8 @@ const ModalPlazas = ({ open, handleClose, plaza, datos }) => {
 ModalPlazas.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
-  plaza: PropTypes.string,
+  titulo: PropTypes.string,
+  mensaje: PropTypes.string,
   datos: PropTypes.array,
 };
 

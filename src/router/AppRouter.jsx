@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { starChecking } from "./../actions/auth";
 import { PublicRoute } from "./PublicRoute";
 import { PrivateRoute } from "./PrivateRoute";
-// import CircularProgress from "@material-ui/core/CircularProgress";
 import Login from "./../pages/Login";
 import Tablero from "./../pages/Tablero";
 import Perfil from "./../pages/Perfil";
@@ -28,6 +27,8 @@ export const AppRouter = () => {
 
   const roles = ["SUPER_ADMIN", "ADMIN_LOCATARIO"];
   const admin = ["SUPER_ADMIN"];
+  // let { token } = useParams();
+  // console.log(token);
   // const locatario = ["ADMIN_LOCATARIO"];
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export const AppRouter = () => {
           />
           <PublicRoute
             exact
-            path="/cambiocontraseña"
+            path="/cambiocontraseña/:token"
             component={ChangePass}
             isAuthenticated={!!id}
           />

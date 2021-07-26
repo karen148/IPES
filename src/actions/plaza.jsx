@@ -4,6 +4,44 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
 
+export const getPlazasGanancias = () => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API + "balances/getGananciasTodasLasPlazas",
+        config
+      )
+      .then((response) => {
+        let data = response.data.ganancias;
+        console.log(data);
+        let total = [];
+        let nombre = [];
+        data.map((item) => {
+          total.push(item.total);
+          nombre.push(item.nombre_plaza);
+        });
+        dispatch(PlazaNombre(nombre));
+        dispatch(PlazaTotal(total));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
+const PlazaNombre = (data) => ({
+  type: types.plazaNombre,
+  plazanombre: data,
+});
+
+const PlazaTotal = (data) => ({
+  type: types.plazaGanacias,
+  plazaGanacia: data,
+});
+
 export const setPlazasExcel = (
   nombrepla,
   numerolocal,

@@ -70,11 +70,12 @@ export const getClientes = (setCliente) => {
       .get(process.env.REACT_APP_URL_API + "clientes/getAll", config)
       .then((response) => {
         let data = response.data.clientes;
+        console.log(response);
         let clientes = data.map((item, index) => ({
           conteo: index + 1,
           id: item.id,
           cedula: item.cedula,
-          nombre: item.nombre.toUpperCase(),
+          nombre: item.nombre?.toUpperCase(),
           telefono: item.telefono,
           direccion: item.direccion,
           img: item.img,

@@ -14,7 +14,7 @@ import useStyles from "components/shared/forms/style";
 import { useDispatch, useSelector } from "react-redux";
 import ArchivoCSV from "components/shared/forms/FormProducto/ArchivoCSV";
 import { ArchivoLocatario } from "actions/locatarios";
-import { setPlazasExcel } from "actions/plaza";
+// import { setPlazasExcel } from "actions/plaza";
 import { setLocatariosExcel } from "actions/locatarios";
 
 const Archivo = ({ open, handleClose }) => {
@@ -28,53 +28,64 @@ const Archivo = ({ open, handleClose }) => {
 
   const [hojas, setHojas] = useState([]);
   const [alerta, setAlerta] = useState(false);
-  const [msg1, setMsg] = useState("");
+  // const [msg1, setMsg] = useState("");
 
   useEffect(() => {
     console.log("buenas");
     hojas.map((item) => {
+      let local = [];
+      let telefonos = [];
+      var expresionRegular = /\s*-\s*/;
       let plaza = plazastrues.filter(
         (pla) =>
           pla.nombre.trim().toLowerCase() === item.plaza.trim().toLowerCase()
       )[0];
-      if (plaza) {
-        console.log("crear locatario");
-        item.data.map((dat) => {
+      item.data.map((dat) => {
+        for (const iterator of dat["NUMERO DEL LOCAL"].split(
+          expresionRegular
+        )) {
+          local.push(iterator);
+        }
+        for (const iterator of dat["TELEFONOS DE DOMICILIOS"].split(
+          expresionRegular
+        )) {
+          telefonos.push(iterator);
+        }
+        if (plaza) {
+          console.log("crear locatario");
           console.log(dat["NUMERO DEL LOCAL"].length);
           dispatch(
             setLocatariosExcel(
               dat["NUMERO DE CEDULA"]?.toString(),
               dat["NOMBRE DEL COMERCIANTE"]?.toString(),
-              dat["NUMERO DEL LOCAL"]?.toString(),
+              local,
               dat["NOMBRE DEL LOCAL"]?.toString(),
-              dat["TELEFONOS DE DOMICILIOS"]?.toString(),
+              telefonos,
               id,
               plaza.id
             )
           );
-        });
-      } else {
-        console.log("crear plaza");
-        item.data.map((dat) => {
+        } else {
+          console.log("crear plaza");
           console.log(dat["NUMERO DEL LOCAL"]?.toString().length);
-          dispatch(
-            setPlazasExcel(
-              item.plaza.toUpperCase(),
-              dat["NUMERO DEL LOCAL"]?.toString(),
-              dat["NUMERO DE CEDULA"]?.toString(),
-              dat["NOMBRE DEL COMERCIANTE"]?.toString(),
-              dat["TELEFONOS DE DOMICILIOS"]?.toString(),
-              id,
-              dat["NOMBRE DEL LOCAL"]?.toString(),
-              setMsg
-            )
-          );
-        });
-      }
+          // dispatch(
+          //   setPlazasExcel(
+          //     item.plaza.toUpperCase(),
+          //     dat["NUMERO DEL LOCAL"]?.toString(),
+          //     dat["NUMERO DE CEDULA"]?.toString(),
+          //     dat["NOMBRE DEL COMERCIANTE"]?.toString(),
+          //     dat["TELEFONOS DE DOMICILIOS"]?.toString(),
+          //     id,
+          //     dat["NOMBRE DEL LOCAL"]?.toString(),
+          //     setMsg
+          //   )
+          // );
+        }
+      });
     });
   }, [hojas.length > 0 && hojas]);
 
-  console.log(msg1);
+  // console.log(msg1);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);

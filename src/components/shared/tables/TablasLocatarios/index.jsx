@@ -40,6 +40,7 @@ import TablaProducto from "../TablaProductos";
 import useStyles from "../style";
 import PropTypes from "prop-types";
 import ModalLocatario from "components/shared/modal/ModalLocatario";
+import ModalCategorias from "components/shared/modal/ModalCategoria";
 
 const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const { plazastrues, categorias, localidades } = useSelector(
@@ -62,6 +63,7 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const [open2, setOpen2] = React.useState(false);
   const [open4, setOpen4] = React.useState(false);
   const [open5, setOpen5] = React.useState(false);
+  const [open6, setOpen6] = React.useState(false);
   const [opent, setOpent] = React.useState(false);
   const [locatario2, setLocatario2] = useState([]);
   const [idp, setIdp] = useState(0);
@@ -69,6 +71,7 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const [idp2, setIdp2] = useState(0);
   const [idp3, setIdp3] = useState(0);
   const [idp4, setIdp4] = useState(0);
+  const [idp5, setIdp5] = useState(0);
 
   const columns = [
     { id: "id", label: "ID", width: "30px" },
@@ -134,6 +137,16 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
   const handleClose4 = () => {
     setOpen4(false);
     getDatosPro();
+  };
+
+  const handleClickOpen6 = (id) => {
+    setOpen6(true);
+    setIdp5(id);
+  };
+
+  const handleClose6 = () => {
+    setOpen6(false);
+    getLocali();
   };
 
   const datoActualizar = (idL) => {
@@ -254,9 +267,7 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
               {datos
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item) => {
-                  // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (item) {
-                    console.log(item);
                     let data = [];
                     if (item?.categorias) {
                       if (item?.categorias.length > 0) {
@@ -332,25 +343,14 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                             style={{ width: "180px" }}
                             align="center"
                           >
-                            {data.length !== 0 ? (
-                              data.map((cat) => {
-                                return (
-                                  <p
-                                    key={cat.id}
-                                    style={{
-                                      textAlign: "center",
-                                      fontSize: "14px",
-                                      color: "#DE9E12",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    {cat.label}
-                                  </p>
-                                );
-                              })
-                            ) : (
-                              <h5 className={classes.error}>---</h5>
-                            )}
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              style={{ color: "white", fontSize: "13px" }}
+                              onClick={() => handleClickOpen6(item.id)}
+                            >
+                              Ver categorías
+                            </Button>
                           </TableCell>
                           <TableCell align="center">
                             {item?.acciones.map((cat) => {
@@ -619,6 +619,16 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
           handleClose={() => setOpen5(false)}
           locatario={datos.filter((item) => item.id === idp4)[0]?.nombre}
           datos={datos.filter((item) => item.id === idp4)}
+        />
+        <ModalCategorias
+          open={open6}
+          handleClose={handleClose6}
+          titulo={
+            "LISTADO DE CATEGORÍAS DEL LOCATARIO " +
+            datos.filter((item) => item.id === idp5)[0]?.nombre
+          }
+          mensaje={"El locatario no tiene categorías asignadas"}
+          datos={datos.filter((item) => item.id === idp5)}
         />
       </Grid>
     </Grid>

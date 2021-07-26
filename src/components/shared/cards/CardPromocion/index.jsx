@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import useStyle from "./style";
@@ -19,14 +20,14 @@ import { DeletePromocion } from "actions/promociones";
 import { getPromocion } from "actions/promociones";
 import firebase from "firebase";
 import { DesactivarPromocion } from "actions/promociones";
+import ModalPlazas from "components/shared/modal/ModalPlazas";
 // const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const CardPromocion = () => {
   const dispatch = useDispatch();
 
   const { promociones } = useSelector((state) => state.promocion);
-  const { categorias, plazastrues } = useSelector((state) => state.plaza);
-  const { productos } = useSelector((state) => state.producto);
+  const { categorias } = useSelector((state) => state.plaza);
 
   const classes = useStyle();
 
@@ -34,10 +35,12 @@ const CardPromocion = () => {
   const [dp1, setIdp1] = useState("");
   const [dp2, setIdp2] = useState("");
   const [dp3, setIdp3] = useState("");
+  const [dp4, setIdp4] = useState("");
   const [promocion, setPromocion] = useState([]);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
+  const [open4, setOpen4] = useState(false);
 
   const handleExpandClick = (id) => {
     setExpanded(!expanded);
@@ -74,6 +77,16 @@ const CardPromocion = () => {
     dispatch(getPromocion());
   };
 
+  const handleClickOpen4 = (id) => {
+    setOpen4(true);
+    setIdp4(id);
+  };
+
+  const handleClose4 = () => {
+    setOpen4(false);
+    dispatch(getPromocion());
+  };
+
   const Activar = () => {
     dispatch(DeletePromocion(dp1));
     dispatch(getPromocion());
@@ -94,25 +107,7 @@ const CardPromocion = () => {
       spacing={2}
     >
       {promociones.map((item) => {
-        let plaza = [];
-        let producto = [];
         let categoria = [];
-        for (let index = 0; index < item.plazas_id.length; index++) {
-          const element = item.plazas_id[index];
-          plazastrues.map((pla) => {
-            if (element === pla.id) {
-              plaza.push(pla);
-            }
-          });
-        }
-        for (let index = 0; index < item.producto_id.length; index++) {
-          const element = item.producto_id[index];
-          productos.map((pro) => {
-            if (element === pro.id) {
-              producto.push(pro);
-            }
-          });
-        }
         for (let index = 0; index < item.categorias_id.length; index++) {
           const element = item.categorias_id[index];
           categorias.map((pro) => {
@@ -178,16 +173,6 @@ const CardPromocion = () => {
               >
                 <CardContent>
                   <Typography variant="h5" color="secondary">
-                    Plazas:
-                  </Typography>
-                  {plaza.map((pla) => {
-                    return (
-                      <Typography paragraph key={pla.id}>
-                        {pla?.nombre.toUpperCase()}
-                      </Typography>
-                    );
-                  })}
-                  <Typography variant="h5" color="secondary">
                     Categorías:
                   </Typography>
                   {categoria.map((pla) => {
@@ -197,16 +182,14 @@ const CardPromocion = () => {
                       </Typography>
                     );
                   })}
-                  <Typography variant="h5" color="secondary">
-                    Productos:
-                  </Typography>
-                  {producto.map((pla) => {
-                    return (
-                      <Typography paragraph key={pla.id}>
-                        {pla?.nombre.toUpperCase()}
-                      </Typography>
-                    );
-                  })}
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    style={{ color: "white", fontSize: "13px" }}
+                    onClick={() => handleClickOpen4(item.id)}
+                  >
+                    Ver plazas
+                  </Button>
                 </CardContent>
               </Collapse>
             </Card>
@@ -235,6 +218,13 @@ const CardPromocion = () => {
         productos1={promocion?.producto_id}
         categorias1={promocion?.categorias_id}
         imagen1={promocion?.imagen}
+      />
+      <ModalPlazas
+        open={open4}
+        handleClose={handleClose4}
+        titulo={"LISTA DE PLAZAS"}
+        mensaje={"No hay plazas asignadas para esta promoción"}
+        datos={promociones.filter((item) => item.id === dp4)}
       />
     </Grid>
   );

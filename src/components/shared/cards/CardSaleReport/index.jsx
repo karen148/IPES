@@ -1,72 +1,56 @@
 import React from "react";
-import Chart from "react-apexcharts";
+import { Line } from "react-chartjs-2";
+import { useSelector } from "react-redux";
 // const Chart = () => import('react-apexcharts');
 
 const CardSaleReport = () => {
-  const state = {
-    series: [
+  const { plazanombres, plazaGanancias } = useSelector((state) => state.plaza);
+  const data = {
+    labels: plazanombres,
+    datasets: [
       {
-        name: "series1",
-        data: [100, 120, 99, 125, 127, 130, 148],
+        label: "Ganancia $",
+        data: plazaGanancias,
+        backgroundColor: "rgb(233,176,41)",
+        borderColor: "rgba(90, 0, 28)",
+        fill: false,
+        cubicInterpolationMode: "monotone",
+        tension: 0.4,
+        // backgroundColor: [
+        //   "rgba(61, 190, 151, 0.1)",
+        //   "rgba(70, 65, 107, 0.1)",
+        //   "rgba(150, 250, 39, 0.1)",
+        //   "rgba(255, 45, 66, 0.1)",
+        //   "rgba(90, 0, 28, 0.1)",
+        // ],
+        // borderColor: [
+        //   "rgba(61, 190, 151, 1)",
+        //   "rgba(70, 65, 107, 1)",
+        //   "rgba(150, 250, 39, 1)",
+        //   "rgba(255, 45, 66, 1)",
+        //   "rgba(90, 0, 28, 1)",
+        // ],
+        borderWidth: 2,
       },
     ],
+  };
 
-    options: {
-      chart: {
-        height: 350,
-        type: "area",
-        toolbar: {
-          show: false,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      colors: ["#fcb800", "#f9f9f9", "#9C27B0"],
-      stroke: {
-        curve: "smooth",
-      },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:30:00.000Z",
-          "2018-09-19T02:30:00.000Z",
-          "2018-09-19T03:30:00.000Z",
-          "2018-09-19T04:30:00.000Z",
-          "2018-09-19T05:30:00.000Z",
-          "2018-09-19T06:30:00.000Z",
-        ],
-      },
-      tooltip: {
-        x: {
-          format: "dd/MM/yy HH:mm",
-        },
-      },
-      responsive: [
+  const options = {
+    title: {
+      display: true,
+      text: "Chart.js Bar Chart",
+    },
+    responsive: true,
+    scales: {
+      yAxes: [
         {
-          breakpoint: 1680,
-          options: {
-            chart: {
-              width: "100%",
-            },
-          },
-        },
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: "100%",
-            },
-            legend: {
-              position: "bottom",
-            },
+          ticks: {
+            beginAtZero: true,
           },
         },
       ],
     },
   };
-
   return (
     <div className="ps-card ps-card--sale-report">
       <div className="ps-card__header">
@@ -75,12 +59,7 @@ const CardSaleReport = () => {
 
       <div className="ps-card__content">
         <div id="chart"></div>
-        <Chart
-          options={state.options}
-          series={state.series}
-          type="area"
-          height={320}
-        />
+        <Line data={data} options={options} />
       </div>
 
       <div className="ps-card__footer">

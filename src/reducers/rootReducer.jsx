@@ -8,6 +8,7 @@ import { productoReducer } from "./productoReduces";
 import { clienteReducer } from "./clienteReducer";
 import menuReducer from "./menuReducer";
 import { promoReducer } from "./promoReducer";
+import { balanceReducer } from "./balanceReducer";
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,4 +19,5 @@ export const rootReducer = combineReducers({
   producto: productoReducer,
   cliente: clienteReducer,
   promocion: promoReducer,
+  balance: balanceReducer,
 });
