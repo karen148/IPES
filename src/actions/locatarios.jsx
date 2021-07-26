@@ -363,12 +363,6 @@ export const setLocatariosExcel = (
 ) => {
   return async () => {
     let admin = [];
-    let local1 = [];
-    admin.push(id);
-
-    if (numero_local.length === 1) {
-      local1.push(numero_local);
-    }
 
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -381,7 +375,7 @@ export const setLocatariosExcel = (
           admin_id: admin,
           plaza_id: plaza,
           nombre_local: local,
-          numero_local: numero_local.length === 1 ? local1 : numero_local,
+          numero_local: numero_local,
           categorias_id: [],
           productos_locatarios_id: [],
           nombre: nombre,

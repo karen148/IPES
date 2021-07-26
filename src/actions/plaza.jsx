@@ -56,10 +56,6 @@ export const setPlazasExcel = (
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   };
   return async () => {
-    let local1 = [];
-    if (numerolocal.length === 1) {
-      local1.push(numerolocal);
-    }
     axios
       .post(
         process.env.REACT_APP_URL_API + "plazas/crear",
@@ -78,6 +74,7 @@ export const setPlazasExcel = (
       )
       .then((response1) => {
         let id = response1.data.plaza.id;
+
         // VERIFICAR LA EXISTENCIA DEL LOCATARIO
         axios
           .get(
@@ -110,7 +107,7 @@ export const setPlazasExcel = (
                     process.env.REACT_APP_URL_API + "admins/registerAdmin",
                     {
                       email: cedula,
-                      password: "123456",
+                      password: "CC" + cedula,
                       rol: "ADMIN_LOCATARIO",
                       nombre: nombre,
                       apellido: "",
@@ -136,7 +133,7 @@ export const setPlazasExcel = (
                   admin_id: [admin],
                   plaza_id: id,
                   nombre_local: local,
-                  numero_local: numerolocal.length === 1 ? local1 : numerolocal,
+                  numero_local: numerolocal,
                   categorias_id: [],
                   productos_locatarios_id: [],
                   nombre: nombre,
