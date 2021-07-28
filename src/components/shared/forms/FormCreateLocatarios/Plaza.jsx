@@ -20,7 +20,7 @@ const Plaza = ({ local, cat, setCat, plaza, setPlaza }) => {
           for (let index = 0; index < item.categorias_id.length; index++) {
             const element = item.categorias_id[index];
             categorias.map((cat) => {
-              if (cat.id === element) {
+              if (cat.id === element && cat.activo) {
                 data.push(cat);
               }
             });

@@ -191,6 +191,13 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                   // console.log(plazasTableRowues.length ? plazasTableRowues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (rol === "SUPER_ADMIN") {
                     let CateAc = [];
+                    var date = new Date(item.fecha);
+                    var options = {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    };
                     if (
                       item?.categorias !== null &&
                       item?.categorias.length > 0
@@ -240,10 +247,10 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                           })}
                         </TableCell>
                         <TableCell align="center">
-                          {item.fecha === null ? (
+                          {item.fecha ? (
                             <p>No hay fecha</p>
                           ) : (
-                            item.fecha.slice(0, 10)
+                            date.toLocaleDateString("es-CO", options)
                           )}
                         </TableCell>
                         <TableCell align="center">
@@ -307,10 +314,10 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
                         </TableCell>
                         <TableCell align="center">{item.stock}</TableCell>
                         <TableCell align="center">
-                          {item.fecha === null ? (
+                          {item.fecha ? (
                             <p>No hay fecha</p>
                           ) : (
-                            item.fecha.slice(0, 10)
+                            date?.toLocaleDateString("es-CO", options)
                           )}
                         </TableCell>
                         <TableCell align="center">

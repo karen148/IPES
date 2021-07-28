@@ -52,10 +52,7 @@ export const getPedidos = (setPedidos) => {
           estado: item.estado,
           total: item.total,
           pagado: item.pagado ? "0" : "1",
-          fecha:
-            item.updated_at === null
-              ? item.created_at.slice(0, 10)
-              : item.updated_at.slice(0, 10),
+          fecha: item.updated_at === null ? item.created_at : item.updated_at,
           acciones: [
             {
               name: "Editar el estado del pedido",

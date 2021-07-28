@@ -37,20 +37,13 @@ const Crear = ({ open, handleClose }) => {
   const [img2, setImg2] = useState(null);
   const [img3, setImg3] = useState(null);
 
-  const [horario_m1, setHorariom1] = useState("");
-  const [horario_m2, setHorariom2] = useState("");
-  const [horario_lm1, setHorariolm1] = useState("");
-  const [horario_lm2, setHorariolm2] = useState("");
-  const [horario_mm1, setHorariomm1] = useState("");
-  const [horario_mm2, setHorariomm2] = useState("");
-  const [horario_jm1, setHorariojm1] = useState("");
-  const [horario_jm2, setHorariojm2] = useState("");
-  const [horario_vm1, setHorariovm1] = useState("");
-  const [horario_vm2, setHorariovm2] = useState("");
-  const [horario_sm1, setHorariosm1] = useState("");
-  const [horario_sm2, setHorariosm2] = useState("");
-  const [horario_dm1, setHorariodm1] = useState("");
-  const [horario_dm2, setHorariodm2] = useState("");
+  const [horario_m1, setHorariom1] = useState([
+    {
+      name: "Todos los días",
+      inicio: "",
+      finalizar: "",
+    },
+  ]);
 
   const [plaza, setPlaza] = useState("");
   const [direccion, setDireccion] = useState("");
@@ -67,6 +60,7 @@ const Crear = ({ open, handleClose }) => {
     }
   };
 
+  console.log(horario_m1);
   const verficarDatos = (plaza1) => {
     let plaz = plazastrues.filter((item) => item.nombre === plaza1)[0]?.nombre;
     if (plaza1 === plaz) {
@@ -135,32 +129,6 @@ const Crear = ({ open, handleClose }) => {
             plaza={plaza}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
-            horario_m2={horario_m2}
-            setHorariom2={setHorariom2}
-            horario_lm1={horario_lm1}
-            setHorariolm1={setHorariolm1}
-            horario_lm2={horario_lm2}
-            setHorariolm2={setHorariolm2}
-            horario_mm1={horario_mm1}
-            setHorariomm1={setHorariomm1}
-            horario_mm2={horario_mm2}
-            setHorariomm2={setHorariomm2}
-            horario_jm1={horario_jm1}
-            setHorariojm1={setHorariojm1}
-            horario_jm2={horario_jm2}
-            setHorariojm2={setHorariojm2}
-            horario_vm1={horario_vm1}
-            setHorariovm1={setHorariovm1}
-            horario_vm2={horario_vm2}
-            setHorariovm2={setHorariovm2}
-            horario_sm1={horario_sm1}
-            setHorariosm1={setHorariosm1}
-            horario_sm2={horario_sm2}
-            setHorariosm2={setHorariosm2}
-            horario_dm1={horario_dm1}
-            setHorariodm1={setHorariodm1}
-            horario_dm2={horario_dm2}
-            setHorariodm2={setHorariodm2}
           />
         );
 
@@ -189,22 +157,21 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Registrar = () => {
+    let horario = [];
+    horario_m1.map((item) => {
+      Array.prototype.push.apply(horario, [
+        { name: item.name, inicio: item.inicio, finalizar: item.finalizar },
+      ]);
+    });
+    let tele = [];
+    telefonos.map((item) => {
+      Array.prototype.push.apply(tele, [item.telefono]);
+    });
+    console.log(horario);
+    console.log(tele);
     dispatch(
       setPlazasMercado(
         horario_m1,
-        horario_m2,
-        horario_lm1,
-        horario_lm2,
-        horario_mm1,
-        horario_mm2,
-        horario_jm1,
-        horario_jm2,
-        horario_vm1,
-        horario_vm2,
-        horario_sm1,
-        horario_sm2,
-        horario_dm1,
-        horario_dm2,
         telefonos,
         cat,
         funcionario,
@@ -228,20 +195,13 @@ const Crear = ({ open, handleClose }) => {
     setImg1(null);
     setImg2(null);
     setImg3(null);
-    setHorariom1("");
-    setHorariom2("");
-    setHorariolm1("");
-    setHorariolm2("");
-    setHorariomm1("");
-    setHorariomm2("");
-    setHorariojm1("");
-    setHorariojm2("");
-    setHorariovm1("");
-    setHorariovm2("");
-    setHorariosm1("");
-    setHorariosm2("");
-    setHorariodm1("");
-    setHorariodm2("");
+    setHorariom1([
+      {
+        name: "Todos los días",
+        inicio: "",
+        finalizar: "",
+      },
+    ]);
     setPlaza("");
     setDireccion("");
     setLocalidad("");

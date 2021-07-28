@@ -153,7 +153,7 @@ const Producto = ({
               limitTags={2}
               id="auto-select"
               autoSelect
-              options={producto}
+              options={productos}
               getOptionLabel={(option) =>
                 option?.nombre ? option?.nombre : ""
               }
@@ -188,7 +188,7 @@ const Producto = ({
                 margin="normal"
                 variant="outlined"
                 type="text"
-                value={plaza.unidad}
+                value={plaza?.unidad}
                 name="unidad"
                 fullWidth
                 disabled
@@ -274,7 +274,7 @@ const Producto = ({
                 margin="normal"
                 variant="outlined"
                 type="text"
-                value={plaza.sku}
+                value={plaza?.sku}
                 name="sku"
                 fullWidth
                 disabled

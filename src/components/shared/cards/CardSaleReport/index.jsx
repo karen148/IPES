@@ -1,5 +1,5 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 // const Chart = () => import('react-apexcharts');
 
@@ -11,7 +11,7 @@ const CardSaleReport = () => {
       {
         label: "Ganancia $",
         data: plazaGanancias,
-        backgroundColor: "rgb(233,176,41)",
+        backgroundColor: "rgb(233,176,41, 0.73)",
         borderColor: "rgba(90, 0, 28)",
         fill: false,
         cubicInterpolationMode: "monotone",
@@ -59,7 +59,7 @@ const CardSaleReport = () => {
 
       <div className="ps-card__content">
         <div id="chart"></div>
-        <Line data={data} options={options} />
+        <Bar data={data} options={options} />
       </div>
 
       <div className="ps-card__footer">

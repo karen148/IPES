@@ -232,19 +232,6 @@ export const UpdateBanner = (img, img1, ids) => {
 
 export const UpdatePlazasMercado = (
   horario_m1,
-  horario_m2,
-  horario_lm1,
-  horario_lm2,
-  horario_mm1,
-  horario_mm2,
-  horario_jm1,
-  horario_jm2,
-  horario_vm1,
-  horario_vm2,
-  horario_sm1,
-  horario_sm2,
-  horario_dm1,
-  horario_dm2,
   telefonos,
   cat,
   funcionario,
@@ -255,16 +242,6 @@ export const UpdatePlazasMercado = (
   idPlaza
 ) => {
   return async (dispatch) => {
-    let horario = [];
-    horario.push(
-      horario_m1 + "-" + horario_m2,
-      horario_lm1 + "-" + horario_lm2,
-      horario_mm1 + "-" + horario_mm2,
-      horario_jm1 + "-" + horario_jm2,
-      horario_vm1 + "-" + horario_vm2,
-      horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2
-    );
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
@@ -294,7 +271,7 @@ export const UpdatePlazasMercado = (
           direccion: direccion,
           telefonos: tele,
           email: email,
-          horarios: horario,
+          horarios: horario_m1,
         },
         config
       )
@@ -315,19 +292,6 @@ export const UpdatePlazasMercado = (
 
 export const setPlazasMercado = (
   horario_m1,
-  horario_m2,
-  horario_lm1,
-  horario_lm2,
-  horario_mm1,
-  horario_mm2,
-  horario_jm1,
-  horario_jm2,
-  horario_vm1,
-  horario_vm2,
-  horario_sm1,
-  horario_sm2,
-  horario_dm1,
-  horario_dm2,
   telefonos,
   cat,
   funcionario,
@@ -339,16 +303,7 @@ export const setPlazasMercado = (
   img2
 ) => {
   return async (dispatch) => {
-    let horario = [];
-    horario.push(
-      horario_m1 + "-" + horario_m2,
-      horario_lm1 + "-" + horario_lm2,
-      horario_mm1 + "-" + horario_mm2,
-      horario_jm1 + "-" + horario_jm2,
-      horario_vm1 + "-" + horario_vm2,
-      horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2
-    );
+    console.log([JSON.stringify(horario_m1)]);
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
@@ -378,7 +333,7 @@ export const setPlazasMercado = (
           direccion: direccion,
           telefonos: tele,
           email: email,
-          horarios: horario,
+          horarios: [JSON.stringify(horario_m1[0])],
         },
         config
       )
@@ -532,6 +487,7 @@ export const getCategorias = () => {
           label: item.nombre.toUpperCase(),
           id: item.id,
           icono: item.icono,
+          activo: item.activo,
         }));
         dispatch(PlazaCategorias(categorias));
       })

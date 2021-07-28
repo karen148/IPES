@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import firebase from "firebase";
+// import firebase from "firebase";
 
 //Material
 import IconButton from "@material-ui/core/IconButton";
@@ -17,7 +17,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import * as locales from "@material-ui/core/locale";
-import Box from "@material-ui/core/Box";
+// import Box from "@material-ui/core/Box";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 //Componentes
@@ -186,6 +186,13 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                   // console.log(plazasTableRowues.length ? plazasTableRowues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (item !== undefined) {
                     if (item.activo === true) {
+                      var date = new Date(item.fecha);
+                      var options = {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      };
                       let data = [];
                       if (
                         item?.categorias !== null &&
@@ -244,7 +251,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                             {item.fecha === null ? (
                               <p>No hay fecha</p>
                             ) : (
-                              item.fecha.slice(0, 10)
+                              date.toLocaleDateString("es-CO", options)
                             )}
                           </TableCell>
                           <TableCell align="center">
@@ -307,7 +314,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
             if (open) {
               let funcionarioss = [];
               let telefonos = [];
-              let horarios = [];
+              let horario = [JSON.parse(item.horarios)];
               if (item?.usuario !== null && item?.usuario.length > 0) {
                 for (let i = 0; i <= item?.usuario.length; i++) {
                   const element = item?.usuario[i];
@@ -324,58 +331,63 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                   telefonos.push({ telefono: element });
                 }
               }
-              if (item?.horarios !== null && item?.horarios.length > 0) {
-                for (let i = 0; i <= item?.horarios.length; i++) {
-                  horarios.push(item?.horarios[i]);
-                }
-              }
+              // if (
+              //   JSON.parse(item.horarios) !== null &&
+              //   JSON.parse(item.horarios).length > 0
+              // ) {
+              //   for (const i of JSON.parse(item.horarios)) {
+              //     horario.push({ i });
+              //   }
+              // }
+              console.log(horario);
+              console.log(JSON.parse(item.horarios));
               if (item !== undefined && item.id === idp) {
-                if (item.img) {
-                  var deserTableRowef1 = firebase
-                    .storage()
-                    .ref()
-                    .child(`PLAZA/img/${idp}/${item.img}`);
-                  deserTableRowef1.getDownloadURL().then(function (url) {
-                    var img = document.getElementById(
-                      `img${item.id}${item.img}`
-                    );
-                    img.src = url !== null ? url : "";
-                  });
-                } else if (!item.img) {
-                  var deserTableRowef2 = firebase
-                    .storage()
-                    .ref()
-                    .child(`no-photo.svg`);
-                  deserTableRowef2.getDownloadURL().then(function (url) {
-                    var img = document.getElementById(
-                      `img${item.id}${item.img}`
-                    );
-                    img.src = url !== null ? url : "";
-                  });
-                }
-                if (item.logo) {
-                  var deserTableRowef3 = firebase
-                    .storage()
-                    .ref()
-                    .child(`PLAZA/logo/${idp}/${item.logo}`);
-                  deserTableRowef3.getDownloadURL().then(function (url) {
-                    var img = document.getElementById(
-                      `logo${item.id}${item.logo}`
-                    );
-                    img.src = url !== null ? url : "";
-                  });
-                } else if (!item.logo) {
-                  var deserTableRowef4 = firebase
-                    .storage()
-                    .ref()
-                    .child(`no-photo.svg`);
-                  deserTableRowef4.getDownloadURL().then(function (url) {
-                    var img = document.getElementById(
-                      `logo${item.id}${item.logo}`
-                    );
-                    img.src = url !== null ? url : "";
-                  });
-                }
+                // if (item.img) {
+                //   var deserTableRowef1 = firebase
+                //     .storage()
+                //     .ref()
+                //     .child(`PLAZA/img/${idp}/${item.img}`);
+                //   deserTableRowef1.getDownloadURL().then(function (url) {
+                //     var img = document.getElementById(
+                //       `img${item.id}${item.img}`
+                //     );
+                //     img.src = url !== null ? url : "";
+                //   });
+                // } else if (!item.img) {
+                //   var deserTableRowef2 = firebase
+                //     .storage()
+                //     .ref()
+                //     .child(`no-photo.svg`);
+                //   deserTableRowef2.getDownloadURL().then(function (url) {
+                //     var img = document.getElementById(
+                //       `img${item.id}${item.img}`
+                //     );
+                //     img.src = url !== null ? url : "";
+                //   });
+                // }
+                // if (item.logo) {
+                //   var deserTableRowef3 = firebase
+                //     .storage()
+                //     .ref()
+                //     .child(`PLAZA/logo/${idp}/${item.logo}`);
+                //   deserTableRowef3.getDownloadURL().then(function (url) {
+                //     var img = document.getElementById(
+                //       `logo${item.id}${item.logo}`
+                //     );
+                //     img.src = url !== null ? url : "";
+                //   });
+                // } else if (!item.logo) {
+                //   var deserTableRowef4 = firebase
+                //     .storage()
+                //     .ref()
+                //     .child(`no-photo.svg`);
+                //   deserTableRowef4.getDownloadURL().then(function (url) {
+                //     var img = document.getElementById(
+                //       `logo${item.id}${item.logo}`
+                //     );
+                //     img.src = url !== null ? url : "";
+                //   });
+                // }
                 return (
                   <Grid
                     container
@@ -383,7 +395,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                     justify="center"
                     alignItems="center"
                   >
-                    <Grid item xs={12} sm={12}>
+                    {/* <Grid item xs={12} sm={12}>
                       <img
                         src={""}
                         id={`img${item.id}${item.img}`}
@@ -395,7 +407,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                         <i>Banner</i>
                       </p>
                       <Divider variant="middle" />
-                    </Grid>
+                    </Grid> */}
                     {/* <Grid
                       item
                       xs={12}
@@ -422,7 +434,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                           sm={4}
                           style={{ textAlign: "center" }}
                         >
-                          <Box
+                          {/* <Box
                             bgcolor="primary.main"
                             style={{ borderRadius: "15px", marginTop: "10px" }}
                           >
@@ -433,7 +445,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                               width="150px"
                               height="150px"
                             />
-                          </Box>
+                          </Box> */}
                           <p style={{ textAlign: "center" }}>
                             <i>Logo</i>
                           </p>
@@ -478,7 +490,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                                 <p key={item?.telefono}> {item?.telefono}</p>
                               );
                             })}
-                            <h4>Correo elecTableRowónico</h4>
+                            <h4>Correo electrónico</h4>
                             <p>{item.email}</p>
                           </Grid>
                           <Grid
@@ -488,27 +500,13 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                             style={{ textAlign: "center" }}
                           >
                             <h4>Horarios</h4>
-                            {horarios[1] === "-" ? (
-                              <>
-                                <p>Lunes: {horarios[0]}</p>
-                                <p>Martes: {horarios[0]}</p>
-                                <p>Miercoles: {horarios[0]}</p>
-                                <p>Jueves: {horarios[0]}</p>
-                                <p>Viernes: {horarios[0]}</p>
-                                <p>Sabado: {horarios[0]}</p>
-                                <p>Domingo: {horarios[0]}</p>
-                              </>
-                            ) : (
-                              <>
-                                <p>Lunes: {horarios[0]}</p>
-                                <p>Martes: {horarios[1]}</p>
-                                <p>Miercoles: {horarios[2]}</p>
-                                <p>Jueves: {horarios[3]}</p>
-                                <p>Viernes: {horarios[4]}</p>
-                                <p>Sabado: {horarios[5]}</p>
-                                <p>Domingo: {horarios[6]}</p>
-                              </>
-                            )}
+                            {/* {horario.map((h, i) => {
+                              return (
+                                <p key={i + 1}>
+                                  {h.name}: {h.inicio} - {h.finalizar}
+                                </p>
+                              );
+                            })} */}
                           </Grid>
                         </Grid>
                       </Grid>

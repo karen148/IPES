@@ -48,9 +48,9 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
     { id: "pedidos", label: "Pedido" },
     { id: "nombre", label: "Nombre" },
     { id: "fecha", label: "Fecha" },
-    { id: "pago", label: "Pago" },
+    // { id: "pago", label: "Pago" },
     { id: "estados", label: "Estados" },
-    { id: "total", label: "Total" },
+    { id: "total", label: "Total", width: "600px" },
     { id: "acciones", label: "Acciones" },
   ];
 
@@ -111,6 +111,13 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                   .map((item) => {
                     // console.log(plazastrues.length ? plazastrues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                     if (item) {
+                      var date = new Date(item.fecha);
+                      var options = {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      };
                       let estado = "";
                       if (item.estado === "0") {
                         estado = "Enviado";
@@ -145,15 +152,15 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                             {item.fecha === null ? (
                               <p>No hay fecha</p>
                             ) : (
-                              item.fecha
+                              date.toLocaleDateString("es-CO", options)
                             )}
                           </TableCell>
-                          <TableCell align="center">
+                          {/* <TableCell align="center">
                             {item.pagado === "0" ? "Pago" : "No pago"}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell align="center">{estado}</TableCell>
                           <TableCell align="center">
-                            $ {Formatear(item.total)}
+                            {Formatear(item.total)}
                           </TableCell>
                           <TableCell align="center">
                             {item?.acciones.map((cat) => {

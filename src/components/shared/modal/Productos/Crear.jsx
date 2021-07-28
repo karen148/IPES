@@ -13,10 +13,12 @@ import Producto from "components/shared/forms/FormProducto/Producto";
 import Imagenes from "components/shared/forms/FormProducto/Imagenes";
 import Categorias from "components/shared/forms/FormProducto/Categorias";
 import { setProductos } from "actions/producto";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setProductosLocatario } from "actions/producto";
+import { getVerificar } from "actions/producto";
 
 const Crear = ({ open, handleClose, locatario, rol }) => {
+  const { productos } = useSelector((state) => state.producto);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -62,8 +64,9 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
       );
     } else {
       if (precio > rebaja) {
-        let pro = [...locatario.productos_locatarios_id];
-        console.log(pro);
+        let categoria = productos.filter((item) => item.id === plaza.id)[0]
+          ?.categorias[0];
+        console.log(categoria);
         dispatch(
           setProductosLocatario(
             plaza,
@@ -78,6 +81,7 @@ const Crear = ({ open, handleClose, locatario, rol }) => {
             setMsg
           )
         );
+        dispatch(getVerificar(locatario.id, categoria));
       }
     }
     setAlerta(true);

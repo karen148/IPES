@@ -498,6 +498,26 @@ export const DeleteProducto = (idProducto) => {
   };
 };
 
+export const getVerificar = (locatario, categoria) => {
+  return async () => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API +
+          `locatarios/findByLocatarioIdSiCategoriaExiste/${locatario}/${categoria}`,
+        config
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 const ProductosLocatarios = (productos) => ({
   type: types.productoLocatarios,
   producto: productos,

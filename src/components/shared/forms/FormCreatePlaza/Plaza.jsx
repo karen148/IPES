@@ -31,7 +31,6 @@ const Plaza = ({
     (state) => state.plaza
   );
 
-  // const [disabled, setHabilitar] = useState(false);
   // console.log(disabled);
   const classes = useStyles();
   //agregar un telefono
