@@ -198,13 +198,12 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
       setTelefono1(telefonoss);
     }
 
-    console.log(locatario.horarios);
     if (locatario.horarios.length > 0) {
-      for (let i = 0; i <= locatario?.horarios.length; i++) {
-        const element = locatario?.horarios[i];
-        horarios.push(element);
-        setHorario1(horarios);
-      }
+      let horario = [];
+      locatario.horarios.forEach((element) => {
+        horario.push(JSON.parse(element.split("/")));
+      });
+      setHorario1(horario);
     } else {
       horarios.push("No tiene horario");
       setHorario1(horarios);
@@ -550,29 +549,13 @@ const TablaLocatarios = ({ datos, getLocali, noimg }) => {
                     </Grid>
                     <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
                       <h4>Horarios</h4>
-                      {horario1[0] === "No tiene horario" ? (
-                        horario1[0]
-                      ) : horario1[1] === "-" ? (
-                        <>
-                          <p>Lunes: {horario1[0]}</p>
-                          <p>Martes: {horario1[0]}</p>
-                          <p>Miercoles: {horario1[0]}</p>
-                          <p>Jueves: {horario1[0]}</p>
-                          <p>Viernes: {horario1[0]}</p>
-                          <p>Sabado: {horario1[0]}</p>
-                          <p>Domingo: {horario1[0]}</p>
-                        </>
-                      ) : (
-                        <>
-                          <p>Lunes: {horario1[0]}</p>
-                          <p>Martes: {horario1[1]}</p>
-                          <p>Miercoles: {horario1[2]}</p>
-                          <p>Jueves: {horario1[3]}</p>
-                          <p>Viernes: {horario1[4]}</p>
-                          <p>Sabado: {horario1[5]}</p>
-                          <p>Domingo: {horario1[6]}</p>
-                        </>
-                      )}
+                      {horario1.map((h, i) => {
+                        return (
+                          <p key={i + 1}>
+                            {h.name}: {h.inicio} - {h.finalizar}
+                          </p>
+                        );
+                      })}
                     </Grid>
                   </Grid>
                 </Grid>

@@ -157,18 +157,6 @@ const Crear = ({ open, handleClose }) => {
   };
 
   const Registrar = () => {
-    let horario = [];
-    horario_m1.map((item) => {
-      Array.prototype.push.apply(horario, [
-        { name: item.name, inicio: item.inicio, finalizar: item.finalizar },
-      ]);
-    });
-    let tele = [];
-    telefonos.map((item) => {
-      Array.prototype.push.apply(tele, [item.telefono]);
-    });
-    console.log(horario);
-    console.log(tele);
     dispatch(
       setPlazasMercado(
         horario_m1,

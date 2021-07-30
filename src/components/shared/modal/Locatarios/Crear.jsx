@@ -33,20 +33,13 @@ const Crear = ({ open, handleClose, locatarios }) => {
   const [img2, setImg2] = useState(null);
   const [img3, setImg3] = useState(null);
 
-  const [horario_m1, setHorariom1] = useState("");
-  const [horario_m2, setHorariom2] = useState("");
-  const [horario_lm1, setHorariolm1] = useState("");
-  const [horario_lm2, setHorariolm2] = useState("");
-  const [horario_mm1, setHorariomm1] = useState("");
-  const [horario_mm2, setHorariomm2] = useState("");
-  const [horario_jm1, setHorariojm1] = useState("");
-  const [horario_jm2, setHorariojm2] = useState("");
-  const [horario_vm1, setHorariovm1] = useState("");
-  const [horario_vm2, setHorariovm2] = useState("");
-  const [horario_sm1, setHorariosm1] = useState("");
-  const [horario_sm2, setHorariosm2] = useState("");
-  const [horario_dm1, setHorariodm1] = useState("");
-  const [horario_dm2, setHorariodm2] = useState("");
+  const [horario_m1, setHorariom1] = useState([
+    {
+      name: "Todos los días",
+      inicio: "",
+      finalizar: "",
+    },
+  ]);
 
   const [cedula, setCedula] = useState("");
   const [local, setLocal] = useState("");
@@ -154,32 +147,6 @@ const Crear = ({ open, handleClose, locatarios }) => {
             local={local}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
-            horario_m2={horario_m2}
-            setHorariom2={setHorariom2}
-            horario_lm1={horario_lm1}
-            setHorariolm1={setHorariolm1}
-            horario_lm2={horario_lm2}
-            setHorariolm2={setHorariolm2}
-            horario_mm1={horario_mm1}
-            setHorariomm1={setHorariomm1}
-            horario_mm2={horario_mm2}
-            setHorariomm2={setHorariomm2}
-            horario_jm1={horario_jm1}
-            setHorariojm1={setHorariojm1}
-            horario_jm2={horario_jm2}
-            setHorariojm2={setHorariojm2}
-            horario_vm1={horario_vm1}
-            setHorariovm1={setHorariovm1}
-            horario_vm2={horario_vm2}
-            setHorariovm2={setHorariovm2}
-            horario_sm1={horario_sm1}
-            setHorariosm1={setHorariosm1}
-            horario_sm2={horario_sm2}
-            setHorariosm2={setHorariosm2}
-            horario_dm1={horario_dm1}
-            setHorariodm1={setHorariodm1}
-            horario_dm2={horario_dm2}
-            setHorariodm2={setHorariodm2}
           />
         );
       case 3:
@@ -207,19 +174,6 @@ const Crear = ({ open, handleClose, locatarios }) => {
     dispatch(
       setLocatarios(
         horario_m1,
-        horario_m2,
-        horario_lm1,
-        horario_lm2,
-        horario_mm1,
-        horario_mm2,
-        horario_jm1,
-        horario_jm2,
-        horario_vm1,
-        horario_vm2,
-        horario_sm1,
-        horario_sm2,
-        horario_dm1,
-        horario_dm2,
         img,
         img2,
         cedula,
@@ -246,20 +200,13 @@ const Crear = ({ open, handleClose, locatarios }) => {
     setImg1(null);
     setImg2(null);
     setImg3(null);
-    setHorariom1("");
-    setHorariom2("");
-    setHorariolm1("");
-    setHorariolm2("");
-    setHorariomm1("");
-    setHorariomm2("");
-    setHorariojm1("");
-    setHorariojm2("");
-    setHorariovm1("");
-    setHorariovm2("");
-    setHorariosm1("");
-    setHorariosm2("");
-    setHorariodm1("");
-    setHorariodm2("");
+    setHorariom1([
+      {
+        name: "Todos los días",
+        inicio: "",
+        finalizar: "",
+      },
+    ]);
     setPlaza("");
     setTelefonos([{ telefono: "" }]);
     setEmail("");

@@ -230,6 +230,10 @@ const Actualizar = ({
   };
 
   const ActualizarPlaza = () => {
+    // const aux = horario_m1.map((i) => {
+    //   return JSON.parse(i);
+    // });
+    // const horario = aux.join();
     dispatch(
       UpdatePlazasMercado(
         horario_m1,

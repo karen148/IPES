@@ -54,20 +54,13 @@ const Actualizar = ({
   const [img2, setImg2] = useState(null);
   const [img3, setImg3] = useState(null);
 
-  const [horario_m1, setHorariom1] = useState("");
-  const [horario_m2, setHorariom2] = useState("");
-  const [horario_lm1, setHorariolm1] = useState("");
-  const [horario_lm2, setHorariolm2] = useState("");
-  const [horario_mm1, setHorariomm1] = useState("");
-  const [horario_mm2, setHorariomm2] = useState("");
-  const [horario_jm1, setHorariojm1] = useState("");
-  const [horario_jm2, setHorariojm2] = useState("");
-  const [horario_vm1, setHorariovm1] = useState("");
-  const [horario_vm2, setHorariovm2] = useState("");
-  const [horario_sm1, setHorariosm1] = useState("");
-  const [horario_sm2, setHorariosm2] = useState("");
-  const [horario_dm1, setHorariodm1] = useState("");
-  const [horario_dm2, setHorariodm2] = useState("");
+  const [horario_m1, setHorariom1] = useState([
+    {
+      name: "Todos los días",
+      inicio: "",
+      finalizar: "",
+    },
+  ]);
 
   const [cedula, setCedula] = useState("");
   const [local4, setLocalNombre] = useState("");
@@ -86,52 +79,16 @@ const Actualizar = ({
   useEffect(() => {
     const Actual = () => {
       if (ced1) {
-        let semana = [];
-        if (horarios2) {
-          for (let h = 0; h < horarios2.length; h++) {
-            semana.push(horarios2[h].split("-", 2));
-          }
-        }
-        if (semana.length) {
-          setHorariom1(semana[0][0]);
-          setHorariom2(semana[0][1]);
-          setHorariolm1(semana[1][0]);
-          setHorariolm2(semana[1][1]);
-          if (semana.length > 2) {
-            setHorariomm1(semana[2][0]);
-            setHorariomm2(semana[2][1]);
-            setHorariojm1(semana[3][0]);
-            setHorariojm2(semana[3][1]);
-            setHorariovm1(semana[4][0]);
-            setHorariovm2(semana[4][1]);
-            setHorariosm1(semana[5][0]);
-            setHorariosm2(semana[5][1]);
-            setHorariodm1(semana[6][0]);
-            setHorariodm2(semana[6][1]);
-          }
-        } else {
-          setHorariom1("");
-          setHorariom2("");
-          setHorariolm1("");
-          setHorariolm2("");
-          setHorariomm1("");
-          setHorariomm2("");
-          setHorariojm1("");
-          setHorariojm2("");
-          setHorariovm1("");
-          setHorariovm2("");
-          setHorariosm1("");
-          setHorariosm2("");
-          setHorariodm1("");
-          setHorariodm2("");
-        }
-
+        let horario = [];
+        horarios2?.forEach((element) => {
+          horario.push(JSON.parse(element.split("/")));
+        });
+        setHorariom1(horario);
         setCedula(ced1);
         setLocalNombre(loc1?.trim());
         console.log(setLocalNombre);
         console.log(loc1?.trim());
         setNombre(nom1);
-        // setApellido(ape1);
         setEmail(email1);
 
         let telefonos2 = [];
@@ -205,6 +162,7 @@ const Actualizar = ({
     }
   };
 
+  console.log(cat);
   const handleNext = () => {
     if (validarEmail(email)) {
       setActiveStep(activeStep + 1);
@@ -261,32 +219,6 @@ const Actualizar = ({
             local={local4}
             horario_m1={horario_m1}
             setHorariom1={setHorariom1}
-            horario_m2={horario_m2}
-            setHorariom2={setHorariom2}
-            horario_lm1={horario_lm1}
-            setHorariolm1={setHorariolm1}
-            horario_lm2={horario_lm2}
-            setHorariolm2={setHorariolm2}
-            horario_mm1={horario_mm1}
-            setHorariomm1={setHorariomm1}
-            horario_mm2={horario_mm2}
-            setHorariomm2={setHorariomm2}
-            horario_jm1={horario_jm1}
-            setHorariojm1={setHorariojm1}
-            horario_jm2={horario_jm2}
-            setHorariojm2={setHorariojm2}
-            horario_vm1={horario_vm1}
-            setHorariovm1={setHorariovm1}
-            horario_vm2={horario_vm2}
-            setHorariovm2={setHorariovm2}
-            horario_sm1={horario_sm1}
-            setHorariosm1={setHorariosm1}
-            horario_sm2={horario_sm2}
-            setHorariosm2={setHorariosm2}
-            horario_dm1={horario_dm1}
-            setHorariodm1={setHorariodm1}
-            horario_dm2={horario_dm2}
-            setHorariodm2={setHorariodm2}
           />
         );
       case 3:
@@ -314,19 +246,6 @@ const Actualizar = ({
     dispatch(
       UpdateLocatarios(
         horario_m1,
-        horario_m2,
-        horario_lm1,
-        horario_lm2,
-        horario_mm1,
-        horario_mm2,
-        horario_jm1,
-        horario_jm2,
-        horario_vm1,
-        horario_vm2,
-        horario_sm1,
-        horario_sm2,
-        horario_dm1,
-        horario_dm2,
         cedula,
         local4,
         numerolocal,

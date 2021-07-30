@@ -252,19 +252,6 @@ export const UpdateImagen = (img, img1, idLocatario) => {
 
 export const UpdateLocatarios = (
   horario_m1,
-  horario_m2,
-  horario_lm1,
-  horario_lm2,
-  horario_mm1,
-  horario_mm2,
-  horario_jm1,
-  horario_jm2,
-  horario_vm1,
-  horario_vm2,
-  horario_sm1,
-  horario_sm2,
-  horario_dm1,
-  horario_dm2,
   cedula,
   local,
   numerolocal,
@@ -278,17 +265,6 @@ export const UpdateLocatarios = (
   idLocatario
 ) => {
   return async (dispatch) => {
-    let horario = [];
-    horario.push(
-      horario_m1 + "-" + horario_m2,
-      horario_lm1 + "-" + horario_lm2,
-      horario_mm1 + "-" + horario_mm2,
-      horario_jm1 + "-" + horario_jm2,
-      horario_vm1 + "-" + horario_vm2,
-      horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2
-    );
-
     let cate = [];
     cat.map((item) => {
       Array.prototype.push.apply(cate, [item.id]);
@@ -331,7 +307,7 @@ export const UpdateLocatarios = (
           nombre: nombre,
           apellido: "",
           cedula: cedula,
-          horarios: horario,
+          horarios: horario_m1,
           email: email,
           telefonos: tele,
         },
@@ -442,19 +418,6 @@ export const setLocatariosExcel = (
 
 export const setLocatarios = (
   horario_m1,
-  horario_m2,
-  horario_lm1,
-  horario_lm2,
-  horario_mm1,
-  horario_mm2,
-  horario_jm1,
-  horario_jm2,
-  horario_vm1,
-  horario_vm2,
-  horario_sm1,
-  horario_sm2,
-  horario_dm1,
-  horario_dm2,
   img,
   img2,
   cedula,
@@ -470,17 +433,6 @@ export const setLocatarios = (
   setMsg
 ) => {
   return async (dispatch) => {
-    let horario = [];
-    horario.push(
-      horario_m1 + "-" + horario_m2,
-      horario_lm1 + "-" + horario_lm2,
-      horario_mm1 + "-" + horario_mm2,
-      horario_jm1 + "-" + horario_jm2,
-      horario_vm1 + "-" + horario_vm2,
-      horario_sm1 + "-" + horario_sm2,
-      horario_dm1 + "-" + horario_dm2
-    );
-
     let cate = [];
     cat.map((item) => {
       Array.prototype.push.apply(cate, [item.id]);
@@ -521,7 +473,7 @@ export const setLocatarios = (
           nombre: nombre,
           apellido: "",
           cedula: cedula,
-          horarios: horario,
+          horarios: horario_m1,
           email: email,
           telefonos: tele,
           img: img,

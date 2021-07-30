@@ -303,7 +303,6 @@ export const setPlazasMercado = (
   img2
 ) => {
   return async (dispatch) => {
-    console.log([JSON.stringify(horario_m1)]);
     let tele = [];
     telefonos.map((item) => {
       Array.prototype.push.apply(tele, [item.telefono]);
@@ -320,7 +319,6 @@ export const setPlazasMercado = (
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
-
     axios
       .post(
         process.env.REACT_APP_URL_API + "plazas/crear",
@@ -333,7 +331,7 @@ export const setPlazasMercado = (
           direccion: direccion,
           telefonos: tele,
           email: email,
-          horarios: [JSON.stringify(horario_m1[0])],
+          horarios: horario_m1,
         },
         config
       )

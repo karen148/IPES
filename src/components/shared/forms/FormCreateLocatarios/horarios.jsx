@@ -7,49 +7,76 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcCallIcon from "@material-ui/icons/AddIcCall";
 import useStyles from "../style";
 
-const Horarios = ({
-  local,
-  horario_m1,
-  setHorariom1,
-  horario_m2,
-  setHorariom2,
-  horario_lm1,
-  setHorariolm1,
-  horario_lm2,
-  setHorariolm2,
-  horario_mm1,
-  setHorariomm1,
-  horario_mm2,
-  setHorariomm2,
-  horario_jm1,
-  setHorariojm1,
-  horario_jm2,
-  setHorariojm2,
-  horario_vm1,
-  setHorariovm1,
-  horario_vm2,
-  setHorariovm2,
-  horario_sm1,
-  setHorariosm1,
-  horario_sm2,
-  setHorariosm2,
-  horario_dm1,
-  setHorariodm1,
-  horario_dm2,
-  setHorariodm2,
-}) => {
+const Horarios = ({ local, horario_m1, setHorariom1 }) => {
   const classes = useStyles();
   const [horaSI, setHoraSI] = useState(false);
   const [value, setValue] = useState(0);
-
+  const Dias = [
+    {
+      0: "Lunes",
+      1: "Martes",
+      2: "Miércoles",
+      3: "Jueves",
+      4: "Viernes",
+      5: "Sábado",
+      6: "Domingo",
+    },
+  ];
+  console.log(Dias[0][0]);
   const HoraSi = () => {
     setHoraSI(true);
+    setHorariom1([
+      {
+        name: Dias[0][0],
+        inicio: "",
+        finalizar: "",
+      },
+    ]);
   };
 
   const HoraNO = () => {
     setHoraSI(false);
+    setHorariom1([
+      {
+        name: "Todos los días",
+        inicio: "",
+        finalizar: "",
+      },
+    ]);
+  };
+
+  //agregar un día
+  const handleAddTel = () => {
+    for (const i of Dias.reverse()) {
+      setHorariom1([
+        ...horario_m1,
+        {
+          name: i[horario_m1.length],
+          inicio: "",
+          finalizar: "",
+        },
+      ]);
+    }
+  };
+
+  //evento para modificar input
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...horario_m1];
+    list[index][name] = value;
+    setHorariom1(list);
+  };
+
+  // evento para remover un hijo
+  const handleRemoveClick = (index) => {
+    const list = [...horario_m1];
+    list.splice(index, 2);
+    setHorariom1(list);
   };
 
   return (
@@ -79,246 +106,106 @@ const Horarios = ({
             />
           </BottomNavigation>
         </Grid>
-        {/* <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={HoraNO}
-            style={{ color: "white" }}
-          >
-            Horario Fijo
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6} style={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={HoraSi}
-            style={{ color: "white" }}
-          >
-            Horario por días
-          </Button>
-        </Grid> */}
-        {horaSI ? (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={2}
-          >
-            <Grid item xs={12} sm={2}>
-              <label>Lunes: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_m1}
-                name="horario_m1"
-                onChange={(e) => setHorariom1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_m2}
-                name="horario_m2"
-                onChange={(e) => setHorariom2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Martes: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_lm1}
-                name="horario_lm1"
-                onChange={(e) => setHorariolm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_lm2}
-                name="horario_lm2"
-                onChange={(e) => setHorariolm2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Miercoles: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_mm1}
-                name="horario_mm1"
-                onChange={(e) => setHorariomm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_mm2}
-                name="horario_mm2"
-                onChange={(e) => setHorariomm2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Jueves: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_jm1}
-                name="horario_jm1"
-                onChange={(e) => setHorariojm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_jm2}
-                name="horario_jm2"
-                onChange={(e) => setHorariojm2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Viernes: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_vm1}
-                name="horario_vm1"
-                onChange={(e) => setHorariovm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_vm2}
-                name="horario_vm2"
-                onChange={(e) => setHorariovm2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Sabado: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_sm1}
-                name="horario_sm1"
-                onChange={(e) => setHorariosm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_sm2}
-                name="horario_sm2"
-                onChange={(e) => setHorariosm2(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <label>Domingo: </label>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_dm1}
-                name="horario_dm1"
-                onChange={(e) => setHorariodm1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} className={classes.horario}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_dm2}
-                name="horario_dm2"
-                onChange={(e) => setHorariodm2(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-        ) : (
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={12} sm={12}>
-              <br></br>
-              <label>El mismo horario para todos los días</label>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_m1}
-                name="horario_m1"
-                onChange={(e) => setHorariom1(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                margin="normal"
-                variant="outlined"
-                fullWidth
-                type="time"
-                value={horario_m2}
-                name="horario_m2"
-                onChange={(e) => setHorariom2(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-        )}
+        {horaSI
+          ? horario_m1.map((h, i) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                  key={i + 1}
+                >
+                  <Grid item xs={12} sm={2}>
+                    <label>{h.name}</label>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      margin="normal"
+                      variant="outlined"
+                      fullWidth
+                      type="time"
+                      value={h.inicio}
+                      name="inicio"
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4} className={classes.horario}>
+                    <TextField
+                      margin="normal"
+                      variant="outlined"
+                      fullWidth
+                      type="time"
+                      value={h.finalizar}
+                      name="finalizar"
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6} style={{ textAlign: "center" }}>
+                    {horario_m1.length !== 1 && (
+                      <IconButton
+                        onClick={() => handleRemoveClick(i)}
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                    {horario_m1.length - 1 === i && (
+                      <IconButton
+                        onClick={handleAddTel}
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <AddIcCallIcon />
+                      </IconButton>
+                    )}
+                  </Grid>
+                </Grid>
+              );
+            })
+          : horario_m1.map((h, i) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  spacing={2}
+                  justify="center"
+                  alignItems="center"
+                  key={i + 2}
+                >
+                  <Grid item xs={12} sm={12}>
+                    <br></br>
+                    <label>El mismo horario para todos los días</label>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      variant="outlined"
+                      fullWidth
+                      type="time"
+                      value={h.inicio}
+                      name="inicio"
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      margin="normal"
+                      variant="outlined"
+                      fullWidth
+                      type="time"
+                      value={h.finalizar}
+                      name="finalizar"
+                      onChange={(e) => handleInputChange(e, i)}
+                    />
+                  </Grid>
+                </Grid>
+              );
+            })}
       </Grid>
     </React.Fragment>
   );
@@ -328,32 +215,6 @@ Horarios.propTypes = {
   local: PropTypes.string,
   horario_m1: PropTypes.string,
   setHorariom1: PropTypes.func,
-  horario_m2: PropTypes.string,
-  setHorariom2: PropTypes.func,
-  horario_lm1: PropTypes.string,
-  setHorariolm1: PropTypes.func,
-  horario_lm2: PropTypes.string,
-  setHorariolm2: PropTypes.func,
-  horario_mm1: PropTypes.string,
-  setHorariomm1: PropTypes.func,
-  horario_mm2: PropTypes.string,
-  setHorariomm2: PropTypes.func,
-  horario_jm1: PropTypes.string,
-  setHorariojm1: PropTypes.func,
-  horario_jm2: PropTypes.string,
-  setHorariojm2: PropTypes.func,
-  horario_vm1: PropTypes.string,
-  setHorariovm1: PropTypes.func,
-  horario_vm2: PropTypes.string,
-  setHorariovm2: PropTypes.func,
-  horario_sm1: PropTypes.string,
-  setHorariosm1: PropTypes.func,
-  horario_sm2: PropTypes.string,
-  setHorariosm2: PropTypes.func,
-  horario_dm1: PropTypes.string,
-  setHorariodm1: PropTypes.func,
-  horario_dm2: PropTypes.string,
-  setHorariodm2: PropTypes.func,
 };
 
 export default Horarios;

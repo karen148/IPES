@@ -311,10 +311,10 @@ const TablaPlazas = ({ datos, getPlaza }) => {
           tamaño="sm"
         >
           {datos.map((item) => {
-            if (open) {
+            if (open && item.id === idp) {
               let funcionarioss = [];
               let telefonos = [];
-              let horario = [JSON.parse(item.horarios)];
+              let horario = [];
               if (item?.usuario !== null && item?.usuario.length > 0) {
                 for (let i = 0; i <= item?.usuario.length; i++) {
                   const element = item?.usuario[i];
@@ -331,6 +331,15 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                   telefonos.push({ telefono: element });
                 }
               }
+              item.horarios.forEach((element) => {
+                horario.push(JSON.parse(element.split("/")));
+              });
+              console.log(horario);
+              // aux.forEach((h, index) => {
+              //   index !== 0 ? horario.push(h.slice(1)) : horario.push(h);
+              // });
+              // horario.pop();
+              // const horario1 = horario.map((h) => JSON.parse(h));
               // if (
               //   JSON.parse(item.horarios) !== null &&
               //   JSON.parse(item.horarios).length > 0
@@ -339,8 +348,8 @@ const TablaPlazas = ({ datos, getPlaza }) => {
               //     horario.push({ i });
               //   }
               // }
-              console.log(horario);
-              console.log(JSON.parse(item.horarios));
+              // console.log(horario);
+              // console.log(JSON.parse(item.horarios));
               if (item !== undefined && item.id === idp) {
                 // if (item.img) {
                 //   var deserTableRowef1 = firebase
@@ -500,13 +509,13 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                             style={{ textAlign: "center" }}
                           >
                             <h4>Horarios</h4>
-                            {/* {horario.map((h, i) => {
+                            {horario.map((h, i) => {
                               return (
                                 <p key={i + 1}>
                                   {h.name}: {h.inicio} - {h.finalizar}
                                 </p>
                               );
-                            })} */}
+                            })}
                           </Grid>
                         </Grid>
                       </Grid>
