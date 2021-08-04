@@ -9,13 +9,13 @@ const FooterCopyright = () => {
           backgroundColor: "white",
           borderRadius: "15px",
           textAlign: "center",
-          width: "85%",
+          width: "95%",
         }}
       >
-        <img src={img} alt="" style={{ width: "100%" }} />
+        <img src={img} alt="" style={{ width: "90%" }} />
       </div>
       <p style={{ color: "white" }}>
-        &copy;2021 IPES. <br /> Todos los derechos reservados.
+        &copy;2021 IPES. Todos los derechos reservados.
       </p>
     </div>
   );

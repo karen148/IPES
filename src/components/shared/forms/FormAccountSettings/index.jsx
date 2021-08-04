@@ -245,7 +245,6 @@ const FormAccountSettings = () => {
               name="cedula"
               value={state.cedula}
               onChange={handleState}
-              disabled
             />
           </div>
         </div>

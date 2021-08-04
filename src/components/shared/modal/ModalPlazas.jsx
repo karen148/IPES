@@ -37,7 +37,7 @@ const ModalPlazas = ({ open, handleClose, titulo, datos, mensaje }) => {
               for (let i = 0; i <= item?.plaza.length; i++) {
                 const element = item?.plaza[i];
                 plazastrues.map((item) => {
-                  if (item.id === element) {
+                  if (item?.id === element) {
                     data.push({
                       id: item.id,
                       name: item.nombre,

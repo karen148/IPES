@@ -29,7 +29,9 @@ const Categoria = ({ plaza, cat, setCat }) => {
               setCat(newValue);
             }}
             options={categorias}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) =>
+              option.activo ? option.label : option.label + " - DESACTIVADA"
+            }
             renderInput={(params) => (
               <TextField
                 {...params}

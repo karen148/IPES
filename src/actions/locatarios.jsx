@@ -2,13 +2,12 @@ import axios from "axios";
 import { types } from "./../types";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
+import { getAdminsCedula } from "./admin";
 
 export const getLocatariosCedulaPlaza = (plaza, numerolocal, setMsg) => {
   return async () => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      plazaId: plaza,
-      numeroLocal: numerolocal,
     };
     axios
       .get(
@@ -337,82 +336,57 @@ export const setLocatariosExcel = (
   id,
   plaza
 ) => {
-  return async () => {
-    let admin = [];
-
+  return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
-
-    axios
-      .post(
-        process.env.REACT_APP_URL_API + "locatarios/crear",
-        {
-          admin_id: admin,
-          plaza_id: plaza,
-          nombre_local: local,
-          numero_local: numero_local,
-          categorias_id: [],
-          productos_locatarios_id: [],
-          nombre: nombre,
-          apellido: "",
-          cedula: cedula,
-          horarios: [],
-          email: "",
-          telefonos: telefonos,
-        },
-        config
-      )
-      .then((response) => {
-        if (response.status === 200) {
+    for (const i of numero_local) {
+      axios
+        .get(
+          process.env.REACT_APP_URL_API +
+            `locatarios/findByNumeroDeLocalYPlazaId/${i}/${plaza}`,
+          config
+        )
+        .then((response) => {
+          console.log(response);
           // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+          dispatch(
+            getAdminsCedula(cedula, nombre, telefonos, "ADMIN_LOCATARIO")
+          );
+        })
+        .catch(() => {
           axios
-            .get(
-              process.env.REACT_APP_URL_API + "admins/findByCedula/" + cedula,
+            .post(
+              process.env.REACT_APP_URL_API + "locatarios/crear",
+              {
+                admin_id: [id],
+                plaza_id: plaza,
+                nombre_local: local,
+                numero_local: numero_local,
+                categorias_id: [],
+                productos_locatarios_id: [],
+                nombre: nombre,
+                apellido: "",
+                cedula: cedula,
+                horarios: [],
+                email: "",
+                telefonos: telefonos,
+              },
               config
             )
             .then((response) => {
-              console.log(response);
+              if (response.status === 200) {
+                // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+                dispatch(
+                  getAdminsCedula(cedula, nombre, telefonos, "ADMIN_LOCATARIO")
+                );
+              }
             })
             .catch((e) => {
-              /**
-               * Sí, canta error significa que no es admin locatario
-               * en la base de datos, por lo tanto registramos lo datos
-               * para que pueda ingresar al modulo locatario.
-               *
-               */
               console.log("ERROR!!!!!", e);
-              let config = {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              };
-              axios
-                .post(
-                  process.env.REACT_APP_URL_API + "admins/registerAdmin",
-                  {
-                    email: cedula,
-                    password: "CC" + cedula,
-                    rol: "ADMIN_LOCATARIO",
-                    nombre: nombre,
-                    apellido: "",
-                    cedula: cedula,
-                    telefonos: telefonos,
-                  },
-                  config
-                )
-                .then((response) => {
-                  console.log(response);
-                })
-                .catch((e) => {
-                  console.log("ERROR!!!!!", e);
-                });
             });
-        }
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
+        });
+    }
   };
 };
 
@@ -484,6 +458,15 @@ export const setLocatarios = (
       .then((response) => {
         setMsg(1);
         let data = response.data;
+        if (email === "") {
+          dispatch(
+            getAdminsCedula(cedula, nombre, telefonos, "ADMIN_LOCATARIO")
+          );
+        } else {
+          dispatch(
+            getAdminsCedula(cedula, nombre, telefonos, "ADMIN_LOCATARIO", email)
+          );
+        }
         dispatch(
           LocatarioMensaje({
             ok: data.ok,

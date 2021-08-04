@@ -35,8 +35,8 @@ const ModalCategorias = ({ open, handleClose, titulo, mensaje, datos }) => {
         {open &&
           datos.map((item) => {
             let data = [];
-            for (let i = 0; i <= item?.categorias.length; i++) {
-              const element = item?.categorias[i];
+            for (let i = 0; i <= item?.categorias_id.length; i++) {
+              const element = item?.categorias_id[i];
               categorias.map((item) => {
                 if (item.id === element) {
                   data.push({
@@ -47,7 +47,7 @@ const ModalCategorias = ({ open, handleClose, titulo, mensaje, datos }) => {
                 }
               });
             }
-            return item?.categorias.length !== 0 ? (
+            return item?.categorias_id.length !== 0 ? (
               <Grid
                 container
                 direction="row"

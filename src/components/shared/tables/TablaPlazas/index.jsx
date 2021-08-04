@@ -195,11 +195,11 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                       };
                       let data = [];
                       if (
-                        item?.categorias !== null &&
-                        item?.categorias.length > 0
+                        item?.categorias_id !== null &&
+                        item?.categorias_id.length > 0
                       ) {
-                        for (let i = 0; i <= item?.categorias.length; i++) {
-                          const element = item?.categorias[i];
+                        for (let i = 0; i <= item?.categorias_id.length; i++) {
+                          const element = item?.categorias_id[i];
                           categorias.map((item) => {
                             if (item.id === element) {
                               data.push({
@@ -531,10 +531,10 @@ const TablaPlazas = ({ datos, getPlaza }) => {
           handleClose={() => setOpen3(false)}
           titulo={
             "LISTADO DE LAS CATEGORÍAS DE LA PLAZA " +
-            datos.filter((item) => item.id === idp3)[0]?.nombre.toUpperCase()
+            datos.filter((item) => item?.id === idp3)[0]?.nombre.toUpperCase()
           }
           mensaje={"La plaza no tiene categorías asignadas"}
-          datos={datos.filter((item) => item.id === idp3)}
+          datos={datos.filter((item) => item?.id === idp3)}
         />
         <_Eliminar
           open={open1}

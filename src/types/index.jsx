@@ -41,6 +41,8 @@ export const types = {
 
   promocionesDatos: "[promocion] Obtener datos de la promoción",
 
+  imagen: "[imagen] Icono de error de imagen",
+
   balanceCantidadProductosVendidos:
     "[balance] Obtener la cantidad de los producto vendidos",
   balanceTopProductos: "[balance] Obtener el top de los productos más vendidos",

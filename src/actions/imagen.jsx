@@ -1,6 +1,7 @@
 import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { types } from "./../types";
 
 export const updateImg = async (
   img1,
@@ -167,25 +168,25 @@ export const updateImg = async (
   }
 };
 
-export const NoImg = (setImg) => {
-  return async () => {
+export const NoImg = () => {
+  return async (dispacth) => {
     var desertRef1 = firebase.storage().ref().child(`no-photo.svg`);
     desertRef1.getDownloadURL().then(function (url) {
-      setImg(url);
+      dispacth(getImg(url));
     });
   };
 };
 
+const getImg = (ima) => ({
+  type: types.imagen,
+  imagen: ima,
+});
+
 export const Img = (url, setImg, img) => {
   return async () => {
     if (img) {
-      var desertRef1 = firebase.storage().ref().child(`${url}`);
+      const desertRef1 = firebase.storage().ref().child(`${url}`);
       desertRef1.getDownloadURL().then(function (url1) {
-        setImg(url1);
-      });
-    } else {
-      var desertRef2 = firebase.storage().ref().child(`no-photo.svg`);
-      desertRef2.getDownloadURL().then(function (url1) {
         setImg(url1);
       });
     }

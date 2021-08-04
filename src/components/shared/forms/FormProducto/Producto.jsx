@@ -116,7 +116,7 @@ const Producto = ({
               gutterBottom
               style={{ marginLeft: "2%", marginTop: "10px" }}
             >
-              No hay plazas registradas
+              No hay registradas
             </Typography>
           )
         ) : (
@@ -130,7 +130,7 @@ const Producto = ({
                   plazastrues.filter((pla) => pla.id === locatario?.plaza_id)[0]
                     ?.nombre
                 }`
-              : "No hay plazas registradas"}
+              : "No hay productos registradas"}
           </Typography>
         )}
         {rol === "SUPER_ADMIN" ? (

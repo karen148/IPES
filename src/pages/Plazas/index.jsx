@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
@@ -15,9 +14,7 @@ import {
 } from "./../../actions/plaza";
 
 import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
-import EditIcon from "@material-ui/icons/Edit";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
 import MenuItem from "@material-ui/core/MenuItem";
@@ -33,18 +30,22 @@ import useStyles from "./styles";
 import { getTrue } from "actions/plaza";
 import { toggleDrawerMenu } from "actions/menu";
 import { getCantidades } from "actions/plaza";
+import { NoImg } from "actions/imagen";
+import { getPlaz } from "actions/plaza";
 
 const Plazas = () => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const { categorias, localidades } = useSelector((state) => state.plaza);
+  const { categorias, localidades, plazas } = useSelector(
+    (state) => state.plaza
+  );
 
   const [currency1, setCurrency1] = React.useState("");
   const [currency2, setCurrency2] = React.useState("");
 
-  const [plazas, setPlaza] = useState([]);
-  const [plaza1, setPlaza1] = useState(plazas);
+  const [mostrar, setMostrar] = useState(true);
+  const [plaza1, setPlaza1] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [nomplaza1, setNomplaza1] = useState("");
 
@@ -56,8 +57,10 @@ const Plazas = () => {
       dispatch(getTrue());
       dispatch(getCantidades());
       dispatch(toggleDrawerMenu(false));
+      dispatch(NoImg());
+      dispatch(getPlaz());
     }
-  }, [categorias.length === 0 && categorias]);
+  }, [categorias]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,7 +68,7 @@ const Plazas = () => {
 
   const handleClose = () => {
     setOpen(false);
-    getPlazas();
+    dispatch(getPlaz());
   };
 
   const handleChange1 = (event) => {
@@ -76,86 +79,32 @@ const Plazas = () => {
     setCurrency2(event.target.value);
   };
 
-  const getPlazas = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + "plazas/getAll", config)
-      .then((response) => {
-        let data = response.data.plazas;
-        let data1 = [];
-        data.map((item) => {
-          if (item.activo === true) {
-            data1.push({
-              id: item.id,
-              usuario: item.admin_id,
-              localidad: item.localidad_id,
-              nombre: item.nombre,
-              direccion: item.direccion,
-              telefonos: item.telefonos,
-              email: item.email,
-              categorias: item.categorias_id,
-              horarios: item.horarios,
-              activo: item.activo,
-              img: item.img,
-              logo: item.logo,
-              fecha:
-                item.updated_at === null ? item.created_at : item.updated_at,
-              acciones: [
-                {
-                  name: "Editar",
-                  icon: <EditIcon />,
-                  id: item.id,
-                },
-                {
-                  name: "Eliminar",
-                  icon: <DeleteIcon />,
-                  id: item.id,
-                },
-              ],
-            });
-          }
-        });
-        setPlaza(data1);
-        setPlaza1(data1);
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
-  useEffect(() => {
-    getPlazas();
-  }, []);
-
   const Filtros = () => {
+    setMostrar(false);
     console.log(currency1 + " - " + currency2);
     let data = [];
     if (currency2 !== "" && currency1 === "") {
-      data = plaza1.filter((item) => item.localidad === currency2);
+      console.log(plazas.filter((item) => item.localidad === currency2));
+      data = plazas.filter((item) => item.localidad === currency2);
     } else if (currency2 === "" && currency1 !== "") {
-      data = plaza1.map((item) => {
-        console.log(item.categorias);
-        if (item.categorias) {
-          if (item.categorias.length > 0) {
-            for (let i = 0; i < item.categorias.length; i++) {
-              const element = item.categorias[i];
-              console.log(element);
-              if (element === currency1) {
-                return item;
-              }
+      data = plazas.filter((item) => {
+        if (item.categorias_id.length > 0) {
+          for (let i = 0; i < item.categorias_id.length; i++) {
+            const element = item.categorias_id[i];
+            if (element === currency1) {
+              item;
             }
           }
         }
       });
     } else {
-      data = plaza1.map((item) => {
+      data = plazas.map((item) => {
         if (item.localidad) {
           if (item.localidad === currency2) {
-            if (item.categorias) {
-              if (item.categorias !== " " && item.categorias.length > 0) {
-                for (let i = 0; i < item.categorias.length; i++) {
-                  const element = item.categorias[i];
+            if (item.categorias_id) {
+              if (item.categorias_id !== " " && item.categorias_id.length > 0) {
+                for (let i = 0; i < item.categorias_id.length; i++) {
+                  const element = item.categorias_id[i];
                   console.log(element);
                   if (element === currency1) {
                     return item;
@@ -164,27 +113,28 @@ const Plazas = () => {
               }
             }
           }
-        } else {
-          console.log("error");
         }
       });
     }
-    setPlaza1(data);
+    setPlaza1(data.filter((item) => item !== undefined));
   };
   console.log(currency1);
   console.log(currency2);
   const Restaurar = () => {
-    setPlaza1(plazas);
+    setMostrar(true);
+    dispatch(getPlaz());
     setCurrency1("");
     setCurrency2("");
   };
 
   const Buscar = () => {
     let data = [];
-    data = plaza1.filter((item) => item.nombre === nomplaza1);
+    setMostrar(false);
+    data = plazas.filter((item) => item.nombre === nomplaza1);
     setPlaza1(data);
   };
-  // console.log(currency1);
+  console.log(plaza1);
+  console.log(plazas);
   return (
     <ContainerDashboard title="Settings">
       <HeaderDashboard
@@ -213,11 +163,15 @@ const Plazas = () => {
                     className={classes.margin}
                     style={{ marginRight: "20px" }}
                   >
-                    {categorias.map((option) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
+                    {categorias.map((option) => {
+                      if (option.activo) {
+                        return (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.label}
+                          </MenuItem>
+                        );
+                      }
+                    })}
                   </TextField>
                 </div>
                 <div className="form-group">
@@ -302,11 +256,21 @@ const Plazas = () => {
             </div>
           </div>
           <div className="ps-section__content">
-            <TablasPlazas datos={plaza1} getPlaza={getPlazas} />
-          </div>
-          <div className="ps-section__footer">
-            <p>Mostrar 10 de 30 artículos.</p>
-            {/* <Pagination /> */}
+            {plaza1.length > 0 || mostrar ? (
+              <TablasPlazas
+                datos={mostrar ? plazas : plaza1}
+                getPlaza={() => dispatch(getPlaz())}
+              />
+            ) : (
+              <h3
+                style={{
+                  textAlign: "center",
+                  color: "#FF2D42",
+                }}
+              >
+                No hay datos
+              </h3>
+            )}
           </div>
         </section>
         <Crear open={open} handleClose={handleClose} />

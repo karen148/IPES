@@ -1,8 +1,11 @@
 import axios from "axios";
 import { types } from "./../types";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
+import { getLocatariosCedulaPlaza } from "./locatarios";
+import { setLocatariosExcel } from "./locatarios";
 
 export const getPlazasGanancias = () => {
   return async (dispatch) => {
@@ -55,7 +58,7 @@ export const setPlazasExcel = (
   let config = {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   };
-  return async () => {
+  return async (dispatch) => {
     axios
       .post(
         process.env.REACT_APP_URL_API + "plazas/crear",
@@ -74,125 +77,41 @@ export const setPlazasExcel = (
       )
       .then((response1) => {
         let id = response1.data.plaza.id;
-
         // VERIFICAR LA EXISTENCIA DEL LOCATARIO
-        axios
-          .get(
-            process.env.REACT_APP_URL_API +
-              `locatarios/findByNumeroDeLocalYPlazaId/${id}/${numerolocal}`,
-            config
-          )
-          .then((response) => {
-            console.log(response);
-            // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
-            axios
-              .get(
-                process.env.REACT_APP_URL_API + "admins/findByCedula/" + cedula,
-                config
-              )
-              .then((response2) => {
-                if (response2.status === 200) {
-                  console.log("existe en admin");
-                }
-              })
-              .catch(() => {
-                /**
-                 * Sí, canta error significa que no es admin locatario
-                 * en la base de datos, por lo tanto registramos lo datos
-                 * para que pueda ingresar al modulo locatario.
-                 *
-                 */
-                axios
-                  .post(
-                    process.env.REACT_APP_URL_API + "admins/registerAdmin",
-                    {
-                      email: cedula,
-                      password: "CC" + cedula,
-                      rol: "ADMIN_LOCATARIO",
-                      nombre: nombre,
-                      apellido: "",
-                      cedula: cedula,
-                      telefonos: telefonos,
-                    },
-                    config
-                  )
-                  .then(() => {
-                    console.log("EXITO");
-                  })
-                  .catch(() => {
-                    console.log("ERROR!!!!!");
-                  });
-              });
-          })
-          .catch(() => {
-            setMsg("No existe");
-            axios
-              .post(
-                process.env.REACT_APP_URL_API + "locatarios/crear",
-                {
-                  admin_id: [admin],
-                  plaza_id: id,
-                  nombre_local: local,
-                  numero_local: numerolocal,
-                  categorias_id: [],
-                  productos_locatarios_id: [],
-                  nombre: nombre,
-                  apellido: "",
-                  cedula: cedula,
-                  horarios: [],
-                  email: "",
-                  telefonos: telefonos,
-                },
-                config
-              )
-              .then((response) => {
-                if (response.status === 200) {
-                  // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
-                  axios
-                    .get(
-                      process.env.REACT_APP_URL_API +
-                        "admins/findByCedula/" +
-                        cedula,
-                      config
-                    )
-                    .then(() => {
-                      console.log("EXITO");
-                    })
-                    .catch(() => {
-                      /**
-                       * Sí, canta error significa que no es admin locatario
-                       * en la base de datos, por lo tanto registramos lo datos
-                       * para que pueda ingresar al modulo locatario.
-                       *
-                       */
-                      axios
-                        .post(
-                          process.env.REACT_APP_URL_API +
-                            "admins/registerAdmin",
-                          {
-                            email: cedula,
-                            password: "123456",
-                            rol: "ADMIN_LOCATARIO",
-                            nombre: nombre,
-                            apellido: "",
-                            cedula: cedula,
-                            telefonos: telefonos,
-                          },
-                          config
-                        )
-                        .then(() => {
-                          console.log("EXITO");
-                        })
-                        .catch(() => {
-                          console.log("ERROR!!!!!");
-                        });
-                    });
-                }
-              })
-              .catch(() => {
-                console.log("ERROR!!!!!");
-              });
-          });
+        for (const i of numerolocal) {
+          axios
+            .get(
+              process.env.REACT_APP_URL_API +
+                `locatarios/findByNumeroDeLocalYPlazaId/${i}/${id}`,
+              config
+            )
+            .then((response) => {
+              console.log(response);
+              // SI EL LOCATARIO EXISTE, VERIFICA QUE ESTE EN EL ADMIN_LOCATARIO
+              dispatch(
+                getLocatariosCedulaPlaza(
+                  cedula,
+                  nombre,
+                  telefonos,
+                  "ADMIN_LOCATARIO"
+                )
+              );
+            })
+            .catch(() => {
+              setMsg("No existe");
+              dispatch(
+                setLocatariosExcel(
+                  cedula,
+                  nombre,
+                  numerolocal,
+                  local,
+                  telefonos,
+                  admin,
+                  id
+                )
+              );
+            });
+        }
       })
       .catch(() => {
         setMsg("No creo la plaza");
@@ -413,13 +332,12 @@ export const getPlaz = () => {
         let plazas = data.map((item) => ({
           id: item.id,
           usuario: item.admin_id,
-          localidad: item.localidad_nombre,
+          localidad: item.localidad_id,
           nombre: item.nombre,
           direccion: item.direccion,
           telefonos: item.telefonos,
           email: item.email,
-          locatarios: 0,
-          categorias: item.categorias_nombres,
+          categorias_id: item.categorias_id,
           horarios: item.horarios,
           activo: item.activo,
           img: item.img,
@@ -427,8 +345,13 @@ export const getPlaz = () => {
           fecha: item.updated_at === null ? item.created_at : item.updated_at,
           acciones: [
             {
-              name: "Agregar lista de plazas",
-              icon: <PlaylistAddIcon />,
+              name: "Editar",
+              icon: <EditIcon />,
+              id: item.id,
+            },
+            {
+              name: "Eliminar",
+              icon: <DeleteIcon />,
               id: item.id,
             },
           ],

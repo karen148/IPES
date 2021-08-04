@@ -9,6 +9,7 @@ import { clienteReducer } from "./clienteReducer";
 import menuReducer from "./menuReducer";
 import { promoReducer } from "./promoReducer";
 import { balanceReducer } from "./balanceReducer";
+import { imgReducer } from "./imgReducer";
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -20,4 +21,5 @@ export const rootReducer = combineReducers({
   cliente: clienteReducer,
   promocion: promoReducer,
   balance: balanceReducer,
+  imagen: imgReducer,
 });

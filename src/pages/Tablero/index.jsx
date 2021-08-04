@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ContainerDashboard from "./../../components/layaouts/ContainerDashboard";
 import CardRecentOrders from "./../../components/shared/cards/CardRecentOrders";
 import CardSaleReport from "./../../components/shared/cards/CardSaleReport";
-// import CardEarning from "./../../components/shared/cards/CardEarning";
 import CardStatics from "./../../components/shared/cards/CardStatics";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
@@ -30,13 +29,17 @@ const Tablero = () => {
   const [cliente, setCliente] = useState([]);
 
   useEffect(() => {
-    dispatch(getLocatarioCedula(setLocatario, codigo));
-    dispatch(getPlazasGanancias());
-    dispatch(getProductosVendidos());
-    dispatch(getTopProductosVendidos());
-    dispatch(getUltimosPedidos(setPedidos));
-    dispatch(getClientes(setCliente));
-  }, []);
+    if (rol === "ADMIN_LOCATARIO") {
+      dispatch(getLocatarioCedula(setLocatario, codigo));
+    }
+    if (cliente.length === 0) {
+      dispatch(getPlazasGanancias());
+      dispatch(getProductosVendidos());
+      dispatch(getTopProductosVendidos());
+      dispatch(getUltimosPedidos(setPedidos));
+      dispatch(getClientes(setCliente));
+    }
+  }, [cliente]);
 
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {

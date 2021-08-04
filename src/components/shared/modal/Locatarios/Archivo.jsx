@@ -31,29 +31,32 @@ const Archivo = ({ open, handleClose }) => {
   const [msg1, setMsg] = useState("");
 
   useEffect(() => {
-    console.log("buenas");
     hojas.map((item) => {
-      let local = [];
-      let telefonos = [];
       var expresionRegular = /\s*-\s*/;
       let plaza = plazastrues.filter(
         (pla) =>
           pla.nombre.trim().toLowerCase() === item.plaza.trim().toLowerCase()
       )[0];
       item.data.map((dat) => {
-        for (const iterator of dat["NUMERO DEL LOCAL"].split(
-          expresionRegular
-        )) {
-          local.push(iterator);
+        let numero_local = dat["NUMERO DEL LOCAL"];
+        let tel = dat["TELEFONOS DE DOMICILIOS"];
+        let local = [];
+        let telefonos = [];
+        if (numero_local.toString().indexOf("-") !== -1) {
+          for (const iterator of numero_local.split(expresionRegular)) {
+            local.push(iterator);
+          }
+        } else if (numero_local.toString().indexOf("-") === -1) {
+          local.push(numero_local.toString());
         }
-        for (const iterator of dat["TELEFONOS DE DOMICILIOS"].split(
-          expresionRegular
-        )) {
-          telefonos.push(iterator);
+        if (tel.toString().indexOf("-") !== -1) {
+          for (const iterator of tel.split(expresionRegular)) {
+            telefonos.push(iterator);
+          }
+        } else if (tel.toString().indexOf("-") === -1) {
+          telefonos.push(tel.toString());
         }
         if (plaza) {
-          console.log("crear locatario");
-          console.log(dat["NUMERO DEL LOCAL"].length);
           dispatch(
             setLocatariosExcel(
               dat["NUMERO DE CEDULA"]?.toString(),
@@ -66,8 +69,6 @@ const Archivo = ({ open, handleClose }) => {
             )
           );
         } else {
-          console.log("crear plaza");
-          console.log(dat["NUMERO DEL LOCAL"]?.toString().length);
           dispatch(
             setPlazasExcel(
               item.plaza.toUpperCase(),
