@@ -26,7 +26,6 @@ export const getPlazasGanancias = () => {
           total.push(item.total);
           nombre.push(item.nombre_plaza);
         });
-        dispatch(PlazaNombre(nombre));
         dispatch(PlazaTotal(total));
       })
       .catch((e) => {
@@ -34,11 +33,6 @@ export const getPlazasGanancias = () => {
       });
   };
 };
-
-const PlazaNombre = (data) => ({
-  type: types.plazaNombre,
-  plazanombre: data,
-});
 
 const PlazaTotal = (data) => ({
   type: types.plazaGanacias,
@@ -295,20 +289,27 @@ export const getTrue = () => {
         let data = response.data.plazas;
         let plazatrues = [];
         let dataid = [];
+        let nombre = [];
         data.map((item) => {
           if (item.activo === true) {
             plazatrues.push(item);
-            dataid.push(item.id);
+            nombre.push({ id: item.id, nombre: item.nombre });
           }
         });
         dispatch(PlazaTrue(plazatrues));
         dispatch(PlazaID(dataid));
+        dispatch(PlazaNombre(nombre));
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
       });
   };
 };
+
+const PlazaNombre = (data) => ({
+  type: types.plazaNombre,
+  plazanombre: data,
+});
 
 const PlazaTrue = (plazatrues) => ({
   type: types.plazaDatosTrue,

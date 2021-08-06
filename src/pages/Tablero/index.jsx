@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ContainerDashboard from "./../../components/layaouts/ContainerDashboard";
-import CardRecentOrders from "./../../components/shared/cards/CardRecentOrders";
 import CardSaleReport from "./../../components/shared/cards/CardSaleReport";
-import CardStatics from "./../../components/shared/cards/CardStatics";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
-import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
+// import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
 import Alert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocatarioCedula } from "actions/locatarios";
@@ -15,18 +13,24 @@ import Button from "@material-ui/core/Button";
 import { UpdateLocatariosEmail } from "actions/locatarios";
 import { getPlazasGanancias } from "actions/plaza";
 import { getProductosVendidos, getTopProductosVendidos } from "actions/balance";
-import { getUltimosPedidos } from "actions/balance";
 import { getClientes } from "actions/cliente";
+import { data, pedido } from "./datos";
+import { Autocomplete } from "@material-ui/lab";
+import { getTrue } from "actions/plaza";
 
 const Tablero = () => {
   const dispatch = useDispatch();
   const { rol, codigo } = useSelector((state) => state.auth);
+  const { plazanombres } = useSelector((state) => state.plaza);
   const [locatario, setLocatario] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [pedido, setPedidos] = useState([]);
   const [cliente, setCliente] = useState([]);
+  const [plaza, setPlaza] = useState([]);
+  const [datos, setDatos] = useState([]);
+  const [datos1, setDatos1] = useState([]);
+  const [mostrar, setMostrar] = useState(false);
 
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {
@@ -36,8 +40,8 @@ const Tablero = () => {
       dispatch(getPlazasGanancias());
       dispatch(getProductosVendidos());
       dispatch(getTopProductosVendidos());
-      dispatch(getUltimosPedidos(setPedidos));
       dispatch(getClientes(setCliente));
+      dispatch(getTrue());
     }
   }, [cliente]);
 
@@ -47,43 +51,72 @@ const Tablero = () => {
     }
   }, [locatario.email === null]);
 
-  const getDatos = () => {
-    if (rol === "SUPER_ADMIN") {
-      dispatch(getUltimosPedidos(setPedidos));
-    } else {
-      dispatch(getUltimosPedidos(setPedidos));
-      // dispatch(getPedidosLocatarios(setPedidos, locatario.id));
-    }
-  };
-
   const Actualizar = () => {
     dispatch(UpdateLocatariosEmail(email, locatario.id, setMsg));
   };
-  console.log(pedido);
+
+  const handleChange = () => {
+    setMostrar(true);
+    let data2 = [];
+    let data3 = [];
+    plaza.map((item) => {
+      data2.push(data.filter((d) => item.id === d.id)[0]);
+      data3.push(pedido.filter((p) => item.id === p.id)[0]);
+    });
+    setDatos(data2);
+    setDatos1(data3);
+  };
+  useEffect(() => {
+    if (plaza.length > 0) {
+      handleChange();
+    }
+  }, [plaza]);
+
+  console.log(datos);
   return (
     <ContainerDashboard>
-      {/* <Provider store={toggleDrawerMenu} > */}
       <HeaderDashboard />
       <section className="ps-dashboard" id="homepage">
-        <div className="ps-section__left">
-          <div className="row">
-            <div className="col-xl-12 col-12">
-              <CardSaleReport />
-            </div>
-            {/* <div className="col-xl-4 col-12">
-              <CardEarning />
-            </div> */}
-          </div>
-          <CardRecentOrders
-            pedidos={pedido}
-            getDatos={getDatos}
-            clientes={cliente}
-          />
-        </div>
-        <div className="ps-section__right">
-          <CardStatics />
-          <CardTopCountries />
-        </div>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+        >
+          <Grid item xs={12} md={12}>
+            <Autocomplete
+              multiple
+              limitTags={4}
+              id="multiple-limit-tags"
+              value={plaza}
+              onChange={(event, newValue) => {
+                setPlaza(newValue);
+              }}
+              options={plazanombres}
+              getOptionLabel={(option) => (option.nombre ? option.nombre : "")}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  placeholder="Plazas"
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <CardSaleReport
+              datas={mostrar ? datos : data}
+              titulo={"Informe de ganacias"}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <CardSaleReport
+              datas={mostrar ? datos1 : pedido}
+              titulo={"Informe de pedidos"}
+            />
+          </Grid>
+        </Grid>
         {rol === "ADMIN_LOCATARIO" && (
           <Modal
             open={open}
@@ -132,8 +165,6 @@ const Tablero = () => {
           </Modal>
         )}
       </section>
-
-      {/* </Provider> */}
     </ContainerDashboard>
   );
 };

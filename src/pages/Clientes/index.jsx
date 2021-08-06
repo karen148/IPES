@@ -64,7 +64,7 @@ const Clientes = () => {
       setCliente1(
         cliente.filter((item) => {
           return item.nombre
-            .toLowerCase()
+            ?.toLowerCase()
             .trim()
             .includes(nomcliente.toLowerCase());
         })
@@ -72,7 +72,7 @@ const Clientes = () => {
     } else if (/[0-9]/.test(parseInt(nomcliente))) {
       setCliente1(
         cliente.filter((item) => {
-          return item.cedula.trim().includes(parseInt(nomcliente.trim()));
+          return item.cedula?.trim().includes(parseInt(nomcliente.trim()));
         })
       );
     }
@@ -90,25 +90,6 @@ const Clientes = () => {
     setNomCLiente("");
     setMostrar(false);
   };
-
-  // const ExportarCliente = async () => {
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
-  //   axios
-  //     .get(process.env.REACT_APP_URL_API + "clientes/downladXLSX", config)
-  //     .then((response) => {
-  //       console.log(response);
-  //       window.open(
-  //         process.env.REACT_APP_URL_API + "clientes/downladXLSX",
-  //         "_self"
-  //       );
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR!!!!!", e);
-  //     });
-  // };
-
   console.log(cliente);
   return (
     <ContainerDashboard title="Settings">
