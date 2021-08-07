@@ -1,12 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
-const CardTopCountries = () => {
+const CardTopCountries = ({ titulo }) => {
   const { TopProductos } = useSelector((state) => state.balance);
   return (
     <section className="ps-card ps-card--top-country">
       <div className="ps-card__header">
-        <h4>Top de los productos más vendidos</h4>
+        <h4>{titulo}</h4>
       </div>
       <div className="ps-card__content">
         <div className="row">
@@ -27,6 +28,10 @@ const CardTopCountries = () => {
       </div>
     </section>
   );
+};
+
+CardTopCountries.propTypes = {
+  titulo: PropTypes.string,
 };
 
 export default CardTopCountries;

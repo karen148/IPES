@@ -298,7 +298,7 @@ export const getTrue = () => {
         });
         dispatch(PlazaTrue(plazatrues));
         dispatch(PlazaID(dataid));
-        dispatch(PlazaNombre(nombre));
+        dispatch(PlazaNombre(nombre.reverse()));
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
