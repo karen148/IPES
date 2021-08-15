@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Img } from "actions/imagen";
-import { UpdatePromocion } from "actions/promociones";
-import { UpdateImagen } from "actions/promociones";
+import { UpdatePromocion, UpdateImagen } from "actions/promociones";
 
 import Promociones from "components/shared/forms/FormPromociones/Promociones";
 import Imagen from "components/shared/forms/FormPromociones/Imagen";

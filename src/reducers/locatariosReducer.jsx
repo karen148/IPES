@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const locatariosReducer = (state = initialState, action) => {
-  switch (action.type) {
+  switch (action?.type) {
     case types.locatariosDatos:
       return {
         ...state,

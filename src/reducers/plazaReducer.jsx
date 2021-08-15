@@ -13,7 +13,7 @@ const initialState = {
 };
 
 export const plazaReducer = (state = initialState, action) => {
-  switch (action.type) {
+  switch (action?.type) {
     case types.plazaLocalidades:
       return {
         ...state,

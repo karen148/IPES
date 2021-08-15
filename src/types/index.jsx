@@ -46,4 +46,10 @@ export const types = {
   balanceCantidadProductosVendidos:
     "[balance] Obtener la cantidad de los producto vendidos",
   balanceTopProductos: "[balance] Obtener el top de los productos más vendidos",
+  balanceTopProductosPlaza:
+    "[balance] Obtener el top de los productos más vendidos por plaza",
+  balanceLocatariosVendidos:
+    "[balance] Obtener el top de los locatarios más vendidos",
+  balanceLocatariosPlaza:
+    "[balance] Obtener el top de los locatarios más vendidos por plaza",
 };

@@ -33,7 +33,7 @@ const ModalCategorias = ({ open, handleClose, titulo, mensaje, datos }) => {
       <DialogTitle id="alert-dialog-title">{titulo}</DialogTitle>
       <DialogContent id="alert-dialog-description">
         {open &&
-          datos.map((item) => {
+          datos?.map((item) => {
             let data = [];
             for (let i = 0; i <= item?.categorias_id.length; i++) {
               const element = item?.categorias_id[i];

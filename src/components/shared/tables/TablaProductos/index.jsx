@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import firebase from "firebase";
-import { DeleteProducto } from "actions/producto";
+import { DeleteProducto, DeleteProductoLoc } from "actions/producto";
 import { useDispatch, useSelector } from "react-redux";
-import { DeleteProductoLoc } from "actions/producto";
 
 //Material
 import IconButton from "@material-ui/core/IconButton";
@@ -97,6 +96,7 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
     setPage(0);
   };
 
+  console.log(rowsPerPage);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -188,7 +188,6 @@ const TablaProducto = ({ getDatos, datos, rol, locatario, img }) => {
               {datos
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => {
-                  // console.log(plazasTableRowues.length ? plazasTableRowues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (rol === "SUPER_ADMIN") {
                     let CateAc = [];
                     var date = new Date(item.fecha);

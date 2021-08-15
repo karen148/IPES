@@ -3,19 +3,32 @@ import { types } from "./../types";
 const initialState = {
   CantidadProductos: [],
   TopProductos: [],
+  TopLocatarios: [],
+  TopLocatariosPlazas: [],
+  TopProductosPlazas: [],
 };
 
 export const balanceReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case types.balanceCantidadProductosVendidos:
-      return {
-        ...state,
-        CantidadProductos: [...action.cantidadproducto],
-      };
+  switch (action?.type) {
     case types.balanceTopProductos:
       return {
         ...state,
         TopProductos: [...action.topproducto],
+      };
+    case types.balanceLocatariosPlaza:
+      return {
+        ...state,
+        TopLocatariosPlazas: [...action.toplocatarioplaza],
+      };
+    case types.balanceTopProductosPlaza:
+      return {
+        ...state,
+        TopProductosPlazas: [...action.topproductoplaza],
+      };
+    case types.balanceLocatariosVendidos:
+      return {
+        ...state,
+        TopLocatarios: [...action.toplocatario],
       };
     default:
       return state;

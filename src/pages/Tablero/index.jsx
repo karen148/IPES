@@ -5,19 +5,20 @@ import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
 import CardTopCountries from "./../../components/shared/cards/CardTopCountries";
 import Alert from "@material-ui/lab/Alert";
 import { useDispatch, useSelector } from "react-redux";
-import { getLocatarioCedula } from "actions/locatarios";
+import { getLocatarioCedula, UpdateLocatariosEmail } from "actions/locatarios";
 import Modal from "components/shared/modal";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import { UpdateLocatariosEmail } from "actions/locatarios";
-import { getPlazasGanancias } from "actions/plaza";
-import { getProductosVendidos, getTopProductosVendidos } from "actions/balance";
-import { getClientes } from "actions/cliente";
+import { getPlazasGanancias, getTrue } from "actions/plaza";
+import {
+  getTopProductos,
+  getLocatariosMasVendidos,
+  getLocatariosPlazas,
+} from "actions/balance";
 import { data, pedido } from "./datos";
 import { Autocomplete } from "@material-ui/lab";
-import { getTrue } from "actions/plaza";
 import { IconButton } from "@material-ui/core";
 import TooltipE from "components/shared/tooltip";
 
@@ -25,34 +26,36 @@ const Tablero = () => {
   const dispatch = useDispatch();
   const { rol, codigo } = useSelector((state) => state.auth);
   const { plazanombres } = useSelector((state) => state.plaza);
+  const { TopLocatarios, TopLocatariosPlazas, TopProductos } = useSelector(
+    (state) => state.balance
+  );
   const [locatario, setLocatario] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [cliente, setCliente] = useState([]);
   const [plaza, setPlaza] = useState([]);
   const [datos, setDatos] = useState([]);
   const [datos1, setDatos1] = useState([]);
+  const [array, setArray] = useState([]);
   const [mostrar, setMostrar] = useState(false);
 
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {
       dispatch(getLocatarioCedula(setLocatario, codigo));
     }
-    if (cliente.length === 0) {
+    if (plazanombres.length === 0) {
       dispatch(getPlazasGanancias());
-      dispatch(getProductosVendidos());
-      dispatch(getTopProductosVendidos());
-      dispatch(getClientes(setCliente));
+      dispatch(getTopProductos());
       dispatch(getTrue());
+      dispatch(getLocatariosPlazas());
     }
-  }, [cliente]);
+  }, [plazanombres]);
 
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {
       setOpen(true);
     }
-  }, [locatario.email === null]);
+  }, [locatario.email]);
 
   const Actualizar = () => {
     dispatch(UpdateLocatariosEmail(email, locatario.id, setMsg));
@@ -63,14 +66,48 @@ const Tablero = () => {
     setPlaza([]);
   };
 
+  // const LocatariosPlaza = (data4) => {
+  //   TopLocatariosPlazas.map((loc) => {
+  //     data4.push(loc);
+  //   });
+  //   console.log(data4);
+  // };
+
   const handleChange = () => {
     setMostrar(true);
     let data2 = [];
     let data3 = [];
+    let data4 = [];
+    let data5 = [];
+    TopLocatariosPlazas.map((loc) => {
+      data5.push(loc);
+    });
+    console.log(plaza.id);
+    console.log(array.indexOf((arr) => arr.id_plaza === plaza.id));
     plaza.map((item) => {
       data2.push(data.filter((d) => item.id === d.id)[0]);
       data3.push(pedido.filter((p) => item.id === p.id)[0]);
+      dispatch(getLocatariosMasVendidos(item.id));
     });
+    if (!array.length) {
+      data4.push(...array, {
+        id_plaza: plaza.id,
+        nombre_plaza: plaza.nombre,
+        locatarios: [...data5],
+      });
+      console.log(data5);
+    } else if (array.length) {
+      if (!array?.filter((arr) => arr.id_plaza === plaza.id)[0]?.length) {
+        data4.push(...array, {
+          id_plaza: plaza.id,
+          nombre_plaza: plaza.nombre,
+          locatarios: [...data5],
+        });
+      } else if (array?.filter((arr) => arr.id_plaza === plaza.id)[0].length) {
+        data4.push(array.filter((arr) => arr.id_plaza === plaza.id)[0]);
+      }
+    }
+    setArray(data4);
     setDatos(data2);
     setDatos1(data3);
   };
@@ -81,6 +118,7 @@ const Tablero = () => {
   }, [plaza]);
 
   console.log(datos);
+  console.log(array);
   return (
     <ContainerDashboard>
       <HeaderDashboard />
@@ -111,7 +149,7 @@ const Tablero = () => {
                   }}
                   options={plazanombres}
                   getOptionLabel={(option) =>
-                    option.nombre ? option.nombre : ""
+                    option?.nombre ? option?.nombre : ""
                   }
                   renderInput={(params) => (
                     <TextField
@@ -165,7 +203,10 @@ const Tablero = () => {
                   {datos.map((item, index) => {
                     return (
                       <Grid item xs={12} md={4} key={index + 1}>
-                        <CardTopCountries titulo={"Plaza " + item.label} />
+                        <CardTopCountries
+                          titulo={"Plaza " + item.label}
+                          dato={datos}
+                        />
                       </Grid>
                     );
                   })}
@@ -182,10 +223,14 @@ const Tablero = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  {datos.map((item, index) => {
+                  {array?.map((item, index) => {
+                    console.log(item);
                     return (
                       <Grid item xs={12} md={4} key={index + 1}>
-                        <CardTopCountries titulo={"Plaza " + item.label} />
+                        <CardTopCountries
+                          titulo={"Plaza " + item.nombre_plaza}
+                          dato={item?.loc}
+                        />
                       </Grid>
                     );
                   })}
@@ -197,11 +242,13 @@ const Tablero = () => {
               <Grid item xs={6} md={6}>
                 <CardTopCountries
                   titulo={"Top de los productos más vendidos"}
+                  dato={TopProductos}
                 />
               </Grid>
               <Grid item xs={6} md={6}>
                 <CardTopCountries
                   titulo={"Top de los locatarios que mas venden"}
+                  dato={TopLocatarios}
                 />
               </Grid>
             </>

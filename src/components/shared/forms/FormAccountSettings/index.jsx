@@ -1,11 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { updateImg } from "actions/imagen";
-import firebase from "firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { getDatos, updateAdmin, updateImagen, changePass } from "actions/admin";
 
+/**
+ * @function FormAccountSettings
+ * @description La vista perfile es donde se puede actualizar la información del admin,
+ * cambio de contraseñas y actualización de imagen de perfil.
+ * @returns
+ */
 const FormAccountSettings = () => {
-  const { id, rol, img } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { id, rol, img } = useSelector((stat) => stat.auth);
 
   const [ojo1, setOjo1] = useState("visibility_off");
   const [ojo2, setOjo2] = useState("visibility_off");
@@ -13,7 +18,6 @@ const FormAccountSettings = () => {
   const [email1, setEmail] = useState("");
   const [state, setState] = useState({
     nombre: "",
-    apellido: "",
     telefono: 0,
     email: "",
     cedula: 0,
@@ -21,6 +25,10 @@ const FormAccountSettings = () => {
     confirmar_contraseña: "",
     antigua: "",
   });
+
+  useEffect(() => {
+    dispatch(getDatos(setState, state, setEmail, id));
+  }, [dispatch]);
 
   const handleState = (event) => {
     const { value, name } = event.target;
@@ -39,99 +47,26 @@ const FormAccountSettings = () => {
     };
   };
 
-  // const fecthApi2 = async () => {
-  //   axios
-  //     .post(
-  //       "https://api-dashboard-auth-ipes.azurewebsites.net/locatarios/registro",
-  //       {
-  //         nombre: state.nombre,
-  //         apellido: state.apellido,
-  //         telefono: state.telefono,
-  //         cedula: state.cedula,
-  //         email: state.email,
-  //         password: state.contraseña,
-  //       }
-  //       // config
-  //     )
-  //     .then((response) => {
-  //       console.log(response.status);
-  //       if (response.status === 200) {
-  //         console.log("SE REGISTRO");
-  //         return history.push("/");
-  //       } else {
-  //         return history.push("/sign-up");
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       console.log("ERROR!!!!!", e);
-  //     });
-  // };
-
-  const getDatos = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + `admins/getAdmin/${id}`, config)
-      .then((response) => {
-        let data = response.data.admin;
-        setState({ state, nombre: data.nombre });
-        setState({ state, apellido: data.apellido });
-        setState({ state, telefono: data.telefono });
-        setState({ state, email: data.email });
-        setState({ state, cedula: data.cedula });
-        setEmail(data.email);
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
-  useEffect(() => {
-    getDatos();
-  }, []);
-
-  const fecthApi = async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .put(
-        process.env.REACT_APP_URL_API + `admins/updateAdmin/${id}`,
-        {
-          nombre: state.nombre,
-          apellido: state.apellido,
-          telefono: state.telefono,
-          cedula: state.cedula,
-        },
-        config
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          getDatos();
-          // return(<div className={classes.root}><Alert severity="success">Datos actualizados</Alert></div>)
-          alert("Datos actualizados");
-        }
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
+  /**
+   * @function fecthApi
+   * @description Por medio de esta función podemos enviar la información
+   * para actualizar los datos del admin, en esta función solo se actualiza
+   * nombre, telefono, cedula y email
+   */
+  const fecthApi = () => {
+    dispatch(
+      updateAdmin(state.nombre, state.telefono, state.cedula, email1, id)
+    );
+    dispatch(getDatos(setState, state, setEmail, id));
   };
 
-  console.log(img1);
-  console.log(state.cedula);
-  console.log(state.telefono);
-
+  /**
+   * @function UpdateImagen
+   * @description Por medio de esta función se actualiza la imagen de perfil del dashboard
+   * y la imagen se visualiza en src\components\shared\widgets\WidgetUserWelcome
+   */
   const UpdateImagen = () => {
-    updateImg(img1, `ADMINS/${rol}/${id}`, `admins/updateAdmin/${id}`, "img");
-    var desertRef = firebase
-      .app()
-      .storage("gs://ipes-adeda.appspot.com")
-      .ref(`/ADMINS/${rol}/${id}`)
-      .child(`${img}`);
-    desertRef
-      .delete()
-      .then((ref) => console.log("success =>", ref))
-      .catch((error) => console.log(error));
+    dispatch(updateImagen(img1, rol, id, img));
   };
 
   const ValiContraseña = (confirmar_contraseña) => {
@@ -145,6 +80,11 @@ const FormAccountSettings = () => {
     }
   };
 
+  /**
+   * @function showPass1
+   * @description Por medio de esta función y la función showPass2 se podra visualizar
+   * la contraseña digitada en los input Cambiar Contraseña y Confirma contraseña
+   */
   const showPass1 = () => {
     var cambio = document.getElementById("pass1");
     if (cambio.type === "password") {
@@ -167,71 +107,32 @@ const FormAccountSettings = () => {
     }
   };
 
-  const changePass = async () => {
-    console.log(email1);
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    if (ValiContraseña(state.confirmar_contraseña)) {
-      axios
-        .put(
-          process.env.REACT_APP_URL_API + "admins/change-password",
-          {
-            email: email1,
-            oldPassword: state.antigua,
-            newPassword: state.contraseña,
-          },
-          config
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            alert("Se atualizo la contraseña");
-          } else {
-            alert("No se atualizo la contraseña");
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            //do something
-            console.log(error.response);
-          } else if (error.request) {
-            //do something else
-            console.log(error.request);
-          } else if (error.message) {
-            //do something other than the other two
-            console.log(error.message);
-          }
-        });
-    }
+  /**
+   * @function changePassword
+   * @description changePassword permita cambiar la contraseña del admmin.
+   */
+  const changePassword = () => {
+    dispatch(
+      changePass(
+        email1,
+        state.antigua,
+        state.contraseña,
+        ValiContraseña,
+        state.confirmar_contraseña
+      )
+    );
   };
-
-  console.log(img1);
-  console.log(
-    /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,16}$/.test(state.contraseña)
-  );
   return (
     <Fragment>
       <div className="row" key={localStorage.getItem("id")}>
-        <div className="col-sm-6">
+        <div className="col-sm-12">
           <div className="form-group">
-            <label>Nombre</label>
+            <label>Nombre completo</label>
             <input
               className="form-control"
               type="text"
               name="nombre"
               value={state.nombre}
-              onChange={handleState}
-            />
-          </div>
-        </div>
-        <div className="col-sm-6">
-          <div className="form-group">
-            <label>Apellido</label>
-            <input
-              className="form-control"
-              type="text"
-              name="apellido"
-              value={state.apellido}
               onChange={handleState}
             />
           </div>
@@ -361,7 +262,7 @@ const FormAccountSettings = () => {
                 <div className="ps-form text-center">
                   <button
                     className="ps-btn success"
-                    onClick={changePass}
+                    onClick={changePassword}
                     style={{ marginBottom: "30px" }}
                   >
                     Actualizar contraseña

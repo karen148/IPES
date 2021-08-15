@@ -3,7 +3,7 @@ import { types } from "./../types";
 const initialState = {};
 
 export const clienteReducer = (state = initialState, action) => {
-  switch (action.type) {
+  switch (action?.type) {
     case types.clienteMensaje:
       return {
         ...state,

@@ -4,8 +4,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { updateImg } from "./imagen";
 import firebase from "firebase";
-import { getLocatariosCedulaPlaza } from "./locatarios";
-import { setLocatariosExcel } from "./locatarios";
+import { getLocatariosCedulaPlaza, setLocatariosExcel } from "./locatarios";
 
 export const getPlazasGanancias = () => {
   return async (dispatch) => {

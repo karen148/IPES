@@ -354,7 +354,6 @@ figure {
 }
 @media screen and (min-width: 1200px) {
     .ps-dashboard {
-        display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: flex-start;

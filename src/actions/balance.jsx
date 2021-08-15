@@ -1,5 +1,4 @@
 import axios from "axios";
-import EditIcon from "@material-ui/icons/Edit";
 import { types } from "types";
 
 export const getGananciasTotales = (setGanancias) => {
@@ -44,7 +43,7 @@ export const getGananciasLocatario = (setGanancias, id) => {
   };
 };
 
-export const getProductosVendidos = () => {
+export const getLocatariosMasVendidos = (id) => {
   return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -52,12 +51,40 @@ export const getProductosVendidos = () => {
     axios
       .get(
         process.env.REACT_APP_URL_API +
-          "ventaProductoLocatarios/getCantidadProductosVendidos",
+          "pedidos/locatariosMasVendidosPorPlaza/" +
+          id,
         config
       )
       .then((response) => {
-        let data = response.data.cantidad;
-        dispatch(ProductosVendidos(data));
+        console.log(response);
+        let data = response.data.pedidos;
+        dispatch(TopLocatariosPlaza(data));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+        dispatch(TopLocatariosPlaza([{ id: 1, nombre: "no hay locatarios" }]));
+      });
+  };
+};
+
+const TopLocatariosPlaza = (data) => ({
+  type: types.balanceLocatariosPlaza,
+  toplocatarioplaza: data,
+});
+
+export const getLocatariosPlazas = () => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API + "pedidos/locatariosMasVendidos",
+        config
+      )
+      .then((response) => {
+        let data = response.data.pedidos;
+        dispatch(TopLocatarios(data));
       })
       .catch((e) => {
         console.log("ERROR!!!!!", e);
@@ -65,24 +92,23 @@ export const getProductosVendidos = () => {
   };
 };
 
-const ProductosVendidos = (data) => ({
-  type: types.balanceCantidadProductosVendidos,
-  cantidadproducto: data,
+const TopLocatarios = (data) => ({
+  type: types.balanceLocatariosVendidos,
+  toplocatario: data,
 });
 
-export const getTopProductosVendidos = () => {
+export const getTopProductos = () => {
   return async (dispatch) => {
     let config = {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     };
     axios
       .get(
-        process.env.REACT_APP_URL_API +
-          "ventaProductoLocatarios/getMasVendidos",
+        process.env.REACT_APP_URL_API + "pedidos/productosMasVendidos",
         config
       )
       .then((response) => {
-        let data = response.data.productos;
+        let data = response.data.pedidos;
         dispatch(TopProductos(data));
       })
       .catch((e) => {
@@ -95,42 +121,3 @@ const TopProductos = (data) => ({
   type: types.balanceTopProductos,
   topproducto: data,
 });
-
-export const getUltimosPedidos = (setPedidos) => {
-  return async () => {
-    let config = {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    };
-    axios
-      .get(process.env.REACT_APP_URL_API + "pedidos/getUltimosCinco", config)
-      .then((response) => {
-        let data = response.data.pedidos;
-        console.log(data);
-        const pedidos = data.map((item, index) => ({
-          id: item.id,
-          conteo: index + 1,
-          pasarela: item.pasarela_pagos_id,
-          plaza: item.plaza_id,
-          locatario: item.locatorios_id,
-          cliente: item.cliente_id,
-          cliente_dato: item.cliente,
-          productos: item.productos_locatarios_id,
-          estado: item.estado,
-          total: item.total,
-          pagado: item.pagado ? "0" : "1",
-          fecha: item.updated_at === null ? item.created_at : item.updated_at,
-          acciones: [
-            {
-              name: "Editar el estado del pedido",
-              icon: <EditIcon />,
-              id: item.id,
-            },
-          ],
-        }));
-        setPedidos(pedidos);
-      })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-      });
-  };
-};

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-// import firebase from "firebase";
 
 //Material
 import IconButton from "@material-ui/core/IconButton";
@@ -17,7 +16,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import * as locales from "@material-ui/core/locale";
-// import Box from "@material-ui/core/Box";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 //Componentes
@@ -183,7 +181,6 @@ const TablaPlazas = ({ datos, getPlaza }) => {
               {datos
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => {
-                  // console.log(plazasTableRowues.length ? plazasTableRowues.filter(pla => pla.id === item.plaza)[0].localidad_nombre : '-' );
                   if (item !== undefined) {
                     if (item.activo === true) {
                       var date = new Date(item.fecha);
@@ -200,12 +197,12 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                       ) {
                         for (let i = 0; i <= item?.categorias_id.length; i++) {
                           const element = item?.categorias_id[i];
-                          categorias.map((item) => {
-                            if (item.id === element) {
+                          categorias.map((cat) => {
+                            if (cat.id === element) {
                               data.push({
-                                icono: item.icono,
-                                id: item.id,
-                                name: item.label,
+                                icono: cat.icono,
+                                id: cat.id,
+                                name: cat.label,
                               });
                             }
                           });
@@ -262,6 +259,7 @@ const TablaPlazas = ({ datos, getPlaza }) => {
                                     color="default"
                                     component="span"
                                     key={cat.name}
+                                    className={classes.iconos}
                                     onClick={
                                       cat.name === "Editar"
                                         ? () => {

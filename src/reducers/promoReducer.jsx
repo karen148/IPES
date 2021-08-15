@@ -6,8 +6,8 @@ const initialState = {
   // name: null
 };
 
-export const promoReducer = (state = initialState, action) => {
-  switch (action.type) {
+export const promoReducer = (action, state = initialState) => {
+  switch (action?.type) {
     case types.promocionesDatos:
       return {
         ...state,

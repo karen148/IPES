@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 
-const CardTopCountries = ({ titulo }) => {
-  const { TopProductos } = useSelector((state) => state.balance);
+const CardTopCountries = ({ titulo, dato }) => {
+  console.log(dato);
   return (
     <section className="ps-card ps-card--top-country">
       <div className="ps-card__header">
@@ -11,7 +10,8 @@ const CardTopCountries = ({ titulo }) => {
       </div>
       <div className="ps-card__content">
         <div className="row">
-          {TopProductos.map((item, index) => {
+          {dato?.map((item, index) => {
+            console.log(item);
             return (
               <div className="col-12" key={index + 1}>
                 <figure className="organge">
@@ -32,6 +32,7 @@ const CardTopCountries = ({ titulo }) => {
 
 CardTopCountries.propTypes = {
   titulo: PropTypes.string,
+  dato: PropTypes.array,
 };
 
 export default CardTopCountries;

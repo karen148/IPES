@@ -2,8 +2,8 @@ import { types } from "./../types";
 
 const initialState = {};
 
-export const pedidoReducer = (state = initialState, action) => {
-  switch (action.type) {
+export const pedidoReducer = (action, state = initialState) => {
+  switch (action?.type) {
     case types.pedidoMensaje:
       return {
         ...state,

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import TooltipE from "./../../tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../../../actions/auth";
-import { Img } from "actions/imagen";
-import { NoImg } from "actions/imagen";
+import { Img, NoImg } from "actions/imagen";
 
 const WidgetUserWelcome = () => {
   const dispatch = useDispatch();
@@ -39,7 +38,7 @@ const WidgetUserWelcome = () => {
         <p style={{ color: "white" }}>
           Hola,
           <a href="perfil" style={{ color: "white" }}>
-            {name}
+            {name.split(" ")[0]}
           </a>
         </p>
       </div>

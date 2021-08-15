@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const imgReducer = (state = initialState, action) => {
-  switch (action.type) {
+  switch (action?.type) {
     case types.imagen:
       return {
         ...state,

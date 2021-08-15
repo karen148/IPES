@@ -7,8 +7,8 @@ const initialState = {
   // name: null
 };
 
-export const productoReducer = (state = initialState, action) => {
-  switch (action.type) {
+export const productoReducer = (action, state = initialState) => {
+  switch (action?.type) {
     case types.productoDatos:
       return {
         ...state,
