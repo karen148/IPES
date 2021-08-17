@@ -16,6 +16,7 @@ import {
   getTopProductos,
   getLocatariosMasVendidos,
   getLocatariosPlazas,
+  getProductosMasVendidos,
 } from "actions/balance";
 import { data, pedido } from "./datos";
 import { Autocomplete } from "@material-ui/lab";
@@ -26,9 +27,12 @@ const Tablero = () => {
   const dispatch = useDispatch();
   const { rol, codigo } = useSelector((state) => state.auth);
   const { plazanombres } = useSelector((state) => state.plaza);
-  const { TopLocatarios, TopLocatariosPlazas, TopProductos } = useSelector(
-    (state) => state.balance
-  );
+  const {
+    TopLocatarios,
+    TopLocatariosPlazas,
+    TopProductos,
+    TopProductosPlazas,
+  } = useSelector((state) => state.balance);
   const [locatario, setLocatario] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = useState(false);
@@ -36,7 +40,6 @@ const Tablero = () => {
   const [plaza, setPlaza] = useState([]);
   const [datos, setDatos] = useState([]);
   const [datos1, setDatos1] = useState([]);
-  const [array, setArray] = useState([]);
   const [mostrar, setMostrar] = useState(false);
 
   useEffect(() => {
@@ -66,48 +69,17 @@ const Tablero = () => {
     setPlaza([]);
   };
 
-  // const LocatariosPlaza = (data4) => {
-  //   TopLocatariosPlazas.map((loc) => {
-  //     data4.push(loc);
-  //   });
-  //   console.log(data4);
-  // };
-
   const handleChange = () => {
     setMostrar(true);
     let data2 = [];
     let data3 = [];
-    let data4 = [];
-    let data5 = [];
-    TopLocatariosPlazas.map((loc) => {
-      data5.push(loc);
-    });
-    console.log(plaza.id);
-    console.log(array.indexOf((arr) => arr.id_plaza === plaza.id));
+
     plaza.map((item) => {
       data2.push(data.filter((d) => item.id === d.id)[0]);
       data3.push(pedido.filter((p) => item.id === p.id)[0]);
       dispatch(getLocatariosMasVendidos(item.id));
+      dispatch(getProductosMasVendidos(item.id));
     });
-    if (!array.length) {
-      data4.push(...array, {
-        id_plaza: plaza.id,
-        nombre_plaza: plaza.nombre,
-        locatarios: [...data5],
-      });
-      console.log(data5);
-    } else if (array.length) {
-      if (!array?.filter((arr) => arr.id_plaza === plaza.id)[0]?.length) {
-        data4.push(...array, {
-          id_plaza: plaza.id,
-          nombre_plaza: plaza.nombre,
-          locatarios: [...data5],
-        });
-      } else if (array?.filter((arr) => arr.id_plaza === plaza.id)[0].length) {
-        data4.push(array.filter((arr) => arr.id_plaza === plaza.id)[0]);
-      }
-    }
-    setArray(data4);
     setDatos(data2);
     setDatos1(data3);
   };
@@ -117,8 +89,6 @@ const Tablero = () => {
     }
   }, [plaza]);
 
-  console.log(datos);
-  console.log(array);
   return (
     <ContainerDashboard>
       <HeaderDashboard />
@@ -200,15 +170,24 @@ const Tablero = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  {datos.map((item, index) => {
-                    return (
-                      <Grid item xs={12} md={4} key={index + 1}>
-                        <CardTopCountries
-                          titulo={"Plaza " + item.label}
-                          dato={datos}
-                        />
-                      </Grid>
-                    );
+                  {TopProductosPlazas.map((item, index) => {
+                    if (
+                      plaza.findIndex((pla) => pla.id === item?.id_plaza) !== -1
+                    ) {
+                      return (
+                        <Grid item xs={12} md={4} key={index + 1}>
+                          <CardTopCountries
+                            titulo={
+                              "Plaza " +
+                              plaza.filter(
+                                (pla) => pla.id === item?.id_plaza
+                              )[0]?.nombre
+                            }
+                            dato={item?.productos}
+                          />
+                        </Grid>
+                      );
+                    }
                   })}
                 </Grid>
               </Grid>
@@ -223,16 +202,24 @@ const Tablero = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  {array?.map((item, index) => {
-                    console.log(item);
-                    return (
-                      <Grid item xs={12} md={4} key={index + 1}>
-                        <CardTopCountries
-                          titulo={"Plaza " + item.nombre_plaza}
-                          dato={item?.loc}
-                        />
-                      </Grid>
-                    );
+                  {TopLocatariosPlazas?.map((item, index) => {
+                    if (
+                      plaza.findIndex((pla) => pla.id === item?.id_plaza) !== -1
+                    ) {
+                      return (
+                        <Grid item xs={12} md={4} key={index + 1}>
+                          <CardTopCountries
+                            titulo={
+                              "Plaza " +
+                              plaza.filter(
+                                (pla) => pla.id === item?.id_plaza
+                              )[0]?.nombre
+                            }
+                            dato={item?.locatarios}
+                          />
+                        </Grid>
+                      );
+                    }
                   })}
                 </Grid>
               </Grid>

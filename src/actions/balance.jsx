@@ -1,6 +1,9 @@
 import axios from "axios";
 import { types } from "types";
 
+let data2 = [];
+let data3 = [];
+
 export const getGananciasTotales = (setGanancias) => {
   return async () => {
     let config = {
@@ -56,14 +59,22 @@ export const getLocatariosMasVendidos = (id) => {
         config
       )
       .then((response) => {
-        console.log(response);
         let data = response.data.pedidos;
-        dispatch(TopLocatariosPlaza(data));
+        if (data2.findIndex((dat) => dat.id_plaza === id) === -1) {
+          data2.push(...data2, { id_plaza: id, locatarios: [...data] });
+        }
+        dispatch(TopLocatariosPlaza([...new Set(data2)]));
       })
-      .catch((e) => {
-        console.log("ERROR!!!!!", e);
-        dispatch(TopLocatariosPlaza([{ id: 1, nombre: "no hay locatarios" }]));
+      .catch(() => {
+        if (data2.findIndex((dat) => dat.id_plaza === id) === -1) {
+          data2.push(...data2, {
+            id_plaza: id,
+            locatarios: [{ nombre: "No hay locatarios" }],
+          });
+        }
+        dispatch(TopLocatariosPlaza([...new Set(data2)]));
       });
+    console.log(data2);
   };
 };
 
@@ -120,4 +131,41 @@ export const getTopProductos = () => {
 const TopProductos = (data) => ({
   type: types.balanceTopProductos,
   topproducto: data,
+});
+
+export const getProductosMasVendidos = (id) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API +
+          "pedidos/productosMasVendidosPorPlaza/" +
+          id,
+        config
+      )
+      .then((response) => {
+        let data = response.data.pedidos;
+        if (data3.findIndex((dat) => dat.id_plaza === id) === -1) {
+          data3.push(...data3, { id_plaza: id, productos: [...data] });
+        }
+        dispatch(TopProductosPlaza([...new Set(data3)]));
+      })
+      .catch(() => {
+        if (data3.findIndex((dat) => dat.id_plaza === id) === -1) {
+          data3.push(...data3, {
+            id_plaza: id,
+            productos: [{ nombre: "No hay productos" }],
+          });
+        }
+        dispatch(TopProductosPlaza([...new Set(data3)]));
+      });
+    console.log(data3);
+  };
+};
+
+const TopProductosPlaza = (data) => ({
+  type: types.balanceTopProductosPlaza,
+  topproductoplaza: data,
 });
