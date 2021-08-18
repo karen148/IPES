@@ -10,18 +10,16 @@ import Modal from "components/shared/modal";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import RefreshIcon from "@material-ui/icons/Refresh";
 import { getPlazasGanancias, getTrue } from "actions/plaza";
 import {
   getTopProductos,
   getLocatariosMasVendidos,
   getLocatariosPlazas,
   getProductosMasVendidos,
+  getDomiciliosPlaza,
+  getGananciasPlaza,
 } from "actions/balance";
-import { data, pedido } from "./datos";
 import { Autocomplete } from "@material-ui/lab";
-import { IconButton } from "@material-ui/core";
-import TooltipE from "components/shared/tooltip";
 
 const Tablero = () => {
   const dispatch = useDispatch();
@@ -32,11 +30,15 @@ const Tablero = () => {
     TopLocatariosPlazas,
     TopProductos,
     TopProductosPlazas,
+    ganancias,
+    domicilios,
   } = useSelector((state) => state.balance);
   const [locatario, setLocatario] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [fecha1, setFecha1] = useState("");
+  const [fecha2, setFecha2] = useState("");
   const [plaza, setPlaza] = useState([]);
   const [datos, setDatos] = useState([]);
   const [datos1, setDatos1] = useState([]);
@@ -52,7 +54,7 @@ const Tablero = () => {
       dispatch(getTrue());
       dispatch(getLocatariosPlazas());
     }
-  }, [plazanombres]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {
@@ -64,19 +66,14 @@ const Tablero = () => {
     dispatch(UpdateLocatariosEmail(email, locatario.id, setMsg));
   };
 
-  const Restaurar = () => {
-    setMostrar(false);
-    setPlaza([]);
-  };
-
   const handleChange = () => {
     setMostrar(true);
     let data2 = [];
     let data3 = [];
 
     plaza.map((item) => {
-      data2.push(data.filter((d) => item.id === d.id)[0]);
-      data3.push(pedido.filter((p) => item.id === p.id)[0]);
+      data2.push(ganancias.filter((d) => item.id === d.id)[0]);
+      data3.push(domicilios.filter((p) => item.id === p.id)[0]);
       dispatch(getLocatariosMasVendidos(item.id));
       dispatch(getProductosMasVendidos(item.id));
     });
@@ -86,8 +83,20 @@ const Tablero = () => {
   useEffect(() => {
     if (plaza.length > 0) {
       handleChange();
+    } else if (plaza.length === 0) {
+      setMostrar(false);
     }
   }, [plaza]);
+
+  const handleData = () => {
+    if (fecha1 < fecha2) {
+      dispatch(getDomiciliosPlaza(fecha1, fecha2));
+      dispatch(getGananciasPlaza(fecha1, fecha2));
+    }
+  };
+  useEffect(() => {
+    handleData();
+  }, [fecha1, fecha2]);
 
   return (
     <ContainerDashboard>
@@ -108,7 +117,7 @@ const Tablero = () => {
               alignItems="center"
               spacing={2}
             >
-              <Grid item xs={11} md={11}>
+              <Grid item xs={12} md={12}>
                 <Autocomplete
                   multiple
                   limitTags={4}
@@ -130,30 +139,56 @@ const Tablero = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={1} md={1}>
-                <TooltipE title="Restaurar información">
-                  <IconButton
-                    color="secondary"
-                    component="span"
-                    onClick={Restaurar}
-                  >
-                    <RefreshIcon
-                      style={{ fontSize: "35px", marginTop: "-5px" }}
-                    />
-                  </IconButton>
-                </TooltipE>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  style={{ marginTop: "10px" }}
+                  id="date"
+                  variant="outlined"
+                  type="date"
+                  size="small"
+                  fullWidth
+                  value={fecha1}
+                  onChange={(e) => setFecha1(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  helperText="Fecha de inicio"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  style={{ marginTop: "10px" }}
+                  id="date"
+                  variant="outlined"
+                  type="date"
+                  size="small"
+                  fullWidth
+                  value={fecha2}
+                  onChange={(e) => setFecha2(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  helperText="Fecha final"
+                />
               </Grid>
             </Grid>
           </Grid>
+          {fecha1 > fecha2 && (
+            <Grid item xs={12} sm={12}>
+              <Alert severity="warning">
+                La fecha final tiene que ser mayor que la fecha de inicio
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12} md={12}>
             <CardSaleReport
-              datas={mostrar ? datos : data}
+              datas={mostrar ? datos : ganancias}
               titulo={"Informe de ganacias"}
             />
           </Grid>
           <Grid item xs={12} md={12}>
             <CardSaleReport
-              datas={mostrar ? datos1 : pedido}
+              datas={mostrar ? datos1 : domicilios}
               titulo={"Informe de pedidos"}
             />
           </Grid>

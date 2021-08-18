@@ -3,6 +3,48 @@ import { Line } from "react-chartjs-2";
 import PropTypes from "prop-types";
 
 const CardSaleReport = ({ datas, titulo }) => {
+  const array = [];
+  const colors = [
+    "#E6B0AA",
+    "#D2B4DE ",
+    "#AED6F1",
+    "#A2D9CE",
+    "#ABEBC6",
+    "#F5CBA7",
+    "#F5B7B1",
+    "#D7BDE2",
+    "#A9CCE3",
+    "#A9DFBF",
+    "#F9E79F",
+    "#F5CBA7",
+    "#D98880",
+    "#C39BD3",
+    "#7FB3D5",
+    "#7DCEA0",
+    "#F7DC6F",
+    "#F0B27A",
+    "#EC7063",
+    "#A569BD",
+    "#5DADE2",
+    "#D2B4DE",
+    "#58D68D",
+    "#F5B041",
+    "#F4D03F",
+    "#DC7633",
+    "#EB984E",
+    "#EDBB99",
+    "#D7BDE2",
+    "#F5B7B1",
+  ];
+  datas?.map((item) => {
+    const dsColor = colors[item.id];
+    array.push({
+      ...item,
+      backgroundColor: dsColor,
+      borderColor: dsColor,
+      tension: 0.2,
+    });
+  });
   const data = {
     labels: [
       "Enero",
@@ -18,13 +60,17 @@ const CardSaleReport = ({ datas, titulo }) => {
       "Noviembre",
       "Diciembre",
     ],
-    datasets: datas,
+    datasets: array,
   };
 
   const options = {
     title: {
       display: true,
       text: "Chart.js Line Chart",
+    },
+    interaction: {
+      mode: "index",
+      intersect: false,
     },
     responsive: true,
     scales: {

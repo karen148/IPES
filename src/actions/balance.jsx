@@ -169,3 +169,61 @@ const TopProductosPlaza = (data) => ({
   type: types.balanceTopProductosPlaza,
   topproductoplaza: data,
 });
+
+export const getGananciasPlaza = (fecha1, fecha2) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .post(
+        process.env.REACT_APP_URL_API + "pedidos/historicosDeVentas",
+        {
+          fechaFin: fecha2,
+          fechaIn: fecha1,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data.historicos;
+        dispatch(gananciasPlaza(data));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+};
+
+const gananciasPlaza = (data) => ({
+  type: types.gananciasPlaza,
+  ganancia: data,
+});
+
+export const getDomiciliosPlaza = (fecha1, fecha2) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .post(
+        process.env.REACT_APP_URL_API + "pedidos/historicosDeDomicilios",
+        {
+          fechaFin: fecha2,
+          fechaIn: fecha1,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data.historicos;
+        dispatch(domiciliosPlaza(data));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+};
+
+const domiciliosPlaza = (data) => ({
+  type: types.domiciliosPlaza,
+  domicilio: data,
+});

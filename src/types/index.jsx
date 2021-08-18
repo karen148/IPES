@@ -52,4 +52,7 @@ export const types = {
     "[balance] Obtener el top de los locatarios más vendidos",
   balanceLocatariosPlaza:
     "[balance] Obtener el top de los locatarios más vendidos por plaza",
+  gananciasPlaza: "[balance] Obtener información de las ganacias de las plazas",
+  domiciliosPlaza:
+    "[balance] Obtener información de los domicilios de las plazas",
 };

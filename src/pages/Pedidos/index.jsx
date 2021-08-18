@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import axios from "axios";
 
 import ContainerDashboard from "../../components/layaouts/ContainerDashboard";
 import HeaderDashboard from "./../../components/shared/headers/HeaderDashboard";
@@ -16,15 +15,13 @@ import Alert from "@material-ui/lab/Alert";
 
 import TooltipE from "./../../components/shared/tooltip";
 import useStyles from "./styles";
-import { getPedidos } from "actions/pedidos";
+import { getPedidos, getPedidosLocatarios } from "actions/pedidos";
 import { getClientes } from "actions/cliente";
 import TablesPedidos from "components/shared/tables/TablaPedidos";
-import { getProducto } from "actions/producto";
+import { getProducto, getProductoLocatario } from "actions/producto";
 import { getTrue } from "actions/plaza";
 import Excel from "components/shared/Excel";
-import { getPedidosLocatarios } from "actions/pedidos";
 import { getLocatarioCedula } from "actions/locatarios";
-import { getProductoLocatario } from "actions/producto";
 
 const Pedidos = () => {
   const dispatch = useDispatch();
@@ -57,7 +54,6 @@ const Pedidos = () => {
     },
   ];
   const classes = useStyles();
-  // const [nomproducto, setNomProducto] = useState("");
   const { rol, codigo } = useSelector((state) => state.auth);
   const [locatario, setLocatario] = useState([]);
   const [pedidos1, setPedidos1] = useState([]);
@@ -76,25 +72,20 @@ const Pedidos = () => {
     {
       label: "Cliente",
       value: function x(row) {
-        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
-          ?.nombre;
-        return nombre;
+        return cliente.filter((clien) => clien.id === row.cliente)[0]?.nombre;
       },
     },
     {
       label: "Dirección",
       value: function x(row) {
-        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
+        return cliente.filter((clien) => clien.id === row.cliente)[0]
           ?.direccion;
-        return nombre;
       },
     },
     {
       label: "Teléfono",
       value: function x(row) {
-        let nombre = cliente.filter((clien) => clien.id === row.cliente)[0]
-          ?.telefono;
-        return nombre;
+        return cliente.filter((clien) => clien.id === row.cliente)[0]?.telefono;
       },
     },
     { label: "Fecha", value: "fecha" },

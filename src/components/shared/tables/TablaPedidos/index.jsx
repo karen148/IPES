@@ -221,7 +221,7 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                 )[0];
                 for (let index = 0; index < item.productos.length; index++) {
                   const element = item.productos[index];
-                  prolocatarios.map((item) => {
+                  prolocatarios?.map((item) => {
                     if (item.id === element) {
                       proloc.push(item);
                     }
@@ -229,7 +229,7 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                 }
                 for (let index = 0; index < item.productos.length; index++) {
                   const element = item.productos[index];
-                  productos.map((item) => {
+                  productos?.map((item) => {
                     if (item.id === element) {
                       producto.push(item);
                     }
@@ -279,8 +279,6 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                               spacing={2}
                             >
                               {proloc.map((pro) => {
-                                console.log(pro);
-                                console.log(productos.filter((it) => it.id));
                                 return (
                                   <Grid
                                     item
@@ -305,7 +303,7 @@ const TablesPedidos = ({ datos, getDatos, clientes }) => {
                                         }}
                                       >
                                         {
-                                          productos.filter(
+                                          productos?.filter(
                                             (it) => it.id === pro.producto_id
                                           )[0]?.nombre
                                         }
