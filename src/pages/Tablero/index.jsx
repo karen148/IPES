@@ -47,8 +47,7 @@ const Tablero = () => {
   useEffect(() => {
     if (rol === "ADMIN_LOCATARIO") {
       dispatch(getLocatarioCedula(setLocatario, codigo));
-    }
-    if (plazanombres.length === 0) {
+    } else {
       dispatch(getPlazasGanancias());
       dispatch(getTopProductos());
       dispatch(getTrue());
