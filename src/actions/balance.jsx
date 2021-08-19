@@ -128,6 +128,28 @@ export const getTopProductos = () => {
   };
 };
 
+export const getTopProductosLocatarios = (id) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .get(
+        process.env.REACT_APP_URL_API +
+          "pedidos/productosMasVendidosPorLocatario/" +
+          id,
+        config
+      )
+      .then((response) => {
+        let data = response.data.pedidos;
+        dispatch(TopProductos(data));
+      })
+      .catch((e) => {
+        console.log("ERROR!!!!!", e);
+      });
+  };
+};
+
 const TopProductos = (data) => ({
   type: types.balanceTopProductos,
   topproducto: data,
@@ -194,6 +216,33 @@ export const getGananciasPlaza = (fecha1, fecha2) => {
   };
 };
 
+export const getGananciaLocatario = (fecha1, fecha2, id) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .post(
+        process.env.REACT_APP_URL_API +
+          "pedidos/historicosDeVentasPorLocatario/" +
+          id,
+        {
+          fechaFin: fecha2,
+          fechaIn: fecha1,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data.historicos;
+        console.log(response);
+        dispatch(gananciasPlaza([data]));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+};
+
 const gananciasPlaza = (data) => ({
   type: types.gananciasPlaza,
   ganancia: data,
@@ -216,6 +265,32 @@ export const getDomiciliosPlaza = (fecha1, fecha2) => {
       .then((response) => {
         let data = response.data.historicos;
         dispatch(domiciliosPlaza(data));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+};
+
+export const getDomiciliosLocatario = (fecha1, fecha2, id) => {
+  return async (dispatch) => {
+    let config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    axios
+      .post(
+        process.env.REACT_APP_URL_API +
+          "pedidos/historicosDeDomiciliosPorLocatario/" +
+          id,
+        {
+          fechaFin: fecha2,
+          fechaIn: fecha1,
+        },
+        config
+      )
+      .then((response) => {
+        let data = response.data.historicos;
+        dispatch(domiciliosPlaza([data]));
       })
       .catch((e) => {
         console.log(e);

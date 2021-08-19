@@ -37,7 +37,7 @@ const CardSaleReport = ({ datas, titulo }) => {
     "#F5B7B1",
   ];
   datas?.map((item) => {
-    const dsColor = colors[item.id];
+    const dsColor = colors[item.id > colors.length ? 1 : item.id];
     array.push({
       ...item,
       backgroundColor: dsColor,

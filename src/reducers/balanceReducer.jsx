@@ -6,8 +6,8 @@ const initialState = {
   TopLocatarios: [],
   TopLocatariosPlazas: [],
   TopProductosPlazas: [],
-  ganancias: [],
-  domiclios: [],
+  Ganancias: [],
+  Domicilios: [],
 };
 
 export const balanceReducer = (state = initialState, action) => {
@@ -35,12 +35,12 @@ export const balanceReducer = (state = initialState, action) => {
     case types.gananciasPlaza:
       return {
         ...state,
-        ganancias: [...action.ganancia],
+        Ganancias: [...action.ganancia],
       };
     case types.domiciliosPlaza:
       return {
         ...state,
-        domicilios: [...action.domicilio],
+        Domicilios: [...action.domicilio],
       };
     default:
       return state;
