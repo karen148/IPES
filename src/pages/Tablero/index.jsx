@@ -194,18 +194,29 @@ const Tablero = () => {
           )}
           {rol === "SUPER_ADMIN" && (
             <>
-              <Grid item xs={12} md={12}>
-                <CardSaleReport
-                  datas={mostrar ? datos : Ganancias}
-                  titulo={"Informe de ganacias"}
-                />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <CardSaleReport
-                  datas={mostrar ? datos1 : Domicilios}
-                  titulo={"Informe de pedidos"}
-                />
-              </Grid>
+              {Ganancias.length > 0 && Domicilios.length > 0 ? (
+                <>
+                  <Grid item xs={12} md={12}>
+                    <CardSaleReport
+                      datas={mostrar ? datos : Ganancias}
+                      titulo={"Informe de ganacias"}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <CardSaleReport
+                      datas={mostrar ? datos1 : Domicilios}
+                      titulo={"Informe de pedidos"}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <Grid item xs={12} md={12}>
+                  <h3 style={{ textAlign: "center" }}>
+                    Para ver la información de las graficas por favor selecciona
+                    un rango de fecha
+                  </h3>
+                </Grid>
+              )}
               {mostrar ? (
                 <>
                   <Grid item xs={12} md={12}>
@@ -305,18 +316,29 @@ const Tablero = () => {
               alignItems="center"
               spacing={3}
             >
-              <Grid item xs={12} md={12}>
-                <CardSaleReport
-                  datas={Ganancias}
-                  titulo={"Informe de ganacias"}
-                />
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <CardSaleReport
-                  datas={Domicilios}
-                  titulo={"Informe de pedidos"}
-                />
-              </Grid>
+              {Ganancias.length > 0 && Domicilios.length > 0 ? (
+                <>
+                  <Grid item xs={12} md={12}>
+                    <CardSaleReport
+                      datas={Ganancias}
+                      titulo={"Informe de ganacias"}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={8}>
+                    <CardSaleReport
+                      datas={Domicilios}
+                      titulo={"Informe de pedidos"}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <Grid item xs={12} md={12}>
+                  <h3 style={{ textAlign: "center" }}>
+                    Para ver la información de las graficas por favor selecciona
+                    un rango de fecha
+                  </h3>
+                </Grid>
+              )}
               <Grid item xs={12} md={4}>
                 <CardTopCountries
                   titulo={"Top de los productos más vendidos"}
